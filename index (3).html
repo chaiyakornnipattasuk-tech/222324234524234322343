@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>มองทะลุ.net</title>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;600;700&family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+
+/* ── RESET & BASE ─────────────────────────────────── */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+:root {
+    --bg:        #f8fafc;
+    --white:     #ffffff;
+    --black:     #000000;
+    --s50:       #f8fafc;
+    --s100:      #f1f5f9;
+    --s200:      #e2e8f0;
+    --s400:      #94a3b8;
+    --s600:      #475569;
+    --s700:      #334155;
+    --sidebar-w: 220px;
+    --fh:        'IBM Plex Sans Thai', sans-serif;
+    --fb:        'Sarabun', sans-serif;
+}
+body        { font-family:var(--fb); background:var(--bg); color:var(--black); line-height:1.6; }
+h1,h2,h3,h4 { font-family:var(--fh); font-weight:700; }
+a           { text-decoration:none; color:inherit; }
+
+/* ── LAYOUT ───────────────────────────────────────── */
+.layout     { display:flex; min-height:100vh; }
+.main       { flex:1; min-width:0; margin-left:var(--sidebar-w); }
+.container  { max-width:1100px; margin:0 auto; padding:0 32px; }
+
+/* ── SIDEBAR ──────────────────────────────────────── */
+.sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    width: var(--sidebar-w);
+    height: 100vh;
+    background: #000;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+    overflow-y: auto;
+}
+.sidebar-logo {
+    padding: 32px 20px 24px;
+    border-bottom: 1px solid #222;
+}
+.sidebar-logo h1 { font-size: 20px; color:#fff; margin-bottom:4px; }
+.sidebar-logo p  { font-size: 11px; color:#6b7280; letter-spacing:.5px; }
+
+.sidebar-nav { flex:1; padding: 16px 0; }
+.nav-label   { font-size:10px; font-weight:700; letter-spacing:1.5px; color:#4b5563; padding:16px 20px 6px; text-transform:uppercase; }
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    color: #9ca3af;
+    border-left: 3px solid transparent;
+    transition: all .15s;
+    font-family: var(--fb);
+    background: none;
+    border-top: none;
+    border-right: none;
+    border-bottom: none;
+    width: 100%;
+    text-align: left;
+}
+.nav-item:hover   { color:#fff; background:#111; }
+.nav-item.active  { color:#fff; background:#111; border-left-color:#fff; }
+.nav-item .icon   { font-size:18px; width:22px; text-align:center; }
+
+.sidebar-footer {
+    padding: 20px;
+    border-top: 1px solid #222;
+    font-size: 11px;
+    color: #4b5563;
+}
+
+/* no hamburger — sidebar shrinks to icon strip on mobile */
+
+/* ── HEADER ───────────────────────────────────────── */
+.page-header       { background:#fff; border-bottom:2px solid #000; padding:48px 0 32px; }
+.page-header-small { background:#fff; border-bottom:2px solid #000; padding:28px 0; }
+.page-title        { font-size:36px; margin-bottom:8px; }
+.page-tagline      { font-size:16px; color:var(--s600); margin-bottom:28px; }
+
+/* ── SEARCH ───────────────────────────────────────── */
+.search-form  { display:flex; gap:8px; margin-bottom:20px; }
+.search-input { flex:1; height:52px; font-size:17px; padding:0 18px; border:2px solid #000; font-family:inherit; }
+.search-input:focus { outline:none; box-shadow:4px 4px 0 #000; }
+
+/* ── SUB-TABS (case / company) ────────────────────── */
+.subtabs     { display:flex; gap:6px; background:var(--s100); border:2px solid #000; padding:4px; margin-bottom:20px; }
+.subtab      { flex:1; padding:10px 20px; border:none; background:transparent; font-weight:600; cursor:pointer; font-size:15px; font-family:inherit; }
+.subtab.active          { background:#000; color:#fff; }
+.subtab:hover:not(.active){ background:var(--s600); color:#fff; }
+
+/* ── FILTER CHIPS ─────────────────────────────────── */
+.filter-chips { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:18px; }
+.chip         { padding:5px 14px; border:2px solid #000; background:#fff; font-size:13px; font-weight:600; cursor:pointer; font-family:inherit; transition:all .15s; }
+.chip:hover   { background:var(--s100); }
+.chip-active  { background:#000; color:#fff; }
+
+/* ── CONTROLS ─────────────────────────────────────── */
+.controls { display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; margin-bottom:4px; }
+.select   { padding:10px 12px; border:2px solid #000; font-size:15px; font-family:inherit; background:#fff; cursor:pointer; }
+
+/* ── GRID ─────────────────────────────────────────── */
+.grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:20px; padding:36px 0; }
+
+/* ── CASE CARD ────────────────────────────────────── */
+.card        { background:#fff; border:2px solid #000; padding:22px; box-shadow:4px 4px 0 #000; cursor:pointer; transition:all .2s; position:relative; overflow:hidden; }
+.card:hover  { box-shadow:8px 8px 0 #000; transform:translate(-2px,-2px); }
+.card-title  { font-size:18px; margin-bottom:10px; font-family:var(--fh); }
+.card:hover .card-title { text-decoration:underline; }
+.card-text   { color:var(--s700); margin:10px 0; font-size:14px; line-height:1.6; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+.card-meta   { display:flex; justify-content:space-between; font-size:13px; color:var(--s600); margin-top:14px; }
+.card::after { content:''; position:absolute; bottom:-28px; right:-28px; width:56px; height:56px; background:var(--s100); transform:rotate(45deg); }
+
+/* ── POLITICIAN CARD ──────────────────────────────── */
+.pol-card    { background:#fff; border:2px solid #000; padding:22px; box-shadow:4px 4px 0 #000; cursor:pointer; transition:all .2s; position:relative; overflow:hidden; }
+.pol-card:hover { box-shadow:8px 8px 0 #000; transform:translate(-2px,-2px); }
+.pol-avatar  { width:52px; height:52px; background:#000; color:#fff; display:flex; align-items:center; justify-content:center; font-size:22px; margin-bottom:14px; flex-shrink:0; }
+.pol-name    { font-size:18px; font-family:var(--fh); margin-bottom:4px; }
+.pol-party   { font-size:13px; color:var(--s600); margin-bottom:12px; font-weight:600; }
+.pol-section-label { font-size:11px; font-weight:700; letter-spacing:.8px; text-transform:uppercase; color:var(--s400); margin-bottom:4px; }
+.pol-section-text  { font-size:13px; color:var(--s700); line-height:1.5; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; margin-bottom:12px; }
+.pol-card::after { content:''; position:absolute; bottom:-28px; right:-28px; width:56px; height:56px; background:var(--s100); transform:rotate(45deg); }
+
+/* ── BADGES ───────────────────────────────────────── */
+.badge           { display:inline-block; padding:3px 10px; font-size:11px; font-weight:700; text-transform:uppercase; border:1px solid; }
+.badge-ongoing   { background:#fef3c7; color:#92400e; border-color:#92400e; }
+.badge-guilty    { background:#fecaca; color:#991b1b; border-color:#991b1b; }
+.badge-acquitted { background:#d1fae5; color:#065f46; border-color:#065f46; }
+.badge-settled   { background:var(--s100); color:var(--s700); border-color:var(--s700); }
+.badge-dismissed { background:#ede9fe; color:#5b21b6; border-color:#5b21b6; }
+
+/* ── DETAIL PAGE ──────────────────────────────────── */
+.btn-back  { background:transparent; border:none; font-size:15px; margin-bottom:14px; cursor:pointer; padding:8px; font-family:inherit; display:inline-flex; align-items:center; gap:6px; }
+.btn-back:hover { background:var(--s100); }
+.detail-header { display:flex; justify-content:space-between; align-items:flex-start; gap:20px; flex-wrap:wrap; }
+.meta          { display:flex; gap:14px; align-items:center; margin-top:10px; flex-wrap:wrap; }
+.content-section { background:#fff; border:2px solid #000; padding:24px; margin-bottom:20px; box-shadow:4px 4px 0 rgba(0,0,0,.08); }
+.content-section h2 { margin-bottom:16px; font-size:20px; }
+
+/* ── TIMELINE vertical ────────────────────────────── */
+.timeline-vertical        { position:relative; padding-left:44px; }
+.timeline-vertical::before{ content:''; position:absolute; left:14px; top:0; bottom:0; width:2px; background:#000; }
+.timeline-item            { position:relative; margin-bottom:24px; }
+.timeline-item::before    { content:'📅'; position:absolute; left:-38px; width:28px; height:28px; background:#000; display:flex; align-items:center; justify-content:center; font-size:13px; }
+.timeline-box             { background:var(--s50); border:1px solid #cbd5e1; padding:14px; }
+.timeline-date            { font-weight:700; font-size:13px; margin-bottom:5px; }
+.timeline-source          { font-size:12px; margin-top:7px; color:var(--s600); }
+.timeline-source a        { color:#2563eb; text-decoration:underline; }
+
+/* ── TIMELINE horizontal ──────────────────────────── */
+.timeline-horizontal  { display:flex; overflow-x:auto; padding:28px 0; }
+.timeline-h-item      { display:flex; align-items:flex-start; min-width:240px; }
+.timeline-h-node      { width:40px; height:40px; background:#000; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
+.timeline-h-content   { margin-top:10px; background:var(--s50); border:2px solid #cbd5e1; padding:12px; min-height:140px; width:220px; font-size:13px; }
+.timeline-h-connector { width:44px; height:2px; background:#000; margin-top:20px; flex-shrink:0; }
+
+/* ── POLITICIAN DETAIL ────────────────────────────── */
+.pol-profile-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+.pol-field        { margin-bottom:0; }
+.pol-field-label  { font-size:11px; font-weight:700; letter-spacing:.8px; text-transform:uppercase; color:var(--s400); margin-bottom:5px; }
+.pol-field-value  { font-size:15px; color:#000; line-height:1.6; }
+.pol-field-full   { grid-column:1/-1; }
+
+/* finance bar */
+.finance-section  { margin-top:8px; }
+.networth-display { font-size:28px; font-family:var(--fh); font-weight:700; margin-bottom:20px; }
+.networth-label   { font-size:13px; color:var(--s600); font-weight:400; margin-left:8px; }
+
+.fund-bar-wrap  { margin-bottom:24px; }
+.fund-bar       { display:flex; height:44px; border:2px solid #000; overflow:hidden; box-shadow:4px 4px 0 #000; }
+.fund-segment   { display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:#fff; transition:flex .4s; overflow:hidden; white-space:nowrap; }
+.fund-seg-people    { background:#1d4ed8; }
+.fund-seg-corporate { background:#dc2626; }
+.fund-seg-undefined { background:#7c3aed; }
+
+.fund-legend     { display:flex; gap:20px; flex-wrap:wrap; margin-top:14px; }
+.fund-legend-item{ display:flex; align-items:center; gap:8px; font-size:13px; }
+.fund-dot        { width:14px; height:14px; flex-shrink:0; border:1px solid rgba(0,0,0,.2); }
+.fund-dot-people    { background:#1d4ed8; }
+.fund-dot-corporate { background:#dc2626; }
+.fund-dot-undefined { background:#7c3aed; }
+
+.linked-case-card { background:var(--s50); border:1px solid var(--s200); padding:14px; margin-bottom:10px; cursor:pointer; transition:all .15s; }
+.linked-case-card:hover { background:#fff; border-color:#000; }
+
+/* ── POLITICIAN TIMELINES ─────────────────────────────── */
+.pol-timeline     { display:flex; flex-direction:column; gap:0; padding-left:36px; position:relative; }
+.pol-tl-item      { display:flex; align-items:flex-start; gap:16px; position:relative; margin-bottom:4px; }
+.pol-tl-dot       { width:32px; height:32px; border-radius:0; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; margin-left:-36px; z-index:1; }
+.pol-tl-line      { position:absolute; left:-20px; top:32px; bottom:-4px; width:2px; }
+.pol-tl-item:last-child .pol-tl-line { display:none; }
+.pol-tl-box       { flex:1; border:1px solid; padding:14px; margin-bottom:12px; }
+.pol-tl-date      { font-size:12px; font-weight:700; letter-spacing:.5px; margin-bottom:5px; }
+.pol-tl-desc      { font-size:14px; line-height:1.6; color:#000; }
+
+/* pol timeline tab switcher */
+.tl-tabs          { display:flex; gap:6px; margin-bottom:20px; flex-wrap:wrap; }
+.tl-tab           { padding:8px 18px; border:2px solid #000; background:#fff; font-size:13px; font-weight:700; cursor:pointer; font-family:inherit; transition:all .15s; }
+.tl-tab.active    { background:#000; color:#fff; }
+.tl-tab:hover:not(.active) { background:var(--s100); }
+
+.footer           { background:#000; color:#fff; padding:56px 0 36px; margin-top:56px; }
+.footer-grid      { display:grid; grid-template-columns:1fr 1fr; gap:48px; margin-bottom:40px; }
+.footer h2        { font-size:26px; margin-bottom:6px; color:#fff; }
+.footer h3        { font-size:17px; margin-bottom:14px; color:#fff; border-bottom:1px solid #333; padding-bottom:9px; }
+.footer-tagline   { color:#9ca3af; font-size:15px; margin-bottom:20px; }
+.footer p         { color:#d1d5db; line-height:1.8; font-size:14px; margin-bottom:10px; }
+.footer-principles{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:14px; }
+.principle-card   { border:1px solid #333; padding:14px; }
+.principle-card .icon { font-size:20px; margin-bottom:6px; }
+.principle-card h4{ font-size:13px; font-weight:700; color:#fff; margin-bottom:5px; }
+.principle-card p { font-size:12px; color:#9ca3af; margin:0; line-height:1.5; }
+.footer-divider   { border:none; border-top:1px solid #222; margin:28px 0; }
+.footer-bottom    { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; }
+.footer-bottom p  { color:#6b7280; font-size:12px; margin:0; }
+.ideology-badge   { display:inline-block; background:#111; border:1px solid #333; color:#9ca3af; font-size:11px; padding:3px 10px; font-weight:600; }
+
+/* ── UTILITIES ────────────────────────────────────── */
+.empty { text-align:center; padding:48px; font-size:17px; color:var(--s600); background:#fff; border:2px solid var(--s100); }
+.section-pad { padding:36px 0; }
+
+/* ── RESPONSIVE ───────────────────────────────────── */
+@media (max-width: 768px) {
+    /* Sidebar shrinks to a narrow icon strip — no hamburger needed */
+    .sidebar          { width: 56px; }
+    .sidebar-logo     { display:none; }
+    .nav-label        { display:none; }
+    .nav-item         { padding:14px 0; justify-content:center; border-left-width:3px; }
+    .nav-item .label  { display:none; }
+    .nav-item .icon   { font-size:22px; width:auto; }
+    .sidebar-footer   { display:none; }
+
+    .main             { margin-left:56px; }
+    .container        { padding:0 12px; }
+    .page-title       { font-size:24px; }
+    .grid             { grid-template-columns:1fr; }
+    .pol-profile-grid { grid-template-columns:1fr; }
+    .footer-grid      { grid-template-columns:1fr; gap:28px; }
+    .footer-principles{ grid-template-columns:1fr; }
+    .footer-bottom    { flex-direction:column; align-items:flex-start; }
+    .detail-header    { flex-direction:column; }
+    .timeline-horizontal { flex-direction:column; }
+    .timeline-h-connector{ display:none; }
+    .fund-legend      { gap:12px; }
+}
+
+    </style>
+</head>
+<body>
+
+<!-- ── SIDEBAR ───────────────────────────── -->
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+        <h1>มองทะลุ.net</h1>
+        <p>HARDER TO SEE THAN FLOW IS NORM</p>
+    </div>
+
+    <nav class="sidebar-nav">
+        <div class="nav-label">เมนูหลัก</div>
+
+        <button class="nav-item active" data-section="cases" id="nav-cases" title="คดีความ">
+            <span class="icon">⚖️</span> <span class="label">คดีความ</span>
+        </button>
+
+        <button class="nav-item" data-section="politicians" id="nav-politicians" title="นักการเมือง">
+            <span class="icon">🏛️</span> <span class="label">นักการเมือง</span>
+        </button>
+    </nav>
+
+    <div class="sidebar-footer">
+        ข้อมูลจากแหล่งสาธารณะ<br>อัปเดตโดยทีมงาน
+    </div>
+</aside>
+
+<!-- ── MAIN ───────────────────────────────── -->
+<div class="layout">
+    <main class="main" id="app"></main>
+</div>
+
+<script>
+// ============================================================
+//  🛑  WEBSITE CODE — DO NOT EDIT
+// ============================================================
+
+const STATUS_LABELS = {
+    ongoing:   'กำลังดำเนินการ',
+    guilty:    'มีความผิด',
+    acquitted: 'ยกฟ้อง (พ้นผิด)',
+    settled:   'ประนีประนอมยอมความ',
+    dismissed: 'จำหน่ายคดี'
+};
+
+const STATUS_FILTERS = [
+    { key:'all',       label:'ทั้งหมด' },
+    { key:'ongoing',   label:'กำลังดำเนินการ' },
+    { key:'guilty',    label:'มีความผิด' },
+    { key:'acquitted', label:'ยกฟ้อง' },
+    { key:'settled',   label:'ประนีประนอมยอมความ' },
+    { key:'dismissed', label:'จำหน่ายคดี' },
+];
+
+let currentSection = 'cases';
+let currentTab     = 'case';
+let currentSearch  = '';
+let currentStatus  = 'all';
+
+// ── SIDEBAR NAV ───────────────────────────────────────────
+document.querySelectorAll('.nav-item').forEach(btn => {
+    btn.addEventListener('click', () => {
+        currentSection = btn.dataset.section;
+        document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        if (currentSection === 'cases') {
+            currentSearch = ''; currentStatus = 'all';
+            navigate('/');
+        } else {
+            navigate('/politicians');
+        }
+    });
+});
+
+// ── ROUTING ───────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+    handleRoute();
+    window.addEventListener('hashchange', handleRoute);
+});
+
+function handleRoute() {
+    const hash = window.location.hash.slice(1) || '/';
+    if (hash === '/' || hash === '') {
+        currentSection = 'cases';
+        setActiveNav('nav-cases');
+        showCasesPage();
+    } else if (hash === '/politicians') {
+        currentSection = 'politicians';
+        setActiveNav('nav-politicians');
+        showPoliticiansPage();
+    } else if (hash.startsWith('/case/') || hash.startsWith('/company/')) {
+        showCaseDetail(hash.split('/')[2]);
+    } else if (hash.startsWith('/politician/')) {
+        showPoliticianDetail(hash.split('/')[2]);
+    } else {
+        navigate('/');
+    }
+}
+
+function navigate(path) { window.location.hash = path; }
+
+function setActiveNav(id) {
+    document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+    document.getElementById(id)?.classList.add('active');
+}
+
+// ── CASES PAGE ────────────────────────────────────────────
+function showCasesPage() {
+    document.getElementById('app').innerHTML = `
+        <div>
+            <div class="page-header">
+                <div class="container">
+                    <h1 class="page-title">คดีความ</h1>
+                    <p class="page-tagline">ติดตามสถานะคดีบุคคลและนิติบุคคล</p>
+
+                    <form class="search-form" id="search-form">
+                        <input type="text" id="search-input" class="search-input"
+                            placeholder="ค้นหาชื่อ, ข้อกล่าวหา..."
+                            value="${currentSearch}">
+                        <button type="submit" class="btn-search">ค้นหา</button>
+                    </form>
+
+                    <div class="subtabs">
+                        <button class="subtab ${currentTab==='case'?'active':''}" data-tab="case">👤 คดีบุคคล</button>
+                        <button class="subtab ${currentTab==='company'?'active':''}" data-tab="company">🏢 บริษัท</button>
+                    </div>
+
+                    <div class="filter-chips">
+                        ${STATUS_FILTERS.map(f=>`
+                            <button class="chip ${currentStatus===f.key?'chip-active':''}"
+                                data-status="${f.key}">${f.label}</button>
+                        `).join('')}
+                    </div>
+
+                    <div class="controls">
+                        <select id="sort-select" class="select">
+                            <option value="most_events">อัปเดตบ่อยสุด</option>
+                            <option value="least_events">อัปเดตน้อยสุด</option>
+                            <option value="alpha_asc">ชื่อ ก–ฮ</option>
+                            <option value="alpha_desc">ชื่อ ฮ–ก</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container">
+                <div id="cases-grid" class="grid"></div>
+            </div>
+
+            ${renderFooter()}
+        </div>
+    `;
+
+    // wire up search
+    document.getElementById('search-form').addEventListener('submit', e => {
+        e.preventDefault();
+        currentSearch = document.getElementById('search-input').value.trim();
+        renderCasesGrid();
+    });
+    // wire up subtabs
+    document.querySelectorAll('.subtab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            currentTab = tab.dataset.tab;
+            currentSearch = ''; currentStatus = 'all';
+            showCasesPage();
+        });
+    });
+    // wire up chips
+    document.querySelectorAll('.chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+            currentStatus = chip.dataset.status;
+            document.querySelectorAll('.chip').forEach(c => c.classList.remove('chip-active'));
+            chip.classList.add('chip-active');
+            renderCasesGrid();
+        });
+    });
+    document.getElementById('sort-select').addEventListener('change', renderCasesGrid);
+    renderCasesGrid();
+}
+
+function renderCasesGrid() {
+    const sortBy = document.getElementById('sort-select').value;
+    let items = DATA.filter(d => d.type === currentTab);
+    if (currentStatus !== 'all') items = items.filter(d => d.status === currentStatus);
+    if (currentSearch) {
+        const q = currentSearch.toLowerCase();
+        items = items.filter(d =>
+            d.name.toLowerCase().includes(q) ||
+            d.allegations.toLowerCase().includes(q)
+        );
+    }
+    if (sortBy === 'most_events')  items.sort((a,b) => b.timeline.length - a.timeline.length);
+    if (sortBy === 'least_events') items.sort((a,b) => a.timeline.length - b.timeline.length);
+    if (sortBy === 'alpha_asc')    items.sort((a,b) => a.name.localeCompare(b.name,'th'));
+    if (sortBy === 'alpha_desc')   items.sort((a,b) => b.name.localeCompare(a.name,'th'));
+
+    const grid = document.getElementById('cases-grid');
+    if (items.length === 0) { grid.innerHTML = '<div class="empty">ไม่พบข้อมูล</div>'; return; }
+    grid.innerHTML = items.map(c => `
+        <div class="card" data-id="${c.id}" data-type="${c.type}">
+            <h3 class="card-title">${c.name}</h3>
+            <span class="badge badge-${c.status}">${STATUS_LABELS[c.status]||c.status}</span>
+            <p class="card-text">${c.allegations}</p>
+            <div class="card-meta">
+                <span>📋 ${c.timeline.length} เหตุการณ์</span>
+            </div>
+        </div>
+    `).join('');
+    document.querySelectorAll('.card').forEach(card => {
+        card.addEventListener('click', () => navigate(`/${card.dataset.type}/${card.dataset.id}`));
+    });
+}
+
+// ── CASE DETAIL ───────────────────────────────────────────
+function showCaseDetail(id) {
+    const data = DATA.find(d => d.id === id);
+    if (!data) { navigate('/'); return; }
+    const timelineHtml = data.type === 'company'
+        ? renderHorizontalTimeline(data.timeline)
+        : renderVerticalTimeline(data.timeline);
+
+    document.getElementById('app').innerHTML = `
+        <div>
+            <div class="page-header-small">
+                <div class="container">
+                    <button class="btn-back" id="back-btn">← กลับ</button>
+                    <div class="detail-header">
+                        <div>
+                            <h1 class="page-title">${data.name}</h1>
+                            <div class="meta">
+                                <span class="badge badge-${data.status}">${STATUS_LABELS[data.status]||data.status}</span>
+                                <span style="color:var(--s600);font-size:13px;">${data.timeline.length} เหตุการณ์</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container section-pad">
+                <div class="content-section">
+                    <h2>ข้อกล่าวหา</h2>
+                    <p>${data.allegations}</p>
+                </div>
+                <div class="content-section">
+                    <h2>ไทม์ไลน์</h2>
+                    ${timelineHtml}
+                </div>
+            </div>
+            ${renderFooter()}
+        </div>
+    `;
+    document.getElementById('back-btn').addEventListener('click', () => navigate('/'));
+}
+
+// ── POLITICIANS PAGE ──────────────────────────────────────
+function showPoliticiansPage() {
+    const pols = POLITICIANS;
+    document.getElementById('app').innerHTML = `
+        <div>
+            <div class="page-header">
+                <div class="container">
+                    <h1 class="page-title">นักการเมือง</h1>
+                    <p class="page-tagline">ประวัติ ผลงาน และความโปร่งใสทางการเงิน</p>
+                    <form class="search-form" id="pol-search-form">
+                        <input type="text" id="pol-search-input" class="search-input"
+                            placeholder="ค้นหาชื่อ, พรรค, นโยบาย...">
+                        <button type="submit" class="btn-search">ค้นหา</button>
+                    </form>
+                </div>
+            </div>
+            <div class="container">
+                <div id="pol-grid" class="grid section-pad"></div>
+            </div>
+            ${renderFooter()}
+        </div>
+    `;
+
+    document.getElementById('pol-search-form').addEventListener('submit', e => {
+        e.preventDefault();
+        renderPoliticiansGrid(document.getElementById('pol-search-input').value.trim());
+    });
+    renderPoliticiansGrid('');
+}
+
+function renderPoliticiansGrid(search) {
+    let items = [...POLITICIANS];
+    if (search) {
+        const q = search.toLowerCase();
+        items = items.filter(p =>
+            p.name.toLowerCase().includes(q) ||
+            p.party.toLowerCase().includes(q) ||
+            (p.campaign||'').toLowerCase().includes(q)
+        );
+    }
+    const grid = document.getElementById('pol-grid');
+    if (items.length === 0) { grid.innerHTML = '<div class="empty">ไม่พบข้อมูล</div>'; return; }
+    grid.innerHTML = items.map(p => `
+        <div class="pol-card" data-id="${p.id}">
+            <div style="display:flex;align-items:flex-start;gap:14px;margin-bottom:14px;">
+                <div class="pol-avatar">🏛️</div>
+                <div>
+                    <div class="pol-name">${p.name}</div>
+                    <div class="pol-party">🏳️ ${p.party} ${p.position ? '· '+p.position : ''}</div>
+                </div>
+            </div>
+            <div class="pol-section-label">ผลงานที่ผ่านมา</div>
+            <div class="pol-section-text">${p.accomplishments || '—'}</div>
+            <div class="pol-section-label">นโยบายหาเสียง</div>
+            <div class="pol-section-text">${p.campaign || '—'}</div>
+            <div style="margin-top:10px;">
+                ${renderMiniFinanceBar(p.finance)}
+            </div>
+        </div>
+    `).join('');
+    document.querySelectorAll('.pol-card').forEach(card => {
+        card.addEventListener('click', () => navigate(`/politician/${card.dataset.id}`));
+    });
+}
+
+function renderMiniFinanceBar(finance) {
+    if (!finance) return '';
+    const { pPct, cPct, uPct } = calcFinance(finance);
+    return `
+        <div style="font-size:11px;color:var(--s400);font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:5px;">สัดส่วนแหล่งทุน</div>
+        <div style="display:flex;height:10px;border:1px solid #000;overflow:hidden;">
+            ${pPct > 0 ? `<div style="flex:${pPct};background:#1d4ed8;"></div>` : ''}
+            ${cPct > 0 ? `<div style="flex:${cPct};background:#dc2626;"></div>` : ''}
+            ${uPct > 0 ? `<div style="flex:${uPct};background:#7c3aed;"></div>` : ''}
+        </div>
+    `;
+}
+
+// ── POLITICIAN DETAIL ─────────────────────────────────────
+function showPoliticianDetail(id) {
+    const p = POLITICIANS.find(x => x.id === id);
+    if (!p) { navigate('/politicians'); return; }
+
+    // linked cases
+    const linked = (p.linkedCases || []).map(cid => DATA.find(d => d.id === cid)).filter(Boolean);
+
+    document.getElementById('app').innerHTML = `
+        <div>
+            <div class="page-header-small">
+                <div class="container">
+                    <button class="btn-back" id="back-btn">← กลับ</button>
+                    <div class="detail-header">
+                        <div style="display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap;">
+                            <div class="pol-avatar" style="width:64px;height:64px;font-size:28px;">🏛️</div>
+                            <div>
+                                <h1 class="page-title">${p.name}</h1>
+                                <div class="meta">
+                                    <span style="font-weight:700;color:var(--s600);">🏳️ ${p.party}</span>
+                                    ${p.position ? `<span style="color:var(--s600);font-size:13px;">${p.position}</span>` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container section-pad">
+
+                <!-- PROFILE -->
+                <div class="content-section">
+                    <h2>ข้อมูลส่วนตัว</h2>
+                    <div class="pol-profile-grid">
+                        <div class="pol-field">
+                            <div class="pol-field-label">ชื่อ–นามสกุล</div>
+                            <div class="pol-field-value">${p.name}</div>
+                        </div>
+                        <div class="pol-field">
+                            <div class="pol-field-label">พรรคการเมือง</div>
+                            <div class="pol-field-value">${p.party}</div>
+                        </div>
+                        ${p.position ? `
+                        <div class="pol-field">
+                            <div class="pol-field-label">ตำแหน่ง</div>
+                            <div class="pol-field-value">${p.position}</div>
+                        </div>` : ''}
+                        ${p.region ? `
+                        <div class="pol-field">
+                            <div class="pol-field-label">เขตเลือกตั้ง / จังหวัด</div>
+                            <div class="pol-field-value">${p.region}</div>
+                        </div>` : ''}
+                    </div>
+                </div>
+
+                <!-- 3 TIMELINES with tab switcher -->
+                <div class="content-section">
+                    <h2 style="margin-bottom:20px;">ประวัติและผลงาน</h2>
+                    <div class="tl-tabs">
+                        <button class="tl-tab active" data-tl="accomplishment">🏆 ผลงานที่ผ่านมา</button>
+                        <button class="tl-tab" data-tl="promise">📋 นโยบายที่หาเสียง</button>
+                        <button class="tl-tab" data-tl="undelivered">❌ ไม่ดำเนินการ / ผิดคำพูด</button>
+                    </div>
+                    <div id="tl-panel-accomplishment">${renderPolTimeline(p.timelineAccomplishments, 'accomplishment')}</div>
+                    <div id="tl-panel-promise"        style="display:none;">${renderPolTimeline(p.timelinePromises, 'promise')}</div>
+                    <div id="tl-panel-undelivered"    style="display:none;">${renderPolTimeline(p.timelineUndelivered, 'undelivered')}</div>
+                </div>
+
+                <!-- FINANCE -->
+                ${p.finance ? (() => {
+                    const { pPct, cPct, uPct } = calcFinance(p.finance);
+                    const unit = p.finance.unit || '';
+                    return `
+                <div class="content-section">
+                    <h2>รายละเอียดทางการเงิน</h2>
+                    <div class="finance-section">
+                        <div class="networth-display">
+                            ${p.finance.networth || 'ไม่เปิดเผย'}
+                            <span class="networth-label">มูลค่าทรัพย์สินโดยประมาณ</span>
+                        </div>
+
+                        <div class="fund-bar-wrap">
+                            <div style="font-size:13px;font-weight:700;margin-bottom:10px;">สัดส่วนแหล่งที่มาของทุน</div>
+                            <div class="fund-bar">
+                                ${pPct > 0 ? `<div class="fund-segment fund-seg-people" style="flex:${pPct}">${pPct >= 8 ? pPct+'%' : ''}</div>` : ''}
+                                ${cPct > 0 ? `<div class="fund-segment fund-seg-corporate" style="flex:${cPct}">${cPct >= 8 ? cPct+'%' : ''}</div>` : ''}
+                                ${uPct > 0 ? `<div class="fund-segment fund-seg-undefined" style="flex:${uPct}">${uPct >= 8 ? uPct+'%' : ''}</div>` : ''}
+                            </div>
+                            <div class="fund-legend">
+                                <div class="fund-legend-item">
+                                    <div class="fund-dot fund-dot-people"></div>
+                                    <span><strong>${pPct}%</strong> — เงินบริจาคประชาชน
+                                    ${p.finance.people ? `<span style="color:var(--s600);font-size:12px;">(${fmtAmount(p.finance.people, unit)})</span>` : ''}</span>
+                                </div>
+                                <div class="fund-legend-item">
+                                    <div class="fund-dot fund-dot-corporate"></div>
+                                    <span><strong>${cPct}%</strong> — เงินบริจาคบริษัท/นิติบุคคล
+                                    ${p.finance.corporate ? `<span style="color:var(--s600);font-size:12px;">(${fmtAmount(p.finance.corporate, unit)})</span>` : ''}</span>
+                                </div>
+                                <div class="fund-legend-item">
+                                    <div class="fund-dot fund-dot-undefined"></div>
+                                    <span><strong>${uPct}%</strong> — ไม่ระบุ/ไม่ชัดเจน
+                                    ${p.finance.undefined ? `<span style="color:var(--s600);font-size:12px;">(${fmtAmount(p.finance.undefined, unit)})</span>` : ''}</span>
+                                </div>
+                            </div>
+                            ${p.finance.note ? `<p style="font-size:12px;color:var(--s600);margin-top:12px;border-top:1px solid var(--s200);padding-top:10px;">หมายเหตุ: ${p.finance.note}</p>` : ''}
+                        </div>
+                    </div>
+                </div>`;
+                })() : ''}
+
+                <!-- LINKED CASES -->
+                ${linked.length > 0 ? `
+                <div class="content-section">
+                    <h2>คดีที่เกี่ยวข้อง</h2>
+                    ${linked.map(c => `
+                        <div class="linked-case-card" data-id="${c.id}" data-type="${c.type}">
+                            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;">
+                                <div>
+                                    <div style="font-weight:700;margin-bottom:4px;">${c.name}</div>
+                                    <div style="font-size:13px;color:var(--s600);">${c.allegations.substring(0,100)}${c.allegations.length>100?'...':''}</div>
+                                </div>
+                                <span class="badge badge-${c.status}">${STATUS_LABELS[c.status]}</span>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>` : ''}
+
+            </div>
+            ${renderFooter()}
+        </div>
+    `;
+
+    document.getElementById('back-btn').addEventListener('click', () => navigate('/politicians'));
+    document.querySelectorAll('.linked-case-card').forEach(card => {
+        card.addEventListener('click', () => navigate(`/${card.dataset.type}/${card.dataset.id}`));
+    });
+    // tab switcher for 3 timelines
+    document.querySelectorAll('.tl-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.tl-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            const type = tab.dataset.tl;
+            ['accomplishment','promise','undelivered'].forEach(t => {
+                document.getElementById(`tl-panel-${t}`).style.display = t === type ? '' : 'none';
+            });
+        });
+    });
+}
+
+// ── TIMELINES ─────────────────────────────────────────────
+function renderVerticalTimeline(timeline) {
+    if (!timeline || timeline.length === 0) return '<div class="empty">ยังไม่มีความคืบหน้า</div>';
+    const sorted = [...timeline].sort((a,b) => new Date(b.date)-new Date(a.date));
+    return `<div class="timeline-vertical">${sorted.map(item => `
+        <div class="timeline-item"><div class="timeline-box">
+            <div class="timeline-date">${item.date}</div>
+            <div>${item.description}</div>
+            ${item.source ? `<div class="timeline-source">🔗 <a href="${item.source}" target="_blank">แหล่งข้อมูล</a></div>` : ''}
+        </div></div>`).join('')}</div>`;
+}
+
+function renderHorizontalTimeline(timeline) {
+    if (!timeline || timeline.length === 0) return '<div class="empty">ยังไม่มีเหตุการณ์</div>';
+    const sorted = [...timeline].sort((a,b) => new Date(a.date)-new Date(b.date));
+    return `<div class="timeline-horizontal">${sorted.map((item,i) => `
+        <div class="timeline-h-item">
+            <div style="display:flex;flex-direction:column;align-items:center;">
+                <div class="timeline-h-node">📅</div>
+                <div class="timeline-h-content">
+                    <div class="timeline-date">${item.date}</div>
+                    <div style="margin:5px 0;">${item.description}</div>
+                    ${item.source ? `<div class="timeline-source">🔗 <a href="${item.source}" target="_blank">แหล่งข้อมูล</a></div>` : ''}
+                </div>
+            </div>
+            ${i < sorted.length-1 ? '<div class="timeline-h-connector"></div>' : ''}
+        </div>`).join('')}</div>`;
+}
+
+// ── POLITICIAN TIMELINES (3 types, colour coded) ──────────
+// icon / accent colour changes per type so each section is visually distinct
+function renderPolTimeline(timeline, type) {
+    if (!timeline || timeline.length === 0)
+        return '<div class="empty" style="padding:24px;">ยังไม่มีข้อมูล</div>';
+
+    const cfg = {
+        accomplishment: { icon:'🏆', color:'#16a34a', bg:'#f0fdf4', border:'#bbf7d0', label:'ผลงาน' },
+        promise:        { icon:'📋', color:'#1d4ed8', bg:'#eff6ff', border:'#bfdbfe', label:'นโยบาย' },
+        undelivered:    { icon:'❌', color:'#dc2626', bg:'#fef2f2', border:'#fecaca', label:'ไม่ดำเนินการ' },
+    };
+    const c = cfg[type] || cfg.accomplishment;
+    const sorted = [...timeline].sort((a,b) => new Date(b.date)-new Date(a.date));
+
+    return `
+        <div class="pol-timeline">
+            ${sorted.map(item => `
+                <div class="pol-tl-item">
+                    <div class="pol-tl-dot" style="background:${c.color};">${c.icon}</div>
+                    <div class="pol-tl-line" style="background:${c.color};"></div>
+                    <div class="pol-tl-box" style="background:${c.bg};border-color:${c.border};">
+                        <div class="pol-tl-date" style="color:${c.color};">${item.date}</div>
+                        <div class="pol-tl-desc">${item.description}</div>
+                        ${item.source ? `<div class="timeline-source">🔗 <a href="${item.source}" target="_blank">แหล่งข้อมูล</a></div>` : ''}
+                    </div>
+                </div>
+            `).join('')}
+        </div>
+    `;
+}
+
+function renderFooter() {
+    return `
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <h2>มองทะลุ.net</h2>
+                    <p class="footer-tagline">Harder to see than flow is norm</p>
+                    <p>มองทะลุ.net คือแพลตฟอร์มสาธารณะที่รวบรวมข้อมูลประวัติคดีความของบุคคลสาธารณะและนิติบุคคล เพื่อเปิดให้ทุกคนสามารถเข้าถึงข้อมูลที่โปร่งใสและตรวจสอบได้</p>
+                    <p>เราเชื่อว่าความทรงจำสาธารณะคือเกราะป้องกันการทุจริต การที่สังคมสามารถย้อนดูประวัติของบุคคลและองค์กรได้ คือรากฐานของสังคมที่ยุติธรรม</p>
+                    <div style="margin-top:18px;">
+                        <p style="color:#9ca3af;font-size:12px;font-weight:700;margin-bottom:9px;letter-spacing:1px;">เราให้บริการสองกลุ่มหลัก</p>
+                        <div style="display:flex;flex-direction:column;gap:10px;">
+                            <div style="border-left:3px solid #fff;padding-left:12px;">
+                                <p style="color:#fff;font-weight:700;font-size:13px;margin-bottom:2px;">📈 นักลงทุน</p>
+                                <p style="font-size:12px;color:#9ca3af;margin:0;">การรู้ประวัติของผู้บริหารและบริษัทคือกุญแจสำคัญในการตัดสินใจลงทุนและบริหารความเสี่ยงทางการเงิน</p>
+                            </div>
+                            <div style="border-left:3px solid #fff;padding-left:12px;">
+                                <p style="color:#fff;font-weight:700;font-size:13px;margin-bottom:2px;">🏘️ ประชาชนทั่วไป</p>
+                                <p style="font-size:12px;color:#9ca3af;margin:0;">เราให้โอกาสประชาชนได้รับรู้และจดจำประวัติของบุคคล เพื่อไม่ให้การทุจริตกลายเป็นเรื่องปกติในสังคม</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h3>อุดมการณ์ — ปรัชญาเศรษฐกิจพอเพียง</h3>
+                    <p style="color:#9ca3af;font-size:12px;margin-bottom:16px;">ดำเนินงานภายใต้หลักปรัชญาเศรษฐกิจพอเพียง ในพระบาทสมเด็จพระบรมชนกาธิเบศร มหาภูมิพลอดุลยเดชมหาราช บรมนาถบพิตร (รัชกาลที่ 9)</p>
+                    <div class="footer-principles">
+                        <div class="principle-card"><div class="icon">⚖️</div><h4>พอประมาณ</h4><p>นำเสนอข้อมูลในระดับที่เหมาะสม ไม่มากเกินจนกลายเป็นการโจมตี ไม่น้อยเกินจนข้อเท็จจริงสูญหาย</p></div>
+                        <div class="principle-card"><div class="icon">🔍</div><h4>มีเหตุผล</h4><p>ข้อมูลทุกชิ้นต้องอ้างอิงได้ ตัดสินจากหลักฐานและข้อเท็จจริง ไม่ใช่การคาดเดาหรืออคติ</p></div>
+                        <div class="principle-card"><div class="icon">🛡️</div><h4>มีภูมิคุ้มกัน</h4><p>การบันทึกประวัติศาสตร์คือภูมิคุ้มกันของสังคม เตรียมพร้อมรับมือกับการเปลี่ยนแปลงในอนาคต</p></div>
+                        <div class="principle-card"><div class="icon">📚</div><h4>เงื่อนไขความรู้</h4><p>รอบรู้ รอบคอบ ระมัดระวังในการนำข้อมูลมาใช้ เพื่อให้ผู้อ่านได้รับความรู้ที่ถูกต้อง</p></div>
+                    </div>
+                    <div class="principle-card" style="margin-top:12px;">
+                        <div class="icon">🤝</div><h4>เงื่อนไขคุณธรรม</h4>
+                        <p>ดำเนินงานด้วยความซื่อสัตย์สุจริต อดทน เพียรพยายาม และใช้สติปัญญาในการนำเสนอข้อมูลอย่างมีความรับผิดชอบ ไม่บิดเบือน ไม่ใส่ร้าย ยึดถือความจริงเป็นสำคัญ</p>
+                    </div>
+                </div>
+            </div>
+            <hr class="footer-divider">
+            <div class="footer-bottom">
+                <p>© ${new Date().getFullYear()} มองทะลุ.net — ข้อมูลทุกชิ้นมาจากแหล่งสาธารณะและเอกสารราชการ</p>
+                <span class="ideology-badge">ปรัชญาเศรษฐกิจพอเพียง รัชกาลที่ 9</span>
+            </div>
+        </div>
+    </footer>`;
+}
+
+// ── FINANCE HELPERS ───────────────────────────────────────
+// Accepts raw amounts (any unit: baht, million, etc.)
+// Calculates percentages automatically — they don't need to add up to 100
+function calcFinance(finance) {
+    const p = finance.people    || 0;
+    const c = finance.corporate || 0;
+    const u = finance.undefined || 0;
+    const total = p + c + u;
+    if (total === 0) return { pPct:0, cPct:0, uPct:0, total:0 };
+    return {
+        pPct: Math.round((p / total) * 100),
+        cPct: Math.round((c / total) * 100),
+        uPct: Math.round((u / total) * 100),
+        total
+    };
+}
+
+function fmtAmount(val, unit) {
+    if (!val) return '0';
+    return val.toLocaleString('th-TH') + (unit ? ' '+unit : '');
+}
+document.head.insertAdjacentHTML('beforeend', `<style>
+.btn-search { padding:0 24px; height:52px; background:#000; color:#fff; border:2px solid #000; font-size:16px; font-weight:700; cursor:pointer; font-family:var(--fb); }
+.btn-search:hover { background:var(--s700); }
+</style>`);
+
+
+// ============================================================
+//
+//
+//  ✏️✏️✏️  แก้ไขข้อมูลด้านล่างนี้เท่านั้น
+//  ✏️✏️✏️  ONLY EDIT THE DATA BELOW THIS LINE
+//
+//
+// ============================================================
+//
+//
+//  ─── STATUS ที่ใช้ได้ ───────────────────────────────────
+//  "ongoing"    →  กำลังดำเนินการ
+//  "guilty"     →  มีความผิด
+//  "acquitted"  →  ยกฟ้อง (พ้นผิด)
+//  "settled"    →  ประนีประนอมยอมความ
+//  "dismissed"  →  จำหน่ายคดี
+//
+//  ─── TYPE ที่ใช้ได้ ─────────────────────────────────────
+//  "case"       →  คดีบุคคล
+//  "company"    →  บริษัท
+//
+//  ─── วันที่ ─────────────────────────────────────────────
+//  ใช้รูปแบบ YYYY-MM-DD   เช่น  2025-03-15
+//
+//
+//  TEMPLATE คดี — คัดลอกตรงนี้:
+//  ────────────────────────────────────────────────────────
+//
+//     {
+//         id:          "case-XXX",
+//         type:        "case",
+//         name:        "ชื่อ นามสกุล",
+//         allegations: "ข้อกล่าวหา",
+//         status:      "ongoing",
+//         timeline: [
+//             {
+//                 date:        "2025-01-01",
+//                 description: "รายละเอียดเหตุการณ์",
+//                 source:      ""
+//             },
+//         ]
+//     },
+//
+//
+// ============================================================
+
+
+const DATA = [
+
+
+    // ─────────────────────────────────────────────────────────
+    //  เปรมชัย กรรณสูต
+    // ─────────────────────────────────────────────────────────
+
+    {
+        id:          "case-premchai",
+        type:        "case",
+        name:        "เปรมชัย กรรณสูต",
+        allegations: "ถูกดำเนินคดีล่าสัตว์ป่าคุ้มครองในเขตรักษาพันธุ์สัตว์ป่าทุ่งใหญ่นเรศวร จ.กาญจนบุรี พบซากสัตว์ป่าคุ้มครองหลายชนิด ได้แก่ เสือดำ เลียงผา ไก่ฟ้าหลังเทา และหมูป่า รวมถึงอาวุธปืนผิดกฎหมายและเครื่องมือล่าสัตว์",
+        status:      "guilty",
+
+        timeline: [
+
+            {
+                date:        "2021-03-01",
+                description: "ศาลอุทธรณ์ภาค 7 พิพากษายืนตามศาลชั้นต้น ยืนยันความผิดทุกข้อกล่าวหา",
+                source:      "https://www.bangkokpost.com/thailand/general/2082123"
+            },
+
+            {
+                date:        "2020-06-01",
+                description: "เปรมชัยยื่นอุทธรณ์คำพิพากษาต่อศาลอุทธรณ์ภาค 7",
+                source:      ""
+            },
+
+            {
+                date:        "2019-02-20",
+                description: "ศาลจังหวัดกาญจนบุรีพิพากษาจำคุกรวม 4 กระทง รวม 2 ปี 18 เดือน (รับสารภาพบางข้อหาลดโทษกึ่งหนึ่ง) พักการลงโทษและได้รับการประกันตัว",
+                source:      "https://www.theguardian.com/environment/2019/feb/20/thai-construction-tycoon-convicted-poaching-black-leopard"
+            },
+
+            {
+                date:        "2018-04-01",
+                description: "อัยการสั่งฟ้องเปรมชัยและพวกรวม 4 คน ในข้อหาล่าสัตว์ป่าคุ้มครอง ครอบครองซากสัตว์ป่า และพาอาวุธปืนเข้าเขตป่าสงวน",
+                source:      ""
+            },
+
+            {
+                date:        "2018-02-06",
+                description: "เจ้าหน้าที่อุทยานฯ ตรวจค้นแคมป์พักในเขตทุ่งใหญ่นเรศวร พบซากเสือดำ เลียงผา ไก่ฟ้า และหมูป่า พร้อมอาวุธปืนและเครื่องมือล่าสัตว์ จับกุมเปรมชัยและพวกรวม 4 คน เหตุการณ์นี้จุดกระแสความโกรธแค้นของสังคมทั่วประเทศ",
+                source:      "https://www.bbc.com/news/world-asia-43006164"
+            },
+
+        ]
+    },
+
+
+    // ─────────────────────────────────────────────────────────
+    //  บริษัท อิตาเลียนไทย ดีเวล๊อปเมนต์ จำกัด (มหาชน)
+    // ─────────────────────────────────────────────────────────
+
+    {
+        id:          "company-itd",
+        type:        "company",
+        name:        "บริษัท อิตาเลียนไทย ดีเวล๊อปเมนต์ จำกัด (มหาชน) (ITD)",
+        allegations: "บริษัทรับเหมาก่อสร้างรายใหญ่ที่สุดของไทย ถูกร้องเรียนและสอบสวนในหลายคดี ได้แก่ การละเมิดสิทธิแรงงานในโครงการก่อสร้าง การไม่ปฏิบัติตามมาตรฐานสิ่งแวดล้อม ปัญหาความล่าช้าและข้อพิพาทในโครงการท่าเรือทวาย และคดีล่าสัตว์ป่าของซีอีโอ รวมถึงการถูกร้องเรียนเรื่องการฮั้วประมูลโครงการภาครัฐ",
+        status:      "ongoing",
+
+        timeline: [
+
+            {
+                date:        "2024-01-01",
+                description: "ITD ยังคงเผชิญแรงกดดันด้านการเงิน มีภาระหนี้สินสูง หุ้น ITD ในตลาดหลักทรัพย์ยังคงถูกกดดัน นักลงทุนติดตามสถานะการชำระหนี้อย่างใกล้ชิด",
+                source:      ""
+            },
+
+            {
+                date:        "2023-05-01",
+                description: "สำนักงาน ก.ล.ต. สอบสวน ITD กรณีการเปิดเผยข้อมูลที่ไม่ครบถ้วนเกี่ยวกับสถานะทางการเงินและความคืบหน้าโครงการต่อผู้ถือหุ้น",
+                source:      ""
+            },
+
+            {
+                date:        "2021-09-01",
+                description: "โครงการท่าเรือน้ำลึกและนิคมอุตสาหกรรมทวาย เมียนมา หยุดชะงักอย่างไม่มีกำหนด หลังรัฐประหารเมียนมาเดือนกุมภาพันธ์ 2564 ITD แบกรับความเสียหายจากการลงทุนในโครงการมูลค่าหลายพันล้านบาท",
+                source:      "https://www.reuters.com/article/myanmar-coup-dawei"
+            },
+
+            {
+                date:        "2019-06-01",
+                description: "มูลนิธิสิทธิมนุษยชนแห่งเอเชีย (AHRC) และองค์กร NGO หลายแห่งออกรายงานกล่าวหา ITD ละเมิดสิทธิแรงงานต่างด้าวในโครงการก่อสร้างหลายแห่ง ทั้งในไทยและต่างประเทศ",
+                source:      ""
+            },
+
+            {
+                date:        "2018-02-06",
+                description: "ซีอีโอ นายเปรมชัย กรรณสูต ถูกจับกุมในข้อหาล่าสัตว์ป่าคุ้มครองในเขตทุ่งใหญ่นเรศวร สร้างความเสียหายต่อภาพลักษณ์บริษัทอย่างรุนแรง หุ้น ITD ร่วงลงกว่า 5% ในวันทำการถัดมา",
+                source:      "https://www.bbc.com/news/world-asia-43006164"
+            },
+
+            {
+                date:        "2012-01-01",
+                description: "คณะกรรมการสิ่งแวดล้อมแห่งชาติของเมียนมาและกลุ่มประชาสังคมร้องเรียนว่า ITD ไม่ดำเนินการประเมินผลกระทบสิ่งแวดล้อม (EIA) อย่างครบถ้วนในโครงการท่อก๊าซและโครงการพัฒนาขนาดใหญ่ในเมียนมา",
+                source:      ""
+            },
+
+        ]
+    },
+
+
+    // ─────────────────────────────────────────────────────────
+    //  ➕ เพิ่มคดีใหม่ด้านล่างนี้ / ADD NEW CASES BELOW
+    // ─────────────────────────────────────────────────────────
+
+
+]; // ← ห้ามลบบรรทัดนี้
+
+
+// ============================================================
+//
+//
+//  TEMPLATE นักการเมือง — คัดลอกตรงนี้:
+//  ────────────────────────────────────────────────────────
+//
+//     {
+//         id:          "pol-XXX",
+//         name:        "ชื่อ นามสกุล",
+//         party:       "พรรค",
+//         position:    "ตำแหน่ง",
+//         region:      "เขต/จังหวัด",
+//         linkedCases: [],
+//
+//         finance: {
+//             networth:  "120 ล้านบาท",
+//             unit:      "ล้านบาท",
+//             people:    3000000,
+//             corporate: 5000000,
+//             undefined: 2000000,
+//             note:      ""
+//         },
+//
+//         timelineAccomplishments: [   ← 🏆 ผลงานจริงที่ทำได้
+//             { date:"2025-01-01", description:"...", source:"" },
+//         ],
+//
+//         timelinePromises: [          ← 📋 นโยบายที่หาเสียงไว้
+//             { date:"2025-01-01", description:"...", source:"" },
+//         ],
+//
+//         timelineUndelivered: [       ← ❌ นโยบายที่ไม่ได้ทำ / ผิดคำพูด
+//             { date:"2025-01-01", description:"...", source:"" },
+//         ],
+//     },
+//
+//
+// ============================================================
+
+
+const POLITICIANS = [
+
+
+    // ─────────────────────────────────────────────────────────
+    //  พล.อ.ประวิตร วงษ์สุวรรณ
+    // ─────────────────────────────────────────────────────────
+
+    {
+        id:          "pol-prawit",
+        name:        "พล.อ.ประวิตร วงษ์สุวรรณ",
+        party:       "พรรคพลังประชารัฐ",
+        position:    "อดีตรองนายกรัฐมนตรี / หัวหน้าพรรคพลังประชารัฐ",
+        region:      "แต่งตั้ง (วุฒิสภา) / บัญชีรายชื่อ",
+        linkedCases: [],
+
+        finance: {
+            networth:  "~1,043 ล้านบาท (ยื่น ป.ป.ช. ปี 2557)",
+            unit:      "ล้านบาท",
+            people:    8.5,
+            corporate: 312,
+            undefined: 95,
+            note:      "ข้อมูลการเงินพรรคพลังประชารัฐจากรายงาน กกต. ปี 2562 | นาฬิกาหรู 25 เรือน มูลค่าประมาณ 20–25 ล้านบาท ถูกตรวจสอบโดย ป.ป.ช. ซึ่งมีมติว่าเป็นของยืมจากเพื่อน ปี 2562"
+        },
+
+
+        // 🏆 ผลงานที่ผ่านมา
+        timelineAccomplishments: [
+
+            {
+                date:        "2565-06-01",
+                description: "รักษาการนายกรัฐมนตรี ระหว่างที่ศาลรัฐธรรมนูญสั่งพักการปฏิบัติหน้าที่ พล.อ.ประยุทธ์ จันทร์โอชา ตั้งแต่เดือนมิถุนายน–กันยายน 2565 รักษาเสถียรภาพรัฐบาลไว้ได้",
+                source:      ""
+            },
+
+            {
+                date:        "2562-03-01",
+                description: "ก่อตั้งพรรคพลังประชารัฐ ดึงฐานเสียงเดิมของรัฐบาล คสช. เข้าสู่ระบบเลือกตั้ง พรรคได้คะแนนเสียงอันดับหนึ่งในการเลือกตั้ง 2562 ด้วยคะแนน 8.4 ล้านเสียง (23.7%)",
+                source:      "https://www.ect.go.th"
+            },
+
+            {
+                date:        "2557-05-01",
+                description: "ร่วมนำการรัฐประหาร 22 พ.ค. 2557 ในนามคณะรักษาความสงบแห่งชาติ (คสช.) ดำรงตำแหน่งรองหัวหน้า คสช. และกำกับดูแลด้านความมั่นคงตลอดช่วงรัฐบาลทหาร 2557–2562",
+                source:      ""
+            },
+
+            {
+                date:        "2551-12-01",
+                description: "ดำรงตำแหน่งรัฐมนตรีว่าการกระทรวงกลาโหมในรัฐบาลอภิสิทธิ์ เวชชาชีวะ กำกับดูแลการปฏิรูปกองทัพและเสริมสร้างงบประมาณกลาโหม",
+                source:      ""
+            },
+
+            {
+                date:        "2548-10-01",
+                description: "ดำรงตำแหน่งผู้บัญชาการทหารบก ควบคุมกองกำลังทหารในช่วงสถานการณ์ความไม่สงบทางการเมือง พ.ศ. 2548–2550",
+                source:      ""
+            },
+
+        ],
+
+
+        // 📋 นโยบายที่หาเสียง (พรรคพลังประชารัฐ ปี 2562 และ 2566)
+        timelinePromises: [
+
+            {
+                date:        "2566-05-01",
+                description: "หาเสียงปี 2566: สัญญาผลักดันโครงการดิจิทัลวอลเล็ต 10,000 บาท ร่วมกับแกนนำพรรค และสนับสนุนนโยบายกระตุ้นเศรษฐกิจฐานราก",
+                source:      ""
+            },
+
+            {
+                date:        "2562-03-01",
+                description: "หาเสียงปี 2562: สัญญาสานต่อโครงการบัตรสวัสดิการแห่งรัฐให้ครอบคลุมและเพิ่มวงเงิน ขยายสิทธิประโยชน์ให้ผู้มีรายได้น้อย",
+                source:      ""
+            },
+
+            {
+                date:        "2562-03-01",
+                description: "หาเสียงปี 2562: สัญญาเดินหน้าโครงการ EEC (เขตพัฒนาพิเศษภาคตะวันออก) ดึงดูดการลงทุนต่างชาติไม่ต่ำกว่า 1.5 ล้านล้านบาทภายใน 5 ปี",
+                source:      ""
+            },
+
+            {
+                date:        "2562-03-01",
+                description: "หาเสียงปี 2562: สัญญาปราบปรามยาเสพติดอย่างจริงจัง ลดจำนวนผู้เสพและผู้ค้าในทุกพื้นที่ภายใน 3 ปี",
+                source:      ""
+            },
+
+            {
+                date:        "2562-03-01",
+                description: "หาเสียงปี 2562: สัญญาแก้ปัญหาราคาสินค้าเกษตรตกต่ำ ประกันรายได้เกษตรกรข้าว ยาง มันสำปะหลัง และปาล์มน้ำมัน",
+                source:      ""
+            },
+
+        ],
+
+
+        // ❌ นโยบายที่ไม่ได้ทำ / ผิดคำพูด / ข้อกังขา
+        timelineUndelivered: [
+
+            {
+                date:        "2566-05-14",
+                description: "การเลือกตั้ง 2566: พรรคพลังประชารัฐได้ ส.ส. เพียง 40 ที่นั่ง จาก 97 ที่นั่งในปี 2562 ผลักดันโครงการดิจิทัลวอลเล็ตที่หาเสียงไว้ไม่สำเร็จ เนื่องจากพรรคไม่ได้เป็นแกนนำรัฐบาล",
+                source:      "https://www.ect.go.th"
+            },
+
+            {
+                date:        "2562-10-01",
+                description: "คดีนาฬิกาหรู: ป.ป.ช. มีมติ 5:4 ว่าพล.อ.ประวิตรไม่มีความผิดฐานแสดงบัญชีทรัพย์สินอันเป็นเท็จ โดยอ้างว่านาฬิกา 25 เรือน มูลค่ารวมกว่า 20 ล้านบาท เป็นของ 'ยืมจากเพื่อน' — มติที่ถูกวิพากษ์วิจารณ์อย่างกว้างขวางว่าขาดความน่าเชื่อถือ",
+                source:      "https://www.bangkokpost.com/thailand/politics/1791397"
+            },
+
+            {
+                date:        "2562-03-01",
+                description: "ราคาพืชผลเกษตร: แม้จะหาเสียงเรื่องประกันราคาสินค้าเกษตร แต่ตลอดช่วงรัฐบาลประยุทธ์ 2 ราคายางพาราและข้าวยังคงตกต่ำต่อเนื่อง เกษตรกรออกมาประท้วงซ้ำหลายครั้ง",
+                source:      ""
+            },
+
+            {
+                date:        "2560-01-01",
+                description: "ปราบยาเสพติด: แม้ดำรงตำแหน่งผู้กำกับดูแลด้านความมั่นคงใน คสช. แต่สถิติผู้ต้องหาคดียาเสพติดยังคงสูงต่อเนื่อง และมีรายงานจาก Human Rights Watch ว่าการปราบปรามในยุค คสช. มีการละเมิดสิทธิมนุษยชนเกิดขึ้น",
+                source:      "https://www.hrw.org/report/2019/thailand"
+            },
+
+            {
+                date:        "2557-06-01",
+                description: "คำมั่นสัญญาเรื่องการเลือกตั้ง: หลังรัฐประหาร 2557 คสช. สัญญาจะคืนอำนาจสู่ประชาชนเร็วที่สุด แต่การเลือกตั้งล่าช้าออกไปถึงปี 2562 รวมเวลา 5 ปีภายใต้รัฐบาลทหาร",
+                source:      ""
+            },
+
+        ],
+
+    },
+
+
+    // ─────────────────────────────────────────────────────────
+    //  ➕ เพิ่มนักการเมืองใหม่ด้านล่างนี้ / ADD NEW POLITICIANS BELOW
+    // ─────────────────────────────────────────────────────────
+
+
+]; // ← ห้ามลบบรรทัดนี้
+</script>
+
+</body>
+</html>
