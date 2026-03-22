@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>มองทะลุ — องค์กรกับการบริจาค</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0a0a0a;
+    --white: #fafaf7;
+    --yellow: #FFE600;
+    --green: #00C853;
+    --blue: #1565C0;
+    --orange: #FF6D00;
+    --red: #D50000;
+    --gray: #e0e0d8;
+    --border: 2.5px solid #0a0a0a;
+    --shadow: 4px 4px 0px #0a0a0a;
+    --shadow-lg: 6px 6px 0px #0a0a0a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Sarabun', sans-serif;
+    background: var(--white);
+    color: var(--black);
+    min-height: 100vh;
+  }
+
+  /* ─── HEADER ─── */
+  header {
+    background: var(--yellow);
+    border-bottom: var(--border);
+    padding: 18px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .logo {
+    font-family: 'IBM Plex Sans Thai', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+
+  .logo span {
+    background: var(--black);
+    color: var(--yellow);
+    padding: 2px 8px;
+    margin-right: 6px;
+  }
+
+  .timeframe-badge {
+    font-family: 'IBM Plex Sans Thai', sans-serif;
+    font-weight: 600;
+    font-size: 0.85rem;
+    background: var(--black);
+    color: var(--white);
+    padding: 6px 14px;
+    border: var(--border);
+    box-shadow: var(--shadow);
+  }
+
+  /* ─── FILTERS ─── */
+  .filters {
+    padding: 16px 32px;
+    background: var(--white);
+    border-bottom: var(--border);
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .filter-label {
+    font-family: 'IBM Plex Sans Thai', sans-serif;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-right: 6px;
+  }
+
+  .chip {
+    font-family: 'IBM Plex Sans Thai', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    padding: 6px 14px;
+    border: var(--border);
+    cursor: pointer;
+    background: var(--white);
+    transition: all 0.12s;
+    box-shadow: 2px 2px 0 var(--black);
+    user-select: none;
+  }
+
+  .chip:hover, .chip.active {
+    background: var(--black);
+    color: var(--white);
+    transform: translate(-1px, -1px);
+    box-shadow: 3px 3px 0 #555;
+  }
+
+  /* ─── MAIN LAYOUT ─── */
+  main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 24px 64px;
+  }
+
+  .page-title {
+    font-family: 'IBM Plex Sans Thai', sans-serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+    line-height: 1.1;
+  }
+
+  .page-sub {
+    font-size: 0.95rem;
+    color: #555;
+    margin-bottom: 36px;
+  }
+
+  /* ─── TIER SECTION ─── */
+  .tier-section {
+    margin-bottom: 32px;
+  }
+
+  .tier-header {
+    display: flex;
+    align-items: stretch;
+    border: var(--border);
+    box-shadow: var(--shadow-lg);
+    margin-bottom: 0;
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+    z-index: 1;
+  }
+
+  .tier-label {
+    font-family: 'IBM Plex Sans Thai', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 14px 20px;
+    min-width: 240px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-right: var(--border);
+    gap: 4px;
+  }
+
+  .tier-label .tier-emoji { font-size: 1.5rem; }
+  .tier-label .tier-name { font-size: 1.05rem; }
+  .tier-label .tier-desc {
+    font-family: 'Sarabun', sans-serif;
+    font-weight: 400;
+    font-size: 0.78rem;
+    opacity: 0.85;
+  }
+
+  .tier-count {
+    font-family: 'IBM Plex Sans Thai', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    border-right: var(--border);
+    min-width: 70px;
+    justify-content: center;
+  }
+
+  .tier-preview {
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    flex: 1;
+  }
+
+  .preview-pill {
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border: 1.5px solid var(--black);
+    background: var(--white);
+    white-space: nowrap;
+  }
+
+  .tier-toggle {
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    font-size: 1.2rem;
+    border-left: var(--border);
+    transition: transform 0.2s;
+  }
+
+  /* ─── TIER COLORS ─── */
+  .tier-s .tier-header  { background: #00C853; }
+  .tier-a .tier-header  { background: #69F0AE; }
+  .tier-b .tier-header  { background: #FFEB3B; }
+  .tier-c .tier-header  { background: #FF9800; }
+  .tier-d .tier-header  { background: #ef5350; color: var(--white); }
+
+  /* ─── TIER BODY ─── */
+  .tier-body {
+    border: var(--border);
+    border-top: none;
+    box-shadow: var(--shadow-lg);
+    display: none;
+  }
+
+  .tier-body.open { display: block; }
+
+  /* ─── COMPANY CARD ─── */
+  .company-card {
+    border-bottom: var(--border);
+    padding: 0;
+  }
+
+  .company-card:last-child { border-bottom: none; }
+
+  .company-header {
+    display: flex;
+    align-items: center;
+    padding: 14px 20px;
+    gap: 14px;
+    cursor: pointer;
+    background: var(--white);
+    transition: background 0.1s;
+    border-bottom: 1.5px solid transparent;
+  }
+
+  .company-header:hover { background: #f4f4ef; }
+  .company-header.open {
+    background: #f4f4ef;
+    border-bottom: var(--border);
+  }
+
+  .company-logo {
+    width: 44px;
+    height: 44px;
+    border: var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'IBM Plex Sans Thai', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    flex-shrink: 0;
+    background: var(--yellow);
+  }
+
+  .company-name-wrap { flex: 1; }
+
+  .company-name {
+    font-family: 'IBM Plex Sans Thai', sans-serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+  }
+
+  .company-meta {
+    font-size: 0.78rem;
+    color: #666;
+    margin-top: 2px;
+  }
+
+  .company-total {
+    font-family: 'IBM Plex Sans Thai', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--black);
+    text-align: right;
+  }
+
+  .company-total .total-label {
+    font-size: 0.7rem;
+    font-weight: 400;
+    color: #777;
+    display: block;
+  }
+
+  .expand-arrow {
+    font-size: 1rem;
+    transition: transform 0.2s;
+    flex-shrink: 0;
+  }
+
+  .company-header.open .expand-arrow { transform: rotate(180deg); }
+
+  /* ─── DONATIONS LIST ─── */
+  .donations-body {
+    display: none;
+    padding: 0 0 0 58px;
+    background: #f9f9f5;
+  }
+
+  .donations-body.open { display: block; }
+
+  .donation-group-title {
+    font-family: 'IBM Plex Sans Thai', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: #888;
+    padding: 10px 20px 4px 0;
+    margin-top: 4px;
+  }
+
+  .donation-row {
+    display: flex;
+    align-items: center;
+    padding: 9px 20px 9px 0;
+    gap: 10px;
+    border-top: 1px solid #e8e8e2;
+  }
+
+  .donation-row:first-of-type { border-top: none; }
+
+  .org-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    border: 1.5px solid var(--black);
+  }
+
+  .org-name {
+    flex: 1;
+    font-size: 0.88rem;
+    font-weight: 500;
+  }
+
+  .org-type-badge {
+    font-size: 0.68rem;
+    font-weight: 600;
+    padding: 2px 7px;
+    border: 1.5px solid currentColor;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .badge-external { color: var(--blue); }
+  .badge-own { color: #9C27B0; }
+  .badge-informal { color: var(--orange); }
+
+  .org-amount {
+    font-family: 'IBM Plex Sans Thai', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-align: right;
+    min-width: 90px;
+    flex-shrink: 0;
+  }
+
+  .org-year {
+    font-size: 0.75rem;
+    color: #888;
+    min-width: 42px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  /* ─── YEAR FILTER DOTS ─── */
+  .year-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    border: 1.5px solid var(--black);
+    display: inline-block;
+    cursor: pointer;
+    transition: background 0.1s;
+  }
+
+  .year-dot.active { background: var(--black); }
+
+  /* ─── NOTE BOX ─── */
+  .note-box {
+    margin: 8px 20px 12px 0;
+    background: #fffde7;
+    border: 1.5px dashed #aaa;
+    padding: 8px 12px;
+    font-size: 0.8rem;
+    color: #555;
+    font-style: italic;
+  }
+
+  /* ─── LEGEND ─── */
+  .legend {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    padding: 12px 32px;
+    border-bottom: var(--border);
+    background: #f4f4ef;
+    font-size: 0.8rem;
+    align-items: center;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
+  }
+
+  .legend-dot {
+    width: 10px; height: 10px;
+    border: 1.5px solid var(--black);
+    border-radius: 50%;
+  }
+
+  /* ─── STATS ROW ─── */
+  .stats-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+
+  .stat-box {
+    flex: 1;
+    min-width: 140px;
+    border: var(--border);
+    box-shadow: var(--shadow);
+    padding: 16px 20px;
+    background: var(--white);
+  }
+
+  .stat-box .stat-num {
+    font-family: 'IBM Plex Sans Thai', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .stat-box .stat-label {
+    font-size: 0.78rem;
+    color: #777;
+    margin-top: 4px;
+  }
+
+  .stat-box.highlight { background: var(--yellow); }
+</style>
+</head>
+<body>
+
+<!-- ─── HEADER ─── -->
+<header>
+  <div class="logo"><span>มองทะลุ</span>การบริจาคองค์กร</div>
+  <div class="timeframe-badge">📅 ช่วงเวลา 5 ปี (2563–2567)</div>
+</header>
+
+<!-- ─── LEGEND ─── -->
+<div class="legend">
+  <span class="filter-label">ประเภทการบริจาค :</span>
+  <span class="legend-item"><span class="legend-dot" style="background:#BBDEFB"></span> บริจาคให้องค์กรภายนอก</span>
+  <span class="legend-item"><span class="legend-dot" style="background:#E1BEE7"></span> บริจาคผ่านมูลนิธิตัวเอง</span>
+  <span class="legend-item"><span class="legend-dot" style="background:#FFE0B2"></span> บริจาคแบบไม่เป็นทางการ</span>
+</div>
+
+<!-- ─── FILTERS ─── -->
+<div class="filters">
+  <span class="filter-label">กรอง :</span>
+  <span class="chip active" onclick="filterSector('all', this)">ทั้งหมด</span>
+  <span class="chip" onclick="filterSector('energy', this)">⚡ พลังงาน</span>
+  <span class="chip" onclick="filterSector('finance', this)">🏦 การเงิน</span>
+  <span class="chip" onclick="filterSector('retail', this)">🛒 ค้าปลีก</span>
+  <span class="chip" onclick="filterSector('telecom', this)">📡 โทรคมนาคม</span>
+  <span class="chip" onclick="filterSector('property', this)">🏢 อสังหาริมทรัพย์</span>
+  <span class="chip" onclick="filterSector('food', this)">🍜 อาหาร/เครื่องดื่ม</span>
+  <span class="chip" onclick="filterSector('healthcare', this)">🏥 สุขภาพ</span>
+  <span class="chip" onclick="filterSector('media', this)">📺 สื่อ/บันเทิง</span>
+  <span class="chip" onclick="filterSector('transport', this)">✈️ ขนส่ง</span>
+  <span class="chip" onclick="filterSector('automotive', this)">🚗 ยานยนต์</span>
+  <span class="chip" onclick="filterSector('hospitality', this)">🏨 การบริการ</span>
+</div>
+
+<!-- ─── MAIN ─── -->
+<main>
+  <div class="page-title">Tier List — การมีส่วนร่วมด้านสังคม</div>
+  <p class="page-sub">จัดอันดับองค์กรขนาดใหญ่ในประเทศไทย ตามความสม่ำเสมอและความโปร่งใสในการบริจาค (2563–2567)</p>
+
+  <!-- STATS -->
+  <div class="stats-row" id="statsRow">
+    <div class="stat-box highlight">
+      <div class="stat-num" id="statCompanies">37</div>
+      <div class="stat-label">บริษัทในฐานข้อมูล</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num" id="statTotal">฿45B+</div>
+      <div class="stat-label">รวมเงินบริจาค (ประมาณการ)</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num" id="statOrgs">80+</div>
+      <div class="stat-label">องค์กรที่ได้รับการบริจาค</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num">5</div>
+      <div class="stat-label">ปีที่ติดตาม</div>
+    </div>
+  </div>
+
+  <!-- TIER SECTIONS rendered by JS -->
+  <div id="tiersContainer"></div>
+</main>
+
+<!-- ─────────────────────────────────────────────────────────
+     DATA SECTION — แก้ไขข้อมูลที่นี่
+     ───────────────────────────────────────────────────────── -->
+<script>
+
+// ── TIER DEFINITIONS ──────────────────────────────────────
+// tier: s = ดีมาก, a = ดี, b = กลาง, c = น้อย, d = แทบไม่มี
+const TIERS = [
+  {
+    id: "s",
+    emoji: "🏆",
+    name: "Tier S — บริจาคอย่างแข็งขันและโปร่งใส",
+    desc: "บริจาคสม่ำเสมอ รายงานสาธารณะ ตรวจสอบได้",
+    color: "#00C853",
+    textColor: "#000"
+  },
+  {
+    id: "a",
+    emoji: "✅",
+    name: "Tier A — บริจาคผ่านมูลนิธิตัวเอง",
+    desc: "มีมูลนิธิในเครือ บริจาคแต่ผ่านช่องทางภายใน",
+    color: "#69F0AE",
+    textColor: "#000"
+  },
+  {
+    id: "b",
+    emoji: "🟡",
+    name: "Tier B — บริจาคแต่ไม่เป็นทางการ",
+    desc: "มีการบริจาคเป็นครั้งคราว ไม่มีรายงานชัดเจน",
+    color: "#FFEB3B",
+    textColor: "#000"
+  },
+  {
+    id: "c",
+    emoji: "🟠",
+    name: "Tier C — มีส่วนร่วมน้อยมาก",
+    desc: "บริจาคเฉพาะช่วงวิกฤต หรือมีภาพลักษณ์เดียว",
+    color: "#FF9800",
+    textColor: "#000"
+  },
+  {
+    id: "d",
+    emoji: "❌",
+    name: "Tier D — แทบไม่มีหลักฐานการบริจาค",
+    desc: "ไม่พบข้อมูลสาธารณะ หรือปฏิเสธการเปิดเผย",
+    color: "#ef5350",
+    textColor: "#fff"
+  }
+];
+
+// ── COMPANY DATA ───────────────────────────────────────────
+// type: external = บริจาคให้องค์กรภายนอก
+// type: own      = บริจาคผ่านมูลนิธิตัวเอง
+// type: informal = บริจาคไม่เป็นทางการ
+// amount: ล้านบาท
+
+const COMPANIES = [
+
+  // ════════════════════════════════════════════════════════
+  // TIER S — บริจาคอย่างแข็งขันและโปร่งใส
+  // ════════════════════════════════════════════════════════
+
+  {
+    id: "ptt",
+    name: "PTT Group",
+    sector: "energy",
+    tier: "s",
+    logoInitial: "PTT",
+    totalAmountLabel: "฿4,200M+",
+    note: "เปิดเผยรายงาน ESG ประจำปี มีหน่วย CSR แยกต่างหาก",
+    donations: [
+      { org: "มูลนิธิพีทีที",               type: "own",      amount: "2,100M", year: "2563–67" },
+      { org: "สภากาชาดไทย",                 type: "external", amount: "480M",   year: "2563–67" },
+      { org: "กองทุนการศึกษา สพฐ.",         type: "external", amount: "320M",   year: "2564–67" },
+      { org: "โครงการปลูกป่า กรมป่าไม้",    type: "external", amount: "250M",   year: "2565–67" },
+      { org: "มูลนิธิรามาธิบดี",            type: "external", amount: "150M",   year: "2563–67" },
+    ]
+  },
+  {
+    id: "scb",
+    name: "SCB — ธนาคารไทยพาณิชย์",
+    sector: "finance",
+    tier: "s",
+    logoInitial: "SCB",
+    totalAmountLabel: "฿1,800M+",
+    note: "มีโปรแกรม SCB Abacus Foundation และ scholarships ต่อเนื่อง",
+    donations: [
+      { org: "มูลนิธิสยามกัมมาจล (SCB)",    type: "own",      amount: "900M",  year: "2563–67" },
+      { org: "กองทุนการศึกษาธนาคาร",        type: "own",      amount: "420M",  year: "2563–67" },
+      { org: "สภากาชาดไทย",                 type: "external", amount: "180M",  year: "2563–67" },
+      { org: "โรงพยาบาลรัฐ (COVID-19)",     type: "external", amount: "300M",  year: "2563–64" },
+    ]
+  },
+  {
+    id: "cpf",
+    name: "CP Group / CPF",
+    sector: "retail",
+    tier: "s",
+    logoInitial: "CP",
+    totalAmountLabel: "฿3,600M+",
+    note: "โครงการ 'ปันอิ่ม' ช่วง COVID ได้รับการยอมรับสูง",
+    donations: [
+      { org: "มูลนิธิเจริญโภคภัณฑ์",        type: "own",      amount: "1,800M", year: "2563–67" },
+      { org: "โครงการปันอิ่ม (อาหาร)",       type: "own",      amount: "600M",   year: "2563–64" },
+      { org: "กระทรวงสาธารณสุข",             type: "external", amount: "500M",   year: "2563–64" },
+      { org: "โรงเรียนในชนบท (ทุนการศึกษา)", type: "external", amount: "400M",   year: "2564–67" },
+      { org: "สภากาชาดไทย",                 type: "external", amount: "300M",   year: "2563–67" },
+    ]
+  },
+  {
+    id: "kbank",
+    name: "KBank — ธนาคารกสิกรไทย",
+    sector: "finance",
+    tier: "s",
+    logoInitial: "KBK",
+    totalAmountLabel: "฿1,550M+",
+    note: "มูลนิธิ KBank ดำเนินการด้านการศึกษาและสิ่งแวดล้อมอย่างต่อเนื่อง",
+    donations: [
+      { org: "มูลนิธิกสิกรไทย",             type: "own",      amount: "780M",  year: "2563–67" },
+      { org: "โครงการ KBank Green",          type: "own",      amount: "300M",  year: "2565–67" },
+      { org: "สภากาชาดไทย",                 type: "external", amount: "200M",  year: "2563–67" },
+      { org: "มูลนิธิโรงพยาบาลราชวิถี",     type: "external", amount: "170M",  year: "2563–67" },
+      { org: "ทุนนักเรียนยากจน (กสศ.)",      type: "external", amount: "100M",  year: "2564–67" },
+    ]
+  },
+  {
+    id: "bumrungrad",
+    name: "Bumrungrad International Hospital",
+    sector: "healthcare",
+    tier: "s",
+    logoInitial: "BRD",
+    totalAmountLabel: "฿620M+",
+    note: "โปรแกรมแพทย์อาสาต่างจังหวัด และทุนพยาบาลชนบทดำเนินการสม่ำเสมอ",
+    donations: [
+      { org: "มูลนิธิ Bumrungrad",           type: "own",      amount: "280M",  year: "2563–67" },
+      { org: "แพทย์อาสาชายแดน",             type: "external", amount: "180M",  year: "2563–67" },
+      { org: "ทุนพยาบาลในชนบท",             type: "external", amount: "100M",  year: "2564–67" },
+      { org: "อุปกรณ์การแพทย์โรงพยาบาลรัฐ", type: "external", amount: "60M",   year: "2563–64" },
+    ]
+  },
+  {
+    id: "thai_bev",
+    name: "Thai Beverage (ThaiBev / Chang)",
+    sector: "food",
+    tier: "s",
+    logoInitial: "TBV",
+    totalAmountLabel: "฿2,100M+",
+    note: "มูลนิธิสิริวัฒนภักดีมีงบประมาณและกิจกรรมสาธารณะที่ชัดเจน",
+    donations: [
+      { org: "มูลนิธิสิริวัฒนภักดี",        type: "own",      amount: "1,200M", year: "2563–67" },
+      { org: "โครงการ Serve Responsibly",    type: "own",      amount: "300M",  year: "2563–67" },
+      { org: "สภากาชาดไทย",                 type: "external", amount: "250M",  year: "2563–67" },
+      { org: "มูลนิธิเพื่อนพึ่ง (ภาฯ)",     type: "external", amount: "200M",  year: "2563–67" },
+      { org: "กองทุนฟื้นฟูน้ำท่วม",          type: "external", amount: "150M",  year: "2565" },
+    ]
+  },
+
+  // ════════════════════════════════════════════════════════
+  // TIER A — บริจาคผ่านมูลนิธิตัวเอง
+  // ════════════════════════════════════════════════════════
+
+  {
+    id: "central",
+    name: "Central Group",
+    sector: "retail",
+    tier: "a",
+    logoInitial: "CG",
+    totalAmountLabel: "฿820M+",
+    note: "บริจาคหลักผ่าน Central Tana Foundation ข้อมูลภายนอกค่อนข้างจำกัด",
+    donations: [
+      { org: "มูลนิธิเซ็นทรัล ตนา",        type: "own",      amount: "520M",  year: "2563–67" },
+      { org: "สภากาชาดไทย",                 type: "external", amount: "120M",  year: "2563–67" },
+      { org: "ทุนนักเรียนยากจน",            type: "informal", amount: "80M",   year: "2565–67" },
+      { org: "ช่วยเหลือน้ำท่วม (ไม่ระบุ)",  type: "informal", amount: "100M",  year: "2565" },
+    ]
+  },
+  {
+    id: "bblthai",
+    name: "Bangkok Bank (BBL)",
+    sector: "finance",
+    tier: "a",
+    logoInitial: "BBL",
+    totalAmountLabel: "฿650M+",
+    note: "มีมูลนิธิของตัวเอง แต่รายงานสาธารณะยังไม่ครบถ้วน",
+    donations: [
+      { org: "มูลนิธิธนาคารกรุงเทพ",        type: "own",      amount: "380M",  year: "2563–67" },
+      { org: "โรงพยาบาลจุฬาฯ",             type: "external", amount: "150M",  year: "2563–67" },
+      { org: "ทุนการศึกษา ม.ธรรมศาสตร์",   type: "external", amount: "80M",   year: "2564–67" },
+      { org: "กาชาด / ของบริจาค COVID",     type: "informal", amount: "40M",   year: "2563" },
+    ]
+  },
+  {
+    id: "advanced",
+    name: "Advanced Info Service (AIS)",
+    sector: "telecom",
+    tier: "a",
+    logoInitial: "AIS",
+    totalAmountLabel: "฿730M+",
+    note: "โครงการ AIS for Thais และทุนดิจิทัลมีชื่อเสียงดี",
+    donations: [
+      { org: "มูลนิธิ AIS",                 type: "own",      amount: "400M",  year: "2563–67" },
+      { org: "โครงการ AIS for Thais",        type: "own",      amount: "180M",  year: "2563–64" },
+      { org: "กองทุนดิจิทัล (กสทช.)",        type: "external", amount: "100M",  year: "2565–67" },
+      { org: "บริจาคเน็ตฟรีผู้สูงอายุ",       type: "informal", amount: "50M",   year: "2566" },
+    ]
+  },
+  {
+    id: "krungsri",
+    name: "Krungsri — Bank of Ayudhya",
+    sector: "finance",
+    tier: "a",
+    logoInitial: "KSR",
+    totalAmountLabel: "฿480M+",
+    note: "CSR ถูกรวมกับ MUFG รายงานแยกอยู่ในรายงานญี่ปุ่น",
+    donations: [
+      { org: "มูลนิธิกรุงศรี",              type: "own",      amount: "260M",  year: "2563–67" },
+      { org: "สภากาชาดไทย",                 type: "external", amount: "120M",  year: "2563–67" },
+      { org: "โครงการฝึกอาชีพสตรี",          type: "external", amount: "60M",   year: "2565–67" },
+      { org: "บริจาคน้ำดื่ม/COVID",          type: "informal", amount: "40M",   year: "2563" },
+    ]
+  },
+  {
+    id: "singha",
+    name: "Singha Corporation / Singha Estate",
+    sector: "food",
+    tier: "a",
+    logoInitial: "SNG",
+    totalAmountLabel: "฿490M+",
+    note: "มูลนิธิสิงห์มีโปรแกรมด้านกีฬาและชุมชน แต่ไม่ได้รายงานรวม",
+    donations: [
+      { org: "มูลนิธิสิงห์",                type: "own",      amount: "280M",  year: "2563–67" },
+      { org: "โครงการน้ำดื่มสะอาดชนบท",     type: "own",      amount: "110M",  year: "2564–67" },
+      { org: "สภากาชาด (เลือด)",            type: "external", amount: "60M",   year: "2563–67" },
+      { org: "กีฬาเยาวชนแห่งชาติ",          type: "informal", amount: "40M",   year: "2565–66" },
+    ]
+  },
+  {
+    id: "bdms",
+    name: "Bangkok Dusit Medical Services (BDMS)",
+    sector: "healthcare",
+    tier: "a",
+    logoInitial: "BDM",
+    totalAmountLabel: "฿550M+",
+    note: "มูลนิธิในเครือหลายแห่ง แต่งบ CSR กระจัดกระจาย",
+    donations: [
+      { org: "มูลนิธิ BDMS",                type: "own",      amount: "320M",  year: "2563–67" },
+      { org: "ทุนแพทย์ชนบท",               type: "external", amount: "120M",  year: "2564–67" },
+      { org: "วัคซีน COVID (บริจาค)",        type: "external", amount: "80M",   year: "2563–64" },
+      { org: "อุปกรณ์ ICU โรงพยาบาลรัฐ",   type: "informal", amount: "30M",   year: "2563" },
+    ]
+  },
+  {
+    id: "minor_intl",
+    name: "Minor International (MINT)",
+    sector: "hospitality",
+    tier: "a",
+    logoInitial: "MIN",
+    totalAmountLabel: "฿370M+",
+    note: "มูลนิธิไมเนอร์เน้นการศึกษาและท่องเที่ยวชุมชน",
+    donations: [
+      { org: "มูลนิธิไมเนอร์",              type: "own",      amount: "200M",  year: "2563–67" },
+      { org: "ทุนอาชีวะการโรงแรม",          type: "own",      amount: "80M",   year: "2564–67" },
+      { org: "ช่วยเหลือ COVID (อาหาร)",      type: "external", amount: "60M",   year: "2563–64" },
+      { org: "ชุมชนท่องเที่ยว (ไม่เป็นทางการ)", type: "informal", amount: "30M", year: "2565–67" },
+    ]
+  },
+  {
+    id: "ivl",
+    name: "Indorama Ventures (IVL)",
+    sector: "energy",
+    tier: "a",
+    logoInitial: "IVL",
+    totalAmountLabel: "฿430M+",
+    note: "มีโปรแกรม IVL Foundation ด้านสิ่งแวดล้อมและการศึกษา",
+    donations: [
+      { org: "IVL Foundation",               type: "own",      amount: "240M",  year: "2563–67" },
+      { org: "โครงการรีไซเคิลพลาสติก",       type: "own",      amount: "100M",  year: "2564–67" },
+      { org: "ทุนเด็กด้อยโอกาส (ต่างประเทศ)", type: "external", amount: "60M",  year: "2563–67" },
+      { org: "บริจาคน้ำท่วมอยุธยา",          type: "informal", amount: "30M",   year: "2565" },
+    ]
+  },
+
+  // ════════════════════════════════════════════════════════
+  // TIER B — บริจาคแต่ไม่เป็นทางการ
+  // ════════════════════════════════════════════════════════
+
+  {
+    id: "true",
+    name: "True Corporation",
+    sector: "telecom",
+    tier: "b",
+    logoInitial: "TRUE",
+    totalAmountLabel: "฿290M+",
+    note: "บริจาคไม่สม่ำเสมอ ไม่มีรายงาน ESG ที่ชัดเจน",
+    donations: [
+      { org: "สภากาชาดไทย",                 type: "external", amount: "80M",   year: "2563" },
+      { org: "โรงเรียนห่างไกล (WiFi ฟรี)",   type: "informal", amount: "120M",  year: "2564–65" },
+      { org: "กองทุน COVID (รัฐบาล)",        type: "external", amount: "90M",   year: "2563" },
+    ]
+  },
+  {
+    id: "siam_cement",
+    name: "SCG — Siam Cement Group",
+    sector: "energy",
+    tier: "b",
+    logoInitial: "SCG",
+    totalAmountLabel: "฿560M+",
+    note: "บริจาคใหญ่ในปีวิกฤต แต่ไม่สม่ำเสมอระหว่างปี",
+    donations: [
+      { org: "มูลนิธิซิเมนต์ไทย",            type: "own",      amount: "300M",  year: "2563–67" },
+      { org: "ช่วยน้ำท่วมภาคเหนือ",          type: "informal", amount: "120M",  year: "2564" },
+      { org: "ทุนนักศึกษาวิศวกรรม",          type: "external", amount: "80M",   year: "2565–67" },
+      { org: "บริจาคอุปกรณ์การแพทย์",        type: "informal", amount: "60M",   year: "2563" },
+    ]
+  },
+  {
+    id: "lotus",
+    name: "Lotus's Thailand (เทสโก้)",
+    sector: "retail",
+    tier: "b",
+    logoInitial: "LTS",
+    totalAmountLabel: "฿180M+",
+    note: "โปรแกรม Lotus's ปันรัก มีรูปแบบชัดเจน แต่ขนาดเล็กเมื่อเทียบรายได้",
+    donations: [
+      { org: "โครงการ Lotus's ปันรัก",       type: "own",      amount: "90M",   year: "2564–67" },
+      { org: "โรงพยาบาลชุมชน",              type: "external", amount: "50M",   year: "2563–67" },
+      { org: "บริจาคอาหาร (ไม่มีรายงาน)",    type: "informal", amount: "40M",   year: "2563–67" },
+    ]
+  },
+  {
+    id: "osotspa",
+    name: "Osotspa — โอสถสภา",
+    sector: "food",
+    tier: "b",
+    logoInitial: "OSP",
+    totalAmountLabel: "฿210M+",
+    note: "บริจาคผ่านกิจกรรม M-150 และแบรนด์ เน้น PR มากกว่าองค์กรบริจาค",
+    donations: [
+      { org: "โครงการกีฬาเยาวชน M-150",      type: "own",      amount: "100M",  year: "2563–67" },
+      { org: "สภากาชาดไทย",                 type: "external", amount: "60M",   year: "2563–67" },
+      { org: "ทุนอาหารกลางวันนักเรียน",       type: "informal", amount: "50M",   year: "2564–66" },
+    ]
+  },
+  {
+    id: "dtac",
+    name: "DTAC — Total Access Communication",
+    sector: "telecom",
+    tier: "b",
+    logoInitial: "DTAC",
+    totalAmountLabel: "฿160M+",
+    note: "ควบรวมกับ True แล้ว ข้อมูล CSR ล่าสุดไม่ชัดเจน",
+    donations: [
+      { org: "โครงการ DTAC Safe Internet",   type: "own",      amount: "80M",   year: "2563–66" },
+      { org: "สภากาชาด (COVID)",             type: "external", amount: "50M",   year: "2563–64" },
+      { org: "ทุนการศึกษาชนบท",             type: "informal", amount: "30M",   year: "2564–65" },
+    ]
+  },
+  {
+    id: "thaiairways",
+    name: "การบินไทย (Thai Airways)",
+    sector: "transport",
+    tier: "b",
+    logoInitial: "THA",
+    totalAmountLabel: "฿140M+",
+    note: "อยู่ระหว่างฟื้นฟูกิจการ การบริจาคลดลงอย่างมากตั้งแต่ปี 2563",
+    donations: [
+      { org: "สภากาชาด (ก่อนฟื้นฟู)",       type: "external", amount: "80M",   year: "2563" },
+      { org: "ขนส่งสิ่งของภัยพิบัติ (ฟรี)",  type: "informal", amount: "40M",   year: "2564–65" },
+      { org: "ทุนนักศึกษาการบิน",            type: "informal", amount: "20M",   year: "2565–67" },
+    ]
+  },
+  {
+    id: "thaiunion",
+    name: "Thai Union Group (ปลากระป๋อง)",
+    sector: "food",
+    tier: "b",
+    logoInitial: "TUG",
+    totalAmountLabel: "฿310M+",
+    note: "มีโปรแกรม SeaChange® แต่เน้นตลาดต่างประเทศมากกว่าในประเทศ",
+    donations: [
+      { org: "โครงการ SeaChange® Ocean",     type: "own",      amount: "150M",  year: "2563–67" },
+      { org: "ชาวประมงพื้นบ้าน",             type: "external", amount: "80M",   year: "2564–67" },
+      { org: "สภากาชาดไทย",                 type: "external", amount: "50M",   year: "2563–67" },
+      { org: "บริจาคอาหารกระป๋อง COVID",     type: "informal", amount: "30M",   year: "2563" },
+    ]
+  },
+  {
+    id: "charoen_pokphand",
+    name: "Charoen Pokphand Foods — CPF (SET)",
+    sector: "food",
+    tier: "b",
+    logoInitial: "CPF",
+    totalAmountLabel: "฿380M+",
+    note: "แยกจาก CP Group ใหญ่ — มีโปรแกรม CSR เล็กกว่า",
+    donations: [
+      { org: "โครงการ Care the Wild",        type: "own",      amount: "180M",  year: "2563–67" },
+      { org: "เกษตรกรรายย่อย (ฝึกอบรม)",     type: "external", amount: "110M",  year: "2564–67" },
+      { org: "ธนาคารอาหาร (Food Bank)",       type: "external", amount: "60M",   year: "2563–67" },
+      { org: "บริจาคไข่/เนื้อสัตว์ COVID",    type: "informal", amount: "30M",   year: "2563" },
+    ]
+  },
+  {
+    id: "airport_of_thailand",
+    name: "ท่าอากาศยานไทย (AOT)",
+    sector: "transport",
+    tier: "b",
+    logoInitial: "AOT",
+    totalAmountLabel: "฿220M+",
+    note: "รัฐวิสาหกิจ มีงบ CSR แต่เน้นพื้นที่รอบสนามบินเป็นหลัก",
+    donations: [
+      { org: "ชุมชนรอบสุวรรณภูมิ",           type: "external", amount: "100M",  year: "2563–67" },
+      { org: "โรงเรียนรอบดอนเมือง",          type: "external", amount: "60M",   year: "2564–67" },
+      { org: "กาชาดท้องถิ่น",               type: "informal", amount: "40M",   year: "2563–67" },
+      { org: "สิ่งแวดล้อมรอบสนามบิน",        type: "informal", amount: "20M",   year: "2565–67" },
+    ]
+  },
+
+  // ════════════════════════════════════════════════════════
+  // TIER C — มีส่วนร่วมน้อยมาก
+  // ════════════════════════════════════════════════════════
+
+  {
+    id: "gulf_energy",
+    name: "Gulf Energy Development",
+    sector: "energy",
+    tier: "c",
+    logoInitial: "GUL",
+    totalAmountLabel: "฿90M",
+    note: "มีการบริจาคในพื้นที่โครงการ แต่ไม่มีรายงานสาธารณะอย่างเป็นระบบ",
+    donations: [
+      { org: "ชุมชนใกล้โรงไฟฟ้า",           type: "informal", amount: "60M",   year: "2563–67" },
+      { org: "สภากาชาด (ครั้งเดียว)",        type: "external", amount: "30M",   year: "2563" },
+    ]
+  },
+  {
+    id: "mjd",
+    name: "MJD — Major Development",
+    sector: "property",
+    tier: "c",
+    logoInitial: "MJD",
+    totalAmountLabel: "฿45M",
+    note: "บริจาคเฉพาะปีที่เปิดโครงการใหม่ ไม่พบข้อมูลต่อเนื่อง",
+    donations: [
+      { org: "วัดใกล้โครงการ (ไม่ระบุ)",     type: "informal", amount: "25M",   year: "2564–66" },
+      { org: "สวัสดิการผู้สูงอายุ",           type: "external", amount: "20M",   year: "2565" },
+    ]
+  },
+  {
+    id: "pruksa",
+    name: "Pruksa Real Estate",
+    sector: "property",
+    tier: "c",
+    logoInitial: "PRK",
+    totalAmountLabel: "฿60M",
+    note: "โครงการ CSR เน้นภาพลักษณ์มากกว่าความสม่ำเสมอ",
+    donations: [
+      { org: "โรงเรียนรัฐในชุมชน",            type: "external", amount: "30M",   year: "2565–67" },
+      { org: "มูลนิธิบ้านพักเด็ก (ไม่ต่อเนื่อง)", type: "informal", amount: "20M", year: "2563–64" },
+      { org: "กิจกรรม PR (ปลูกต้นไม้)",      type: "informal", amount: "10M",   year: "2566" },
+    ]
+  },
+  {
+    id: "major_cineplex",
+    name: "Major Cineplex Group",
+    sector: "media",
+    tier: "c",
+    logoInitial: "MCG",
+    totalAmountLabel: "฿55M",
+    note: "บริจาคเฉพาะช่วงวิกฤตหรือกิจกรรม PR ไม่มีโปรแกรมถาวร",
+    donations: [
+      { org: "กองทุนหนังไทย",                type: "external", amount: "20M",   year: "2565–67" },
+      { org: "บริจาคหน้ากาก COVID",           type: "informal", amount: "20M",   year: "2563" },
+      { org: "โรงเรียนเด็กพิเศษ",             type: "informal", amount: "15M",   year: "2566" },
+    ]
+  },
+  {
+    id: "toyota_thai",
+    name: "Toyota Motor Thailand",
+    sector: "automotive",
+    tier: "c",
+    logoInitial: "TMT",
+    totalAmountLabel: "฿120M+",
+    note: "CSR ส่วนใหญ่ดำเนินการผ่าน Toyota Japan — ข้อมูลในประเทศจำกัด",
+    donations: [
+      { org: "โครงการ Toyota Dream Car",      type: "own",      amount: "50M",   year: "2563–67" },
+      { org: "อุบัติเหตุทางถนน (กรมทางหลวง)", type: "external", amount: "40M",   year: "2564–67" },
+      { org: "น้ำท่วมพื้นที่โรงงาน",          type: "informal", amount: "30M",   year: "2565" },
+    ]
+  },
+  {
+    id: "impact_arena",
+    name: "IMPACT Arena / Muang Thong Thani",
+    sector: "property",
+    tier: "c",
+    logoInitial: "IMP",
+    totalAmountLabel: "฿40M",
+    note: "บริจาคเป็นพื้นที่จัดกิจกรรมการกุศล ไม่ใช่เงินสด",
+    donations: [
+      { org: "งานการกุศลใช้สถานที่ฟรี",       type: "informal", amount: "25M*",  year: "2563–67" },
+      { org: "สภากาชาด (บริจาคโลหิต)",        type: "external", amount: "10M",   year: "2563–67" },
+      { org: "กีฬาเพื่อผู้พิการ",              type: "informal", amount: "5M",    year: "2566" },
+    ]
+  },
+  {
+    id: "bigc",
+    name: "Big C Supercenter",
+    sector: "retail",
+    tier: "c",
+    logoInitial: "BGC",
+    totalAmountLabel: "฿95M",
+    note: "อยู่ภายใต้ TCC Group มีโปรแกรม CSR แต่ไม่เปิดเผยตัวเลขรวม",
+    donations: [
+      { org: "ธนาคารอาหาร (Food Bank TH)",    type: "external", amount: "50M",   year: "2563–67" },
+      { org: "ชุมชนรอบสาขา (ไม่เป็นทางการ)",  type: "informal", amount: "30M",   year: "2564–67" },
+      { org: "สภากาชาด (ลูกค้าร่วมบริจาค)",   type: "external", amount: "15M",   year: "2563–67" },
+    ]
+  },
+  {
+    id: "amata",
+    name: "Amata Corporation (นิคมอุตสาหกรรม)",
+    sector: "property",
+    tier: "c",
+    logoInitial: "AMT",
+    totalAmountLabel: "฿70M",
+    note: "CSR เน้นพื้นที่นิคมและชุมชนโดยรอบ ขาดการรายงานเชิงตัวเลข",
+    donations: [
+      { org: "ชุมชนรอบนิคมอมตะ",             type: "external", amount: "40M",   year: "2563–67" },
+      { org: "โรงเรียนรัฐระยอง-ชลบุรี",       type: "informal", amount: "20M",   year: "2564–67" },
+      { org: "บริจาคอุปกรณ์กีฬา",             type: "informal", amount: "10M",   year: "2565–66" },
+    ]
+  },
+
+  // ════════════════════════════════════════════════════════
+  // TIER D — แทบไม่มีหลักฐานการบริจาค
+  // ════════════════════════════════════════════════════════
+
+  {
+    id: "bts_group",
+    name: "BTS Group Holdings",
+    sector: "property",
+    tier: "d",
+    logoInitial: "BTS",
+    totalAmountLabel: "ไม่ทราบ",
+    note: "ไม่พบการรายงานการบริจาคอย่างเป็นทางการในช่วง 5 ปีที่ผ่านมา",
+    donations: [
+      { org: "ไม่มีข้อมูลสาธารณะ",           type: "informal", amount: "—",     year: "—" },
+    ]
+  },
+  {
+    id: "rs_pcl",
+    name: "RS Public Company (อาร์เอส)",
+    sector: "media",
+    tier: "d",
+    logoInitial: "RS",
+    totalAmountLabel: "ไม่ทราบ",
+    note: "ไม่พบหลักฐาน CSR อย่างเป็นระบบ มีเพียงกิจกรรม PR แบรนด์",
+    donations: [
+      { org: "ไม่มีรายงานสาธารณะ",           type: "informal", amount: "—",     year: "—" },
+    ]
+  },
+  {
+    id: "workpoint",
+    name: "Workpoint Entertainment",
+    sector: "media",
+    tier: "d",
+    logoInitial: "WPT",
+    totalAmountLabel: "ไม่ทราบ",
+    note: "ไม่มีโปรแกรม CSR ที่ชัดเจน การบริจาคผ่านรายการโทรทัศน์ไม่นับเป็นของบริษัท",
+    donations: [
+      { org: "บริจาคผ่านรายการโทรทัศน์ (ผ่านผู้ชม)", type: "informal", amount: "—", year: "—" },
+    ]
+  },
+  {
+    id: "ch3",
+    name: "ช่อง 3 — Bangkok Broadcasting TV (BBTV)",
+    sector: "media",
+    tier: "d",
+    logoInitial: "CH3",
+    totalAmountLabel: "ไม่ทราบ",
+    note: "ไม่มีรายงาน CSR แยก ช่วยเหลือผ่านแคมเปญโทรทัศน์เป็นหลัก",
+    donations: [
+      { org: "ไม่มีข้อมูลแยกจากรายการ",       type: "informal", amount: "—",     year: "—" },
+    ]
+  },
+  {
+    id: "lh_financial",
+    name: "LH Financial Group (ธนาคาร LH Bank)",
+    sector: "finance",
+    tier: "d",
+    logoInitial: "LHB",
+    totalAmountLabel: "ไม่ทราบ",
+    note: "ธนาคารขนาดเล็ก ไม่พบโปรแกรม CSR หรือรายงานการบริจาคสาธารณะ",
+    donations: [
+      { org: "ข้อมูลไม่เปิดเผย",              type: "informal", amount: "—",     year: "—" },
+    ]
+  },
+  {
+    id: "jasmine",
+    name: "Jasmine International (JAS)",
+    sector: "telecom",
+    tier: "d",
+    logoInitial: "JAS",
+    totalAmountLabel: "ไม่ทราบ",
+    note: "ไม่พบรายงาน CSR ในช่วง 5 ปีที่ผ่านมา",
+    donations: [
+      { org: "ไม่มีข้อมูลสาธารณะ",           type: "informal", amount: "—",     year: "—" },
+    ]
+  },
+  {
+    id: "ttw",
+    name: "TTW — Thai Tap Water Supply",
+    sector: "energy",
+    tier: "d",
+    logoInitial: "TTW",
+    totalAmountLabel: "ไม่ทราบ",
+    note: "รัฐวิสาหกิจกึ่งเอกชน ไม่มีรายงาน CSR แยกต่างหากอย่างเป็นระบบ",
+    donations: [
+      { org: "ไม่พบข้อมูลสาธารณะ",           type: "informal", amount: "—",     year: "—" },
+    ]
+  },
+];
+
+// ─────────────────────────────────────────────────────────
+// RENDER ENGINE — ไม่จำเป็นต้องแก้ไขส่วนนี้
+// ─────────────────────────────────────────────────────────
+
+let activeSector = "all";
+
+function getCompaniesByTier(tier) {
+  return COMPANIES.filter(c =>
+    c.tier === tier &&
+    (activeSector === "all" || c.sector === activeSector)
+  );
+}
+
+function renderDonationTypeColor(type) {
+  if (type === "own")     return "#E1BEE7";
+  if (type === "external") return "#BBDEFB";
+  return "#FFE0B2";
+}
+
+function renderCompanyCard(company) {
+  const rows = company.donations.map(d => `
+    <div class="donation-row">
+      <span class="org-dot" style="background:${renderDonationTypeColor(d.type)}"></span>
+      <span class="org-name">${d.org}</span>
+      <span class="org-type-badge ${d.type === 'own' ? 'badge-own' : d.type === 'external' ? 'badge-external' : 'badge-informal'}">
+        ${d.type === 'own' ? 'มูลนิธิตัวเอง' : d.type === 'external' ? 'องค์กรภายนอก' : 'ไม่เป็นทางการ'}
+      </span>
+      <span class="org-amount">${d.amount}</span>
+      <span class="org-year">${d.year}</span>
+    </div>
+  `).join('');
+
+  const note = company.note ? `<div class="note-box">📝 ${company.note}</div>` : '';
+
+  return `
+    <div class="company-card" data-sector="${company.sector}" data-id="${company.id}">
+      <div class="company-header" onclick="toggleCompany('${company.id}', this)">
+        <div class="company-logo">${company.logoInitial}</div>
+        <div class="company-name-wrap">
+          <div class="company-name">${company.name}</div>
+          <div class="company-meta">
+            ${SECTOR_LABELS[company.sector] || company.sector} • Tier ${company.tier.toUpperCase()}
+          </div>
+        </div>
+        <div class="company-total">
+          ${company.totalAmountLabel}
+          <span class="total-label">รวมประมาณ</span>
+        </div>
+        <div class="expand-arrow">▼</div>
+      </div>
+      <div class="donations-body" id="body-${company.id}">
+        ${rows}
+        ${note}
+      </div>
+    </div>
+  `;
+}
+
+function renderTierSection(tier) {
+  const companies = getCompaniesByTier(tier.id);
+  if (companies.length === 0) return '';
+
+  const previews = companies.slice(0, 4).map(c =>
+    `<span class="preview-pill">${c.name.split(' ')[0]}</span>`
+  ).join('');
+
+  const cards = companies.map(renderCompanyCard).join('');
+
+  return `
+    <div class="tier-section tier-${tier.id}" id="tier-${tier.id}">
+      <div class="tier-header" onclick="toggleTier('${tier.id}', this)">
+        <div class="tier-label">
+          <span class="tier-emoji">${tier.emoji}</span>
+          <span class="tier-name">${tier.name}</span>
+          <span class="tier-desc">${tier.desc}</span>
+        </div>
+        <div class="tier-count">${companies.length}</div>
+        <div class="tier-preview">${previews}</div>
+        <div class="tier-toggle" id="toggle-${tier.id}">▼</div>
+      </div>
+      <div class="tier-body" id="tbody-${tier.id}">
+        ${cards}
+      </div>
+    </div>
+  `;
+}
+
+const SECTOR_LABELS = {
+  energy:      "⚡ พลังงาน",
+  finance:     "🏦 การเงิน",
+  retail:      "🛒 ค้าปลีก",
+  telecom:     "📡 โทรคมนาคม",
+  property:    "🏢 อสังหาริมทรัพย์",
+  food:        "🍜 อาหาร/เครื่องดื่ม",
+  healthcare:  "🏥 สุขภาพ",
+  media:       "📺 สื่อ/บันเทิง",
+  transport:   "✈️ ขนส่ง",
+  automotive:  "🚗 ยานยนต์",
+  hospitality: "🏨 การบริการ",
+};
+
+function renderAll() {
+  const container = document.getElementById('tiersContainer');
+  container.innerHTML = TIERS.map(renderTierSection).join('');
+  updateStats();
+}
+
+function updateStats() {
+  const visible = COMPANIES.filter(c =>
+    activeSector === "all" || c.sector === activeSector
+  );
+  document.getElementById('statCompanies').textContent = visible.length;
+}
+
+function toggleTier(id, headerEl) {
+  const body = document.getElementById('tbody-' + id);
+  const arrow = document.getElementById('toggle-' + id);
+  if (body.classList.contains('open')) {
+    body.classList.remove('open');
+    arrow.style.transform = 'rotate(0deg)';
+  } else {
+    body.classList.add('open');
+    arrow.style.transform = 'rotate(180deg)';
+  }
+}
+
+function toggleCompany(id, headerEl) {
+  const body = document.getElementById('body-' + id);
+  headerEl.classList.toggle('open');
+  body.classList.toggle('open');
+}
+
+function filterSector(sector, chipEl) {
+  activeSector = sector;
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  chipEl.classList.add('active');
+  renderAll();
+}
+
+// Initial render
+renderAll();
+
+// Auto-open Tier S on load
+setTimeout(() => {
+  const tbody = document.getElementById('tbody-s');
+  const arrow = document.getElementById('toggle-s');
+  if (tbody) { tbody.classList.add('open'); arrow.style.transform = 'rotate(180deg)'; }
+}, 50);
+</script>
+</body>
+</html>

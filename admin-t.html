@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>admin(t) — ฐานข้อมูลนโยบายรัฐบาลไทย</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:       #0d0f14;
+  --surface:  #151820;
+  --surface2: #1c2030;
+  --border:   #2a2f3e;
+  --border2:  #363d52;
+  --text:     #e8eaf0;
+  --muted:    #6b7280;
+  --accent:   #f0c040;
+  --green:    #22c55e;
+  --red:      #ef4444;
+  --blue:     #60a5fa;
+  --orange:   #fb923c;
+  --mono:     'IBM Plex Mono', monospace;
+  --sans:     'IBM Plex Sans Thai', sans-serif;
+  --body:     'Sarabun', sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--body);
+  font-size: 15px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+/* ── HEADER ── */
+header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  height: 56px;
+}
+
+.header-brand {
+  padding: 0 24px;
+  border-right: 1px solid var(--border);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-tag {
+  font-family: var(--mono);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: -0.03em;
+}
+
+.brand-sub {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-left: 1px solid var(--border2);
+  padding-left: 10px;
+}
+
+.header-meta {
+  margin-left: auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.status-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--green);
+  display: inline-block;
+  box-shadow: 0 0 6px var(--green);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%,100% { opacity: 1; }
+  50%      { opacity: 0.4; }
+}
+
+/* ── LAYOUT ── */
+.app {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  min-height: calc(100vh - 56px);
+}
+
+/* ── LEFT: TIMELINE SIDEBAR ── */
+.sidebar {
+  border-right: 1px solid var(--border);
+  padding: 24px 0;
+  position: sticky;
+  top: 56px;
+  height: calc(100vh - 56px);
+  overflow-y: auto;
+}
+
+.sidebar-label {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: var(--muted);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0 20px 12px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 8px;
+}
+
+/* Admin Timeline entries */
+.admin-entry {
+  padding: 0;
+  cursor: pointer;
+  border-left: 3px solid transparent;
+  transition: all 0.15s;
+}
+
+.admin-entry:hover   { background: var(--surface2); }
+.admin-entry.active  { border-left-color: var(--accent); background: var(--surface2); }
+
+.admin-entry-inner {
+  padding: 14px 20px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.admin-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  border: 2px solid var(--border2);
+  background: var(--bg);
+  margin-top: 4px;
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+
+.admin-entry.active .admin-dot {
+  background: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 0 8px rgba(240,192,64,0.5);
+}
+
+.admin-entry-text {}
+
+.admin-name {
+  font-family: var(--sans);
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.3;
+}
+
+.admin-term-label {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.admin-years {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: var(--border2);
+  margin-top: 3px;
+}
+
+.timeline-connector {
+  width: 1px;
+  background: var(--border);
+  margin: 0 0 0 32px;
+  height: 8px;
+}
+
+/* ── RIGHT: CONTENT PANEL ── */
+.content {
+  padding: 32px 40px;
+  overflow-y: auto;
+}
+
+/* ── ADMIN HERO ── */
+.admin-hero {
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.hero-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 16px;
+}
+
+.hero-name-th {
+  font-family: var(--sans);
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.hero-name-en {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-top: 4px;
+  letter-spacing: 0.04em;
+}
+
+.hero-term-badge {
+  background: var(--accent);
+  color: #000;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 4px 12px;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.hero-meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.hero-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.hero-meta-item strong {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.hero-desc {
+  font-size: 0.92rem;
+  color: #a0a8b8;
+  line-height: 1.75;
+  max-width: 720px;
+}
+
+/* ── STATS ROW ── */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.stat-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 16px 18px;
+}
+
+.stat-num {
+  font-family: var(--mono);
+  font-size: 1.6rem;
+  font-weight: 600;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+}
+
+.stat-passed  .stat-num { color: var(--green); }
+.stat-planned .stat-num { color: var(--blue); }
+.stat-total   .stat-num { color: var(--accent); }
+
+/* ── POLICY SECTION HEADER ── */
+.section-title {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--muted);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ── POLICY CARDS ── */
+.policy-grid {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.policy-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all 0.15s;
+  overflow: hidden;
+}
+
+.policy-card:hover {
+  border-color: var(--border2);
+  background: var(--surface2);
+}
+
+.policy-card.expanded {
+  border-color: var(--accent);
+}
+
+.policy-card-header {
+  padding: 16px 18px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.policy-status-pill {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  padding: 3px 10px;
+  border-radius: 2px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.status-passed  { background: rgba(34,197,94,0.15); color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
+.status-planned { background: rgba(96,165,250,0.15); color: var(--blue);  border: 1px solid rgba(96,165,250,0.3); }
+.status-delayed { background: rgba(251,146,60,0.15); color: var(--orange);border: 1px solid rgba(251,146,60,0.3); }
+.status-dropped { background: rgba(239,68,68,0.15);  color: var(--red);   border: 1px solid rgba(239,68,68,0.3); }
+
+.policy-main { flex: 1; min-width: 0; }
+
+.policy-name-th {
+  font-family: var(--sans);
+  font-size: 0.97rem;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.35;
+  margin-bottom: 3px;
+}
+
+.policy-name-en {
+  font-size: 0.75rem;
+  color: var(--muted);
+  font-family: var(--mono);
+}
+
+.policy-summary {
+  font-size: 0.83rem;
+  color: #8892a4;
+  margin-top: 6px;
+  line-height: 1.6;
+}
+
+.policy-chevron {
+  color: var(--muted);
+  font-size: 0.8rem;
+  flex-shrink: 0;
+  margin-top: 3px;
+  transition: transform 0.2s;
+}
+
+.policy-card.expanded .policy-chevron { transform: rotate(90deg); }
+
+/* ── POLICY EXPANDED BODY ── */
+.policy-body {
+  display: none;
+  border-top: 1px solid var(--border);
+  padding: 20px 18px;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.policy-card.expanded .policy-body { display: block; }
+
+.policy-detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.detail-block-label {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.detail-block-content {
+  font-size: 0.85rem;
+  color: #a0a8b8;
+  line-height: 1.65;
+}
+
+/* responsible parties */
+.responsible-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.responsible-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  font-size: 0.8rem;
+}
+
+.resp-type {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  padding: 1px 6px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.resp-gov     { background: rgba(96,165,250,0.15); color: var(--blue); }
+.resp-company { background: rgba(251,146,60,0.15); color: var(--orange); }
+.resp-mixed   { background: rgba(240,192,64,0.15); color: var(--accent); }
+
+.resp-name { color: var(--text); font-weight: 500; }
+
+/* ── WELCOME SCREEN ── */
+.welcome-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  text-align: center;
+  gap: 16px;
+}
+
+.welcome-ascii {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--border2);
+  line-height: 1.4;
+  margin-bottom: 8px;
+  white-space: pre;
+}
+
+.welcome-title {
+  font-family: var(--mono);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.welcome-sub {
+  font-size: 0.88rem;
+  color: var(--muted);
+  max-width: 420px;
+  line-height: 1.7;
+}
+
+.welcome-arrow {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--border2);
+  margin-top: 8px;
+  animation: blink 1.5s infinite;
+}
+
+@keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.2; } }
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--muted);
+  padding: 16px 40px;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  display: flex;
+  justify-content: space-between;
+  letter-spacing: 0.06em;
+}
+
+footer span { color: var(--accent); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .app { grid-template-columns: 1fr; }
+  .sidebar {
+    position: static;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .content { padding: 20px 18px; }
+  .stats-row { grid-template-columns: 1fr 1fr 1fr; }
+  .policy-detail-grid { grid-template-columns: 1fr; }
+  .hero-name-th { font-size: 1.3rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header>
+  <div class="header-inner">
+    <div class="header-brand">
+      <span class="brand-tag">admin(t)</span>
+      <span class="brand-sub">Thai Policy Database · มองทะลุ.net</span>
+    </div>
+    <div class="header-meta">
+      <span><span class="status-dot"></span>&nbsp; LIVE DATABASE</span>
+      <span>รัฐบาลไทย / GOV.TH</span>
+    </div>
+  </div>
+</header>
+
+<div class="app">
+
+  <!-- ── SIDEBAR: ADMINISTRATOR TIMELINE ── -->
+  <aside class="sidebar">
+    <div class="sidebar-label">// ลำดับรัฐบาล / Administration Timeline</div>
+    <div id="adminTimeline"></div>
+  </aside>
+
+  <!-- ── CONTENT PANEL ── -->
+  <main class="content" id="contentPanel">
+    <div class="welcome-screen">
+      <div class="welcome-ascii">┌─────────────────────────┐
+│   admin(t) v1.0         │
+│   policy tracker        │
+│   thailand              │
+└─────────────────────────┘</div>
+      <div class="welcome-title">เลือกรัฐบาลเพื่อดูนโยบาย</div>
+      <div class="welcome-sub">คลิกชื่อรัฐบาลในแถบซ้ายเพื่อดูนโยบาย สรุปเป้าหมาย บริษัทรับผิดชอบ และสถานะการดำเนินงาน</div>
+      <div class="welcome-arrow">← เลือกรัฐบาลจากแถบซ้าย</div>
+    </div>
+  </main>
+
+</div>
+
+<footer>
+  <span>admin(t)</span> — ฐานข้อมูลนโยบายรัฐบาลไทย (ไม่ใช่นโยบายพรรค)
+  &nbsp;|&nbsp; ส่วนหนึ่งของ <span>มองทะลุ.net</span>
+  <span>ข้อมูลอ้างอิงจากแหล่งสาธารณะ / PUBLIC RECORD ONLY</span>
+</footer>
+
+<!-- ════════════════════════════════════════════════════
+     DATA — รายชื่อรัฐบาลและนโยบาย
+     แก้ไขข้อมูลใน ADMINISTRATIONS array ด้านล่างเท่านั้น
+     ════════════════════════════════════════════════════ -->
+<script>
+
+// ─── STATUS OPTIONS ───────────────────────────────────────────────
+// passed  = ผ่าน / บังคับใช้แล้ว
+// planned = อยู่ในแผน / กำลังดำเนินการ
+// delayed = ล่าช้า
+// dropped = ยกเลิก / ไม่ดำเนินการ
+// ─── RESPONSIBLE TYPE ─────────────────────────────────────────────
+// gov     = หน่วยงานรัฐ
+// company = บริษัทเอกชน
+// mixed   = รัฐ + เอกชนร่วม
+
+const ADMINISTRATIONS = [
+
+  // ══════════════════════════════════════════════════
+  //  รัฐบาล แพทองธาร ชินวัตร
+  // ══════════════════════════════════════════════════
+  {
+    id: "paetongtarn-1",
+    nameTh: "แพทองธาร ชินวัตร",
+    nameEn: "Paetongtarn Shinawatra",
+    term: "วาระที่ 1",
+    termEn: "1st Term",
+    years: "2567–ปัจจุบัน",
+    party: "เพื่อไทย",
+    summary: "รัฐบาลที่นำโดยนายกรัฐมนตรีที่อายุน้อยที่สุดในประวัติศาสตร์ไทย เน้นนโยบายกระตุ้นเศรษฐกิจ การท่องเที่ยว และการแก้ไขปัญหาค่าครองชีพ โดยสืบต่อจากแนวทางรัฐบาลเศรษฐา",
+    policies: [
+      {
+        id: "pt-digital",
+        nameTh: "โครงการดิจิทัลวอลเล็ต 10,000 บาท",
+        nameEn: "Digital Wallet 10,000 THB",
+        status: "passed",
+        summary: "แจกเงินดิจิทัล 10,000 บาทแก่ประชาชนที่มีสิทธิ์ เพื่อกระตุ้นการใช้จ่ายในระบบเศรษฐกิจท้องถิ่น",
+        aim: "กระตุ้นเศรษฐกิจฐานราก เพิ่มการหมุนเวียนเงินในชุมชน และลดความเหลื่อมล้ำทางเศรษฐกิจ คาดว่าจะส่งผล GDP +1.2–1.8%",
+        responsible: [
+          { type: "gov",     name: "ธนาคารกรุงไทย (Krungthai Bank)" },
+          { type: "gov",     name: "กระทรวงการคลัง" },
+          { type: "company", name: "บริษัทเทคโนโลยีที่รับเป็น Node" },
+        ]
+      },
+      {
+        id: "pt-visa",
+        nameTh: "วีซ่าฟรี 93 ประเทศ / VISA-FREE Expansion",
+        nameEn: "Visa-Free 93 Countries",
+        status: "passed",
+        summary: "ขยายนโยบายการยกเว้นวีซ่าให้ครอบคลุม 93 ประเทศ เพื่อดึงดูดนักท่องเที่ยวต่างชาติ",
+        aim: "เพิ่มจำนวนนักท่องเที่ยวสู่ 40 ล้านคนต่อปี สร้างรายได้ภาคการท่องเที่ยวกว่า 3.5 ล้านล้านบาท",
+        responsible: [
+          { type: "gov",  name: "กระทรวงการต่างประเทศ" },
+          { type: "gov",  name: "การท่องเที่ยวแห่งประเทศไทย (TAT)" },
+          { type: "mixed", name: "สายการบินและโรงแรมร่วมโปรโมต" },
+        ]
+      },
+      {
+        id: "pt-softpower",
+        nameTh: "นโยบาย Soft Power ไทย 5F",
+        nameEn: "Thai Soft Power 5F",
+        status: "planned",
+        summary: "พัฒนาและส่งออก Soft Power ไทยใน 5 สาขา: Food / Film / Fashion / Festival / Fighting Arts",
+        aim: "สร้างมูลค่าทางเศรษฐกิจสร้างสรรค์ ยกระดับภาพลักษณ์ประเทศ และเพิ่มรายได้แก่ผู้ประกอบการรายย่อยในอุตสาหกรรมวัฒนธรรม",
+        responsible: [
+          { type: "gov",     name: "กระทรวงวัฒนธรรม" },
+          { type: "gov",     name: "สำนักงาน Soft Power แห่งชาติ" },
+          { type: "company", name: "บริษัทบันเทิงและสื่อเอกชน" },
+        ]
+      },
+      {
+        id: "pt-min-wage",
+        nameTh: "ค่าแรงขั้นต่ำ 400 บาท/วัน",
+        nameEn: "Minimum Wage 400 THB/day",
+        status: "delayed",
+        summary: "ปรับขึ้นค่าแรงขั้นต่ำทั่วประเทศเป็น 400 บาทต่อวัน จากเดิม 330–370 บาทแล้วแต่จังหวัด",
+        aim: "ยกมาตรฐานรายได้แรงงาน ลดความเหลื่อมล้ำ กระตุ้นกำลังซื้อฐานรากของประเทศ",
+        responsible: [
+          { type: "gov",     name: "กระทรวงแรงงาน" },
+          { type: "gov",     name: "คณะกรรมการค่าจ้าง" },
+          { type: "company", name: "ภาคเอกชนนายจ้างทั่วประเทศ" },
+        ]
+      },
+    ]
+  },
+
+  // ══════════════════════════════════════════════════
+  //  รัฐบาล เศรษฐา ทวีสิน
+  // ══════════════════════════════════════════════════
+  {
+    id: "srettha-1",
+    nameTh: "เศรษฐา ทวีสิน",
+    nameEn: "Srettha Thavisin",
+    term: "วาระที่ 1",
+    termEn: "1st Term",
+    years: "2566–2567",
+    party: "เพื่อไทย",
+    summary: "อดีตซีอีโอ Sansiri นายกรัฐมนตรีที่เน้นนโยบายเศรษฐกิจและการลงทุนต่างชาติ ก่อนถูกศาลรัฐธรรมนูญวินิจฉัยให้พ้นจากตำแหน่งเมื่อสิงหาคม 2567",
+    policies: [
+      {
+        id: "sr-eza",
+        nameTh: "เขตเศรษฐกิจพิเศษ EEC ขยายพันธุ์",
+        nameEn: "EEC Special Economic Zone Expansion",
+        status: "passed",
+        summary: "ขยายพื้นที่และสิทธิประโยชน์ EEC (อีสเทิร์นซีบอร์ด) ดึงดูดอุตสาหกรรมเป้าหมาย 12 กลุ่ม",
+        aim: "ดึงการลงทุนโดยตรงจากต่างชาติ (FDI) สร้างงานทักษะสูง พัฒนาคลัสเตอร์อุตสาหกรรมยานยนต์ไฟฟ้า อิเล็กทรอนิกส์ และดิจิทัล",
+        responsible: [
+          { type: "gov",     name: "สำนักงาน EEC" },
+          { type: "gov",     name: "BOI (สำนักงานคณะกรรมการส่งเสริมการลงทุน)" },
+          { type: "company", name: "CP Group, PTT, บริษัทญี่ปุ่นและจีน" },
+        ]
+      },
+      {
+        id: "sr-land-bridge",
+        nameTh: "โครงการ Land Bridge ชุมพร–ระนอง",
+        nameEn: "Southern Land Bridge",
+        status: "planned",
+        summary: "โครงสร้างพื้นฐานเชื่อมท่าเรืออ่าวไทย–อันดามัน ระยะทาง 90 กม. ด้วยเงินลงทุนกว่า 1 ล้านล้านบาท",
+        aim: "ลดเวลาขนส่งสินค้าแทนเส้นทางช่องแคบมะละกา ดึงเส้นทางการค้าโลก สร้างมูลค่าเศรษฐกิจในภาคใต้",
+        responsible: [
+          { type: "gov",     name: "กระทรวงคมนาคม" },
+          { type: "gov",     name: "การท่าเรือแห่งประเทศไทย" },
+          { type: "mixed",   name: "บริษัทลงทุนต่างชาติ (PPP)" },
+        ]
+      },
+      {
+        id: "sr-cannabis",
+        nameTh: "ทบทวนนโยบายกัญชาเสรี",
+        nameEn: "Cannabis Policy Review",
+        status: "dropped",
+        summary: "ทบทวนและกลับทิศนโยบายกัญชาเสรีของรัฐบาลก่อน โดยเตรียมร่าง พ.ร.บ. ควบคุมกัญชาใหม่",
+        aim: "ควบคุมการใช้กัญชาเพื่อการแพทย์เป็นหลัก ลดผลกระทบทางสังคม และตอบสนองแรงกดดันจากนานาชาติ",
+        responsible: [
+          { type: "gov",     name: "กระทรวงสาธารณสุข" },
+          { type: "gov",     name: "สำนักงาน อ.ย." },
+          { type: "company", name: "บริษัทยาที่ได้ใบอนุญาต" },
+        ]
+      },
+    ]
+  },
+
+  // ══════════════════════════════════════════════════
+  //  รัฐบาล ประยุทธ์ จันทร์โอชา — วาระ 2
+  // ══════════════════════════════════════════════════
+  {
+    id: "prayuth-2",
+    nameTh: "พล.อ. ประยุทธ์ จันทร์โอชา",
+    nameEn: "Gen. Prayuth Chan-ocha",
+    term: "วาระที่ 2",
+    termEn: "2nd Term",
+    years: "2562–2566",
+    party: "พลังประชารัฐ / รวมไทยสร้างชาติ",
+    summary: "รัฐบาลหลังการเลือกตั้ง 2562 ที่ประยุทธ์ได้รับการสนับสนุนจาก ส.ว. แต่งตั้ง ผ่านช่วงวิกฤต COVID-19 และเผชิญการชุมนุมทางการเมืองขนาดใหญ่",
+    policies: [
+      {
+        id: "pr2-covid",
+        nameTh: "มาตรการรับมือ COVID-19",
+        nameEn: "COVID-19 Response Package",
+        status: "passed",
+        summary: "ชุดมาตรการเยียวยาและควบคุมโรคระบาด รวมถึงเงินเยียวยา 5,000 บาท/เดือน โครงการคนละครึ่ง และการจัดซื้อวัคซีน",
+        aim: "ควบคุมการแพร่ระบาด ฟื้นฟูเศรษฐกิจ และรักษาความมั่นคงทางสังคมในช่วงวิกฤต",
+        responsible: [
+          { type: "gov",     name: "กรมควบคุมโรค กระทรวงสาธารณสุข" },
+          { type: "gov",     name: "กระทรวงการคลัง / สำนักงานประกันสังคม" },
+          { type: "company", name: "AstraZeneca, Sinovac (วัคซีน)" },
+        ]
+      },
+      {
+        id: "pr2-eec",
+        nameTh: "EEC ระยะแรก — อุตสาหกรรมเป้าหมาย S-Curve",
+        nameEn: "EEC Phase 1 — S-Curve Industries",
+        status: "passed",
+        summary: "ประกาศและดำเนินการเขตเศรษฐกิจพิเศษภาคตะวันออก ระยะแรก ดึงอุตสาหกรรม S-Curve 10 กลุ่ม",
+        aim: "ยกระดับโครงสร้างเศรษฐกิจไทยจากอุตสาหกรรมแรงงานเข้มข้น สู่อุตสาหกรรมเทคโนโลยีและนวัตกรรมสูง",
+        responsible: [
+          { type: "gov",     name: "สำนักงาน EEC" },
+          { type: "company", name: "Toyota, Samsung, Alibaba Cloud" },
+          { type: "mixed",   name: "กลุ่มทุนไทย-ญี่ปุ่น-จีน" },
+        ]
+      },
+      {
+        id: "pr2-highspeed",
+        nameTh: "รถไฟความเร็วสูง 3 สนามบิน",
+        nameEn: "High-Speed Rail — 3 Airports",
+        status: "delayed",
+        summary: "โครงการรถไฟความเร็วสูงเชื่อม 3 สนามบิน (ดอนเมือง–สุวรรณภูมิ–อู่ตะเภา) ระยะ 220 กม.",
+        aim: "พัฒนาโครงสร้างพื้นฐานขนส่งมวลชนทางราง รองรับการขยายตัวของ EEC และท่องเที่ยว",
+        responsible: [
+          { type: "gov",     name: "การรถไฟแห่งประเทศไทย" },
+          { type: "company", name: "CP Group (ผู้ชนะประมูล)" },
+          { type: "mixed",   name: "กลุ่ม BSR — BTS + Sino-Thai + Ratchaburi Electricity" },
+        ]
+      },
+    ]
+  },
+
+  // ══════════════════════════════════════════════════
+  //  รัฐบาล ประยุทธ์ จันทร์โอชา — วาระ 1 (คสช.)
+  // ══════════════════════════════════════════════════
+  {
+    id: "prayuth-1",
+    nameTh: "พล.อ. ประยุทธ์ จันทร์โอชา",
+    nameEn: "Gen. Prayuth Chan-ocha",
+    term: "วาระที่ 1 (คสช.)",
+    termEn: "1st Term (NCPO)",
+    years: "2557–2562",
+    party: "คณะรักษาความสงบแห่งชาติ (คสช.)",
+    summary: "รัฐบาลหลังรัฐประหาร 22 พฤษภาคม 2557 โดย คสช. ออกประกาศและคำสั่งแทนการออกกฎหมาย บริหารประเทศในฐานะ 'รัฐบาลเฉพาะกาล' ก่อนการเลือกตั้ง 2562",
+    policies: [
+      {
+        id: "pr1-thailand40",
+        nameTh: "ยุทธศาสตร์ชาติ 20 ปี และ Thailand 4.0",
+        nameEn: "20-Year National Strategy & Thailand 4.0",
+        status: "passed",
+        summary: "กำหนดกรอบยุทธศาสตร์การพัฒนาชาติ 20 ปี (2560–2579) และแนวคิด Thailand 4.0 สู่เศรษฐกิจนวัตกรรม",
+        aim: "หลุดพ้นกับดักรายได้ปานกลาง ยกระดับ GDP per capita สู่ประเทศรายได้สูงภายใน 20 ปี",
+        responsible: [
+          { type: "gov",  name: "สำนักงานสภาพัฒนาการเศรษฐกิจและสังคมแห่งชาติ (สศช.)" },
+          { type: "gov",  name: "ทุกกระทรวง — ผูกพันตามยุทธศาสตร์" },
+        ]
+      },
+      {
+        id: "pr1-pracharath",
+        nameTh: "ประชารัฐ — รัฐ-เอกชน-ประชาสังคม",
+        nameEn: "Pracharath — Public-Private Partnership",
+        status: "passed",
+        summary: "โครงการความร่วมมือภาครัฐ เอกชน และประชาสังคม เพื่อพัฒนาเศรษฐกิจฐานราก ใน 5 กลุ่มด้าน",
+        aim: "กระตุ้นเศรษฐกิจชุมชน พัฒนา SME และสร้างรายได้แก่ชุมชนผ่านความร่วมมือกับเอกชนขนาดใหญ่",
+        responsible: [
+          { type: "mixed",   name: "บริษัทเอกชน 12 กลุ่ม (CP, SCG, PTT, ฯลฯ)" },
+          { type: "gov",     name: "กระทรวงพาณิชย์ / กระทรวงมหาดไทย" },
+        ]
+      },
+      {
+        id: "pr1-welfare",
+        nameTh: "บัตรสวัสดิการแห่งรัฐ",
+        nameEn: "State Welfare Card",
+        status: "passed",
+        summary: "บัตรสำหรับผู้มีรายได้น้อย ใช้ซื้อสินค้าอุปโภคบริโภค ค่าเดินทาง และสิทธิประโยชน์ต่างๆ",
+        aim: "ลดความเหลื่อมล้ำ ช่วยเหลือผู้มีรายได้ต่ำกว่า 100,000 บาทต่อปี จำนวนกว่า 14 ล้านคน",
+        responsible: [
+          { type: "gov",     name: "กระทรวงการคลัง" },
+          { type: "gov",     name: "ธนาคารกรุงไทย" },
+          { type: "company", name: "ร้านธงฟ้าประชารัฐ และพันธมิตรค้าปลีก" },
+        ]
+      },
+    ]
+  },
+
+];
+// ─── END DATA ──────────────────────────────────────────────────────
+
+
+// ═══════════════════════════════════════════════════════
+//  APPLICATION LOGIC
+// ═══════════════════════════════════════════════════════
+
+let activeAdmin = null;
+
+const statusLabel = {
+  passed:  "ผ่านแล้ว",
+  planned: "กำลังดำเนินการ",
+  delayed: "ล่าช้า",
+  dropped: "ยกเลิก"
+};
+
+const respTypeLabel = {
+  gov:     "รัฐ",
+  company: "เอกชน",
+  mixed:   "รัฐ+เอกชน"
+};
+
+// Build sidebar timeline
+function buildSidebar() {
+  const container = document.getElementById('adminTimeline');
+  container.innerHTML = ADMINISTRATIONS.map((a, i) => `
+    ${i > 0 ? '<div class="timeline-connector"></div>' : ''}
+    <div class="admin-entry" id="entry-${a.id}" onclick="selectAdmin('${a.id}')">
+      <div class="admin-entry-inner">
+        <div class="admin-dot"></div>
+        <div class="admin-entry-text">
+          <div class="admin-name">${a.nameTh}</div>
+          <div class="admin-term-label">${a.term}</div>
+          <div class="admin-years">${a.years}</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function selectAdmin(id) {
+  activeAdmin = id;
+  // update sidebar highlight
+  document.querySelectorAll('.admin-entry').forEach(e => e.classList.remove('active'));
+  document.getElementById('entry-' + id).classList.add('active');
+  // render content
+  renderAdmin(id);
+}
+
+function renderAdmin(id) {
+  const a = ADMINISTRATIONS.find(x => x.id === id);
+  if (!a) return;
+
+  const passed  = a.policies.filter(p => p.status === 'passed').length;
+  const planned = a.policies.filter(p => p.status === 'planned' || p.status === 'delayed').length;
+  const total   = a.policies.length;
+
+  const panel = document.getElementById('contentPanel');
+  panel.innerHTML = `
+    <!-- HERO -->
+    <div class="admin-hero">
+      <div class="hero-top">
+        <div>
+          <div class="hero-name-th">${a.nameTh}</div>
+          <div class="hero-name-en">${a.nameEn}</div>
+        </div>
+        <div class="hero-term-badge">${a.termEn.toUpperCase()}</div>
+      </div>
+      <div class="hero-meta-row">
+        <div class="hero-meta-item">📅 <strong>${a.years}</strong></div>
+        <div class="hero-meta-item">🏛️ <strong>${a.party}</strong></div>
+        <div class="hero-meta-item">📋 <strong>${total} นโยบาย</strong>ที่บันทึก</div>
+      </div>
+      <div class="hero-desc">${a.summary}</div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-row">
+      <div class="stat-box stat-passed">
+        <div class="stat-num">${passed}</div>
+        <div class="stat-label">✅ ผ่านแล้ว / Passed</div>
+      </div>
+      <div class="stat-box stat-planned">
+        <div class="stat-num">${planned}</div>
+        <div class="stat-label">🔄 กำลังดำเนินการ / In Progress</div>
+      </div>
+      <div class="stat-box stat-total">
+        <div class="stat-num">${total}</div>
+        <div class="stat-label">📋 ทั้งหมด / Total</div>
+      </div>
+    </div>
+
+    <!-- POLICIES -->
+    <div class="section-title">// นโยบายรัฐบาล / Government Policies</div>
+    <div class="policy-grid">
+      ${a.policies.map(p => buildPolicyCard(p)).join('')}
+    </div>
+  `;
+}
+
+function buildPolicyCard(p) {
+  const responsibleHTML = p.responsible.map(r => `
+    <div class="responsible-item">
+      <span class="resp-type resp-${r.type}">${respTypeLabel[r.type]}</span>
+      <span class="resp-name">${r.name}</span>
+    </div>
+  `).join('');
+
+  return `
+    <div class="policy-card" id="card-${p.id}" onclick="toggleCard('${p.id}')">
+      <div class="policy-card-header">
+        <span class="policy-status-pill status-${p.status}">${statusLabel[p.status]}</span>
+        <div class="policy-main">
+          <div class="policy-name-th">${p.nameTh}</div>
+          <div class="policy-name-en">${p.nameEn}</div>
+          <div class="policy-summary">${p.summary}</div>
+        </div>
+        <span class="policy-chevron">▶</span>
+      </div>
+      <div class="policy-body">
+        <div class="policy-detail-grid">
+          <div>
+            <div class="detail-block-label">// เป้าหมายนโยบาย / Policy Aim</div>
+            <div class="detail-block-content">${p.aim}</div>
+          </div>
+          <div>
+            <div class="detail-block-label">// ผู้รับผิดชอบ / Responsible Parties</div>
+            <div class="responsible-list">${responsibleHTML}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function toggleCard(id) {
+  const card = document.getElementById('card-' + id);
+  card.classList.toggle('expanded');
+}
+
+// ── INIT ──
+buildSidebar();
+</script>
+</body>
+</html>

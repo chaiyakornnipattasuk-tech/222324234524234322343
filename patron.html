@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PATRON — The Rich Don't Want Your Validation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@300;400;500&family=Sarabun:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:       #0e0c0a;
+  --paper:     #f7f3ec;
+  --cream:     #ede7d9;
+  --gold:      #b8973a;
+  --gold-lt:   #d4b86a;
+  --gold-pale: #f0e4c0;
+  --rust:      #8b3a2a;
+  --charcoal:  #2a2620;
+  --smoke:     #6b6560;
+  --rule:      #d4c9b4;
+  --serif:     'Cormorant Garamond', Georgia, serif;
+  --thai:      'IBM Plex Sans Thai', sans-serif;
+  --mono:      'IBM Plex Mono', monospace;
+  --body:      'Sarabun', sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 15px;
+  line-height: 1.6;
+  cursor: default;
+}
+
+/* ── GRAIN OVERLAY ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 999;
+  opacity: 0.6;
+}
+
+/* ── MASTHEAD ── */
+.masthead {
+  border-bottom: 1px solid var(--ink);
+  padding: 0;
+}
+
+.masthead-top {
+  display: flex;
+  align-items: stretch;
+  border-bottom: 1px solid var(--rule);
+}
+
+.masthead-side {
+  padding: 10px 24px;
+  border-right: 1px solid var(--rule);
+  display: flex;
+  align-items: center;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  color: var(--smoke);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  gap: 16px;
+}
+
+.masthead-side:last-child {
+  border-right: none;
+  margin-left: auto;
+  border-left: 1px solid var(--rule);
+}
+
+.issue-num {
+  color: var(--gold);
+  font-weight: 500;
+}
+
+/* ── HERO TITLE ── */
+.masthead-center {
+  flex: 1;
+  text-align: center;
+  padding: 32px 24px 20px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.site-eyebrow {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: var(--smoke);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.site-title {
+  font-family: var(--serif);
+  font-size: clamp(3.5rem, 9vw, 7rem);
+  font-weight: 300;
+  letter-spacing: 0.25em;
+  color: var(--ink);
+  line-height: 0.9;
+  text-transform: uppercase;
+}
+
+.site-title em {
+  font-style: italic;
+  color: var(--gold);
+}
+
+.site-motto {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--smoke);
+  margin-top: 14px;
+  letter-spacing: 0.02em;
+}
+
+.site-sub {
+  font-family: var(--thai);
+  font-size: 0.75rem;
+  color: var(--smoke);
+  margin-top: 6px;
+  letter-spacing: 0.06em;
+}
+
+/* ── GOLD RULE ── */
+.gold-rule {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 40px;
+  border-bottom: 1px solid var(--ink);
+}
+
+.gold-rule::before,
+.gold-rule::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--gold);
+}
+
+.gold-rule-text {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 0.82rem;
+  color: var(--gold);
+  white-space: nowrap;
+  letter-spacing: 0.08em;
+}
+
+/* ── LAYOUT ── */
+.page {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+/* ── SECTION HEADER ── */
+.section-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 32px 0 20px;
+  border-bottom: 2px solid var(--ink);
+  margin-bottom: 0;
+}
+
+.section-heading {
+  font-family: var(--serif);
+  font-size: 2rem;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+}
+
+.section-heading em { font-style: italic; color: var(--gold); }
+
+.section-count {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--smoke);
+  letter-spacing: 0.1em;
+}
+
+/* ── RANK TABLE HEADER ── */
+.rank-table-head {
+  display: grid;
+  grid-template-columns: 52px 1fr 180px 200px;
+  gap: 0;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 0;
+}
+
+.rank-col-label {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  color: var(--smoke);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0 16px;
+}
+
+/* ── PATRON ROW ── */
+.patron-row {
+  border-bottom: 1px solid var(--rule);
+  cursor: pointer;
+  transition: background 0.15s;
+  position: relative;
+}
+
+.patron-row:hover { background: var(--cream); }
+.patron-row.open  { background: var(--cream); }
+
+.patron-row-main {
+  display: grid;
+  grid-template-columns: 52px 1fr 180px 200px;
+  gap: 0;
+  align-items: center;
+  padding: 0;
+}
+
+/* rank number */
+.patron-rank {
+  padding: 22px 16px;
+  font-family: var(--serif);
+  font-size: 1.8rem;
+  font-weight: 300;
+  color: var(--rule);
+  line-height: 1;
+  text-align: center;
+  transition: color 0.15s;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid var(--rule);
+}
+
+.patron-row:hover .patron-rank,
+.patron-row.open  .patron-rank { color: var(--gold); }
+
+/* Top rank special */
+.patron-row:nth-child(1) .patron-rank { color: var(--gold); font-size: 2rem; }
+.patron-row:nth-child(2) .patron-rank { color: #9a9088; }
+.patron-row:nth-child(3) .patron-rank { color: #a07848; }
+
+/* name block */
+.patron-name-block {
+  padding: 18px 20px;
+  border-right: 1px solid var(--rule);
+}
+
+.patron-name-th {
+  font-family: var(--thai);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.3;
+}
+
+.patron-name-en {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 0.85rem;
+  color: var(--smoke);
+  margin-top: 1px;
+}
+
+.patron-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.patron-tag {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  padding: 1px 7px;
+  background: var(--gold-pale);
+  color: var(--gold);
+  border: 1px solid #d4b86a55;
+  text-transform: uppercase;
+}
+
+/* amount */
+.patron-amount-block {
+  padding: 18px 20px;
+  border-right: 1px solid var(--rule);
+  text-align: right;
+}
+
+.patron-amount-num {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: var(--ink);
+  line-height: 1.2;
+}
+
+.patron-amount-unit {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  color: var(--smoke);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+/* top artist */
+.patron-artist-block {
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.patron-top-artist {
+  flex: 1;
+}
+
+.artist-label {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  color: var(--smoke);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 3px;
+}
+
+.artist-name {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--ink);
+  line-height: 1.3;
+}
+
+.artist-discipline {
+  font-size: 0.72rem;
+  color: var(--smoke);
+}
+
+.expand-arrow {
+  font-size: 0.75rem;
+  color: var(--rule);
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.patron-row.open .expand-arrow {
+  color: var(--gold);
+  transform: rotate(90deg);
+}
+
+/* ── EXPANDED PANEL ── */
+.patron-detail {
+  display: none;
+  border-top: 1px solid var(--rule);
+  padding: 28px 72px 32px;
+  background: var(--cream);
+  animation: revealDown 0.2s ease;
+}
+
+@keyframes revealDown {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.patron-row.open .patron-detail { display: block; }
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 28px;
+  margin-bottom: 24px;
+}
+
+.detail-block-label {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  color: var(--smoke);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.detail-block-text {
+  font-size: 0.85rem;
+  color: var(--charcoal);
+  line-height: 1.75;
+}
+
+/* artist list */
+.artist-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.artist-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 14px;
+  background: var(--paper);
+  border-left: 2px solid var(--gold);
+}
+
+.artist-item-name {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--ink);
+  font-weight: 500;
+  flex: 1;
+}
+
+.artist-item-disc {
+  font-size: 0.75rem;
+  color: var(--smoke);
+  margin-top: 1px;
+}
+
+.artist-item-amount {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--gold);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* ── ARTIST TIER SHADING ───────────────────────────────────────────
+   small   = ศิลปินหน้าใหม่ / underground → deep buddha-gold, rich & saturated
+   rising  = เริ่มมีชื่อเสียง / earning 50M+ → pale champagne, light golden
+   famous  = ศิลปินดัง / established name → black & gold prestige
+   ─────────────────────────────────────────────────────────────── */
+
+/* SMALL — deep molten buddha gold, like temple lacquer */
+.artist-item.tier-small {
+  background: #2a1f06;
+  border-left: 3px solid #c9991a;
+}
+.artist-item.tier-small .artist-item-name  { color: #f0c84a; text-shadow: 0 0 18px rgba(201,153,26,0.4); }
+.artist-item.tier-small .artist-item-disc  { color: #9a7a30; }
+.artist-item.tier-small .artist-item-amount { color: #f0c84a; }
+.artist-item.tier-small .tier-badge {
+  background: #c9991a;
+  color: #1a1200;
+}
+
+/* RISING — champagne / light golden, soft warm glow */
+.artist-item.tier-rising {
+  background: #fdf6e3;
+  border-left: 3px solid #d4b86a;
+}
+.artist-item.tier-rising .artist-item-name  { color: #7a5c1a; }
+.artist-item.tier-rising .artist-item-disc  { color: #a08848; }
+.artist-item.tier-rising .artist-item-amount { color: #b8973a; }
+.artist-item.tier-rising .tier-badge {
+  background: #f0e4c0;
+  color: #7a5c1a;
+  border: 1px solid #d4b86a;
+}
+
+/* FAMOUS — black prestige with gold detail, like auction house catalog */
+.artist-item.tier-famous {
+  background: #0e0c0a;
+  border-left: 3px solid #b8973a;
+  border-top: 1px solid #2a2418;
+  border-bottom: 1px solid #2a2418;
+  border-right: 1px solid #2a2418;
+}
+.artist-item.tier-famous .artist-item-name  { color: #d4b86a; font-weight: 600; letter-spacing: 0.02em; }
+.artist-item.tier-famous .artist-item-disc  { color: #6b6050; }
+.artist-item.tier-famous .artist-item-amount { color: #b8973a; }
+.artist-item.tier-famous .tier-badge {
+  background: #b8973a;
+  color: #0e0c0a;
+}
+
+/* shared badge pill */
+.tier-badge {
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  flex-shrink: 0;
+  align-self: flex-start;
+  margin-top: 2px;
+}
+
+/* ── LEGEND ── */
+.tier-legend {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 0 14px;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 0;
+  flex-wrap: wrap;
+}
+
+.tier-legend-label {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  color: var(--smoke);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  color: var(--smoke);
+  letter-spacing: 0.06em;
+}
+
+.legend-swatch {
+  width: 22px;
+  height: 10px;
+  flex-shrink: 0;
+}
+
+.legend-swatch.small  { background: linear-gradient(90deg, #c9991a, #f0c84a); }
+.legend-swatch.rising { background: linear-gradient(90deg, #d4b86a, #f0e4c0); }
+.legend-swatch.famous { background: linear-gradient(90deg, #0e0c0a 40%, #b8973a); border: 1px solid #444; }
+
+/* ── TIER LEGEND TABS ── */
+.tier-legend-wrap {
+  margin: 0 0 0;
+  border-bottom: 1px solid var(--ink);
+}
+
+.tier-legend-tabs {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  border-bottom: 1px solid var(--rule);
+  background: var(--cream);
+  overflow-x: auto;
+}
+
+.tier-legend-intro {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  color: var(--smoke);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 10px 18px;
+  border-right: 1px solid var(--rule);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Tab buttons */
+.tlb {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 18px;
+  border: none;
+  border-right: 1px solid var(--rule);
+  background: none;
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  color: var(--smoke);
+  transition: all 0.12s;
+  white-space: nowrap;
+  flex-shrink: 0;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+
+.tlb:hover { color: var(--ink); background: var(--paper); }
+
+.tlb.active { background: var(--paper); color: var(--ink); }
+.tlb-small.active  { border-bottom-color: #c9991a; }
+.tlb-rising.active { border-bottom-color: #d4b86a; }
+.tlb-famous.active { border-bottom-color: #0e0c0a; }
+
+.tlb-swatch {
+  width: 14px;
+  height: 8px;
+  flex-shrink: 0;
+  display: inline-block;
+}
+
+.tlb-swatch.small  { background: linear-gradient(90deg, #c9991a, #f0c84a); }
+.tlb-swatch.rising { background: linear-gradient(90deg, #d4b86a, #f0e4c0); border: 1px solid #d4b86a; }
+.tlb-swatch.famous { background: linear-gradient(90deg, #0e0c0a 40%, #b8973a); border: 1px solid #555; }
+
+/* Panel container */
+.tier-panels { position: relative; }
+
+.tier-panel {
+  display: none;
+  padding: 18px 22px;
+  background: var(--paper);
+  border-top: 1px solid var(--rule);
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.tier-panel.active { display: flex; }
+
+/* The colour sample cube — this is the only place the tier colour lives */
+.tp-cube-wrap {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  width: 76px;
+}
+
+.tp-cube {
+  width: 64px;
+  height: 72px;
+  border: 1px solid var(--ink);
+  flex-shrink: 0;
+}
+
+/* SMALL — antiqued bronze dark / burnished temple gold */
+.tp-cube.small {
+  background: linear-gradient(90deg, #1a1200 50%, #c9991a 50%);
+  box-shadow: 3px 3px 0 #0e0c0a;
+}
+
+/* RISING — warm ivory / pale champagne gold */
+.tp-cube.rising {
+  background: linear-gradient(90deg, #f5edd0 50%, #d4aa3a 50%);
+  box-shadow: 3px 3px 0 #0e0c0a;
+}
+
+/* FAMOUS — pitch black / sovereign gold */
+.tp-cube.famous {
+  background: linear-gradient(90deg, #0e0c0a 50%, #b8973a 50%);
+  box-shadow: 3px 3px 0 #3a2c06;
+}
+
+.tp-cube-label {
+  font-family: var(--mono);
+  font-size: 0.52rem;
+  color: var(--smoke);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-align: center;
+  line-height: 1.3;
+}
+
+/* Panel text — always on paper, always ink */
+.tp-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.tp-title {
+  font-family: var(--serif);
+  font-size: 0.97rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 6px;
+  letter-spacing: 0.01em;
+}
+
+.tp-desc {
+  font-size: 0.82rem;
+  line-height: 1.78;
+  color: var(--smoke);
+  margin-bottom: 12px;
+}
+
+.tp-desc strong { color: var(--ink); font-weight: 600; }
+.tp-desc em     { color: var(--gold); font-style: italic; }
+
+/* criteria pills row */
+.tp-criteria {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.tp-pill {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.07em;
+  padding: 2px 9px;
+  background: var(--cream);
+  color: var(--smoke);
+  border: 1px solid var(--rule);
+}
+
+/* ── MOTTO BANNER ── */
+.motto-banner {
+  margin: 48px 0;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  padding: 28px 0;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.motto-banner::before {
+  content: '';
+  position: absolute;
+  top: 4px; bottom: 4px;
+  left: 0; right: 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  pointer-events: none;
+}
+
+.motto-text {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(1.2rem, 3vw, 1.8rem);
+  color: var(--ink);
+  letter-spacing: 0.03em;
+  line-height: 1.4;
+}
+
+.motto-text em {
+  color: var(--gold);
+  font-style: normal;
+}
+
+.motto-sub {
+  font-family: var(--thai);
+  font-size: 0.82rem;
+  color: var(--smoke);
+  margin-top: 8px;
+}
+
+/* ── FILTER BAR ── */
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 0;
+  overflow-x: auto;
+}
+
+.filter-label {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  color: var(--smoke);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding-right: 16px;
+  border-right: 1px solid var(--rule);
+  margin-right: 16px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.filter-chip {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  border: 1px solid var(--rule);
+  background: none;
+  color: var(--smoke);
+  cursor: pointer;
+  transition: all 0.12s;
+  margin-right: 6px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.filter-chip:hover { border-color: var(--gold); color: var(--gold); }
+.filter-chip.active { background: var(--ink); color: var(--gold-pale); border-color: var(--ink); }
+
+/* ── FOOTER ── */
+footer {
+  border-top: 2px solid var(--ink);
+  margin-top: 60px;
+  padding: 28px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.footer-brand {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  font-style: italic;
+  color: var(--gold-lt);
+  letter-spacing: 0.1em;
+}
+
+.footer-meta {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  color: var(--smoke);
+  letter-spacing: 0.08em;
+  text-align: right;
+  line-height: 1.8;
+}
+
+.footer-meta span { color: var(--gold-lt); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .page { padding: 0 16px; }
+  .rank-table-head { display: none; }
+  .patron-row-main { grid-template-columns: 48px 1fr; }
+  .patron-amount-block, .patron-artist-block { display: none; }
+  .patron-detail { padding: 20px 20px 24px; }
+  .detail-grid { grid-template-columns: 1fr; gap: 20px; }
+  .masthead-side { display: none; }
+  .gold-rule { padding: 10px 20px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── MASTHEAD ── -->
+<div class="masthead">
+  <div class="masthead-top">
+    <div class="masthead-side">
+      <span class="issue-num">VOL. I</span>
+      <span>Thailand Art Patronage Index</span>
+    </div>
+    <div class="masthead-side">
+      <span>ส่วนหนึ่งของ <span style="color:var(--gold)">มองทะลุ.net</span></span>
+    </div>
+  </div>
+  <div class="masthead-center">
+    <div class="site-eyebrow">Thailand · Art Patronage · Culture Capital</div>
+    <div class="site-title">P<em>A</em>TRON</div>
+    <div class="site-motto">"The rich don't want your validation — they want validation from other rich."</div>
+    <div class="site-sub">จัดอันดับผู้อุปถัมภ์ศิลปะที่แท้จริงในประเทศไทย / Ranking Real Art Patrons in Thailand</div>
+  </div>
+  <div class="gold-rule">
+    <span class="gold-rule-text">คนรวยที่ลงทุนในศิลปะ ไม่ใช่แค่ซื้อภาพแขวนบ้าน · Those who invest in artists, not just art as furniture</span>
+  </div>
+</div>
+
+<!-- ── MAIN PAGE ── -->
+<div class="page">
+
+  <!-- MOTTO BANNER -->
+  <div class="motto-banner">
+    <div class="motto-text">
+      "True patronage is not charity —<br>
+      it is the belief that an artist's eye<br>
+      sees <em>farther</em> than any balance sheet."
+    </div>
+    <div class="motto-sub">การอุปถัมภ์ที่แท้จริงไม่ใช่การทำบุญ — คือความเชื่อว่าสายตาของศิลปินมองไกลกว่างบการเงิน</div>
+  </div>
+
+  <!-- SECTION HEADER -->
+  <div class="section-header">
+    <div class="section-heading">The <em>Patrons</em> — อันดับผู้อุปถัมภ์</div>
+    <div class="section-count" id="patronCount">— ENTRIES</div>
+  </div>
+
+  <!-- FILTER BAR -->
+  <div class="filter-bar">
+    <span class="filter-label">กรอง / Filter</span>
+    <button class="filter-chip active" data-filter="all" onclick="setFilter(this,'all')">All</button>
+    <button class="filter-chip" data-filter="visual" onclick="setFilter(this,'visual')">Visual Art</button>
+    <button class="filter-chip" data-filter="music" onclick="setFilter(this,'music')">Music</button>
+    <button class="filter-chip" data-filter="film" onclick="setFilter(this,'film')">Film</button>
+    <button class="filter-chip" data-filter="craft" onclick="setFilter(this,'craft')">Craft / Design</button>
+    <button class="filter-chip" data-filter="multi" onclick="setFilter(this,'multi')">Multi-Discipline</button>
+  </div>
+
+  <!-- TIER LEGEND — clickable tabs -->
+  <div class="tier-legend-wrap">
+    <div class="tier-legend-tabs">
+      <span class="tier-legend-intro">ระดับสีศิลปิน / Shade Guide</span>
+      <button class="tlb tlb-small  active" onclick="showTierTab(this,'small')">
+        <span class="tlb-swatch small"></span>Underground
+      </button>
+      <button class="tlb tlb-rising" onclick="showTierTab(this,'rising')">
+        <span class="tlb-swatch rising"></span>Rising 50M+
+      </button>
+      <button class="tlb tlb-famous" onclick="showTierTab(this,'famous')">
+        <span class="tlb-swatch famous"></span>Established
+      </button>
+    </div>
+
+    <div class="tier-panels">
+
+      <div class="tier-panel tier-panel-small active" id="tp-small">
+        <div class="tp-cube-wrap">
+          <div class="tp-cube small"></div>
+          <div class="tp-cube-label">Buddha<br>Gold</div>
+        </div>
+        <div class="tp-body">
+          <div class="tp-title">🪔 Buddha Gold — ศิลปินหน้าใหม่ / The Undiscovered</div>
+          <div class="tp-desc">
+            The colour of gold that has never needed an audience. Deep, lacquered, self-possessed —
+            as found on the innermost chamber of a temple that tourists have not yet located on any map.
+            <strong>Reserved for artists of consequence who have not yet been consecrated by the market.</strong>
+            The patron who acts here does not follow taste. They author it.
+            One does not stumble upon such a commission. One is called to it.
+            <em>"The darkness that surrounds the gold is not absence — it is discretion."</em>
+          </div>
+          <div class="tp-criteria">
+            <span class="tp-pill">รายได้ศิลปิน &lt; ฿50M</span>
+            <span class="tp-pill">ไม่มีนิทรรศการใหญ่</span>
+            <span class="tp-pill">ยังไม่ติด auction record</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tier-panel tier-panel-rising" id="tp-rising">
+        <div class="tp-cube-wrap">
+          <div class="tp-cube rising"></div>
+          <div class="tp-cube-label">Champagne<br>Gold</div>
+        </div>
+        <div class="tp-body">
+          <div class="tp-title">🥂 Champagne Gold — เริ่มมีชื่อเสียง / The Ascending</div>
+          <div class="tp-desc">
+            The precise quality of afternoon light in a well-appointed room — warm without effort,
+            luminous without announcement. <strong>The artist has acquired a name, though the full weight of it
+            has not yet settled.</strong> Collectors of refinement enter here not from obligation,
+            but from the particular pleasure of being correct before the consensus forms.
+            It is champagne in the glass before the toast is made — still rising.
+            <em>"To invest in the ascending is not generosity. It is confidence in one's own eye."</em>
+          </div>
+          <div class="tp-criteria">
+            <span class="tp-pill">รายได้ศิลปิน ฿50M+</span>
+            <span class="tp-pill">มีนิทรรศการเดี่ยว</span>
+            <span class="tp-pill">เริ่มติดรายชื่อ auction</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tier-panel tier-panel-famous" id="tp-famous">
+        <div class="tp-cube-wrap">
+          <div class="tp-cube famous"></div>
+          <div class="tp-cube-label">Black &amp;<br>Gold</div>
+        </div>
+        <div class="tp-body">
+          <div class="tp-title">🖤 Black &amp; Gold — ศิลปินดัง / The Canonised</div>
+          <div class="tp-desc">
+            Black requires no introduction. Gold requires no justification.
+            Together they constitute the only colour combination that has never required explanation
+            in any language, in any century, in any room.
+            <strong>The artist at this level is not supported — they are acquired.</strong>
+            The name alone moves the room before the work is unveiled.
+            Patronage here is not charity, nor even investment. It is the recognition of two legacies
+            choosing to share a wall.
+            <em>"One does not discover such an artist. One is fortunate enough to be introduced."</em>
+          </div>
+          <div class="tp-criteria">
+            <span class="tp-pill">ชื่อเสียงระดับชาติ+</span>
+            <span class="tp-pill">ประวัติการประมูลสูง</span>
+            <span class="tp-pill">พิพิธภัณฑ์ / รางวัลใหญ่</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TABLE HEADER -->
+  <div class="rank-table-head">
+    <div class="rank-col-label" style="text-align:center">#</div>
+    <div class="rank-col-label">ผู้อุปถัมภ์ / Patron</div>
+    <div class="rank-col-label" style="text-align:right">ยอดรวม / Total Spent</div>
+    <div class="rank-col-label">ศิลปินที่โดดเด่น / Top Artist</div>
+  </div>
+
+  <!-- PATRON LIST -->
+  <div id="patronList"></div>
+
+</div>
+
+<footer>
+  <div class="footer-brand">Patron</div>
+  <div class="footer-meta">
+    <span>PATRON</span> — Thailand Art Patronage Index<br>
+    ส่วนหนึ่งของ <span>มองทะลุ.net</span> · ข้อมูลอ้างอิงจากแหล่งสาธารณะ
+  </div>
+</footer>
+
+<!-- ════════════════════════════════════════════════════════
+     DATA — รายชื่อผู้อุปถัมภ์ศิลปะ
+     แก้ไขข้อมูลใน PATRONS array ด้านล่างเท่านั้น
+     ════════════════════════════════════════════════════════ -->
+<script>
+
+// ─── FILTER CATEGORIES ────────────────────────────────────────────
+// visual / music / film / craft / multi
+
+const PATRONS = [
+
+  {
+    id: "met-art",
+    nameTh: "คุณหญิงชดช้อย โสภณพนิช",
+    nameEn: "Khunying Chadchaoy Sophonpanich",
+    tags: ["visual", "multi"],
+    totalSpent: "฿180M+",          // ยอดรวมที่ใช้จ่ายเพื่อศิลปิน
+    totalNote: "ประมาณการ / Estimated",
+    topArtist: "ถวัลย์ ดัชนี",
+    topArtistDiscipline: "จิตรกรรม / Painting",
+    about: "ทายาทธนาคารกรุงเทพและนักสะสมงานศิลป์รุ่นแรกของไทยที่จริงจัง ผู้ก่อตั้งหอศิลป์ส่วนตัวและสนับสนุนศิลปินไทยชั้นนำมาหลายทศวรรษ โดยเน้นงานที่มีรากเหง้าทางวัฒนธรรมไทยอย่างแท้จริง",
+    artists: [
+      { name: "ถวัลย์ ดัชนี", discipline: "จิตรกรรม / Painting", amount: "฿40M+", fame: "famous" },
+      { name: "เฉลิมชัย โฆษิตพิพัฒน์", discipline: "จิตรกรรม–วัด / Temple Murals", amount: "฿30M+", fame: "famous" },
+      { name: "ประเทือง เอมเจริญ", discipline: "ประติมากรรม / Sculpture", amount: "฿15M+", fame: "rising" },
+    ],
+    note: "ข้อมูลยอดเงินเป็นการประมาณการจากการประมูลและรายงานสื่อ ไม่ใช่ตัวเลขทางบัญชี"
+  },
+
+  {
+    id: "tcdc",
+    nameTh: "ดร. ทักษิณ ชินวัตร (ผ่านมูลนิธิ)",
+    nameEn: "Dr. Thaksin Shinawatra (via Foundation)",
+    tags: ["multi", "film"],
+    totalSpent: "฿120M+",
+    totalNote: "รวมมูลนิธิและทุนวัฒนธรรม",
+    topArtist: "ปรีชา เถาทอง",
+    topArtistDiscipline: "จิตรกรรมร่วมสมัย / Contemporary",
+    about: "สนับสนุนศิลปินและวัฒนธรรมผ่านมูลนิธิหลายแห่ง ส่วนใหญ่เน้นศิลปะพื้นบ้านภาคเหนือและงานร่วมสมัยที่สะท้อนอัตลักษณ์ไทย รวมถึงทุนภาพยนตร์อิสระ",
+    artists: [
+      { name: "ปรีชา เถาทอง", discipline: "จิตรกรรม / Painting", amount: "฿25M+", fame: "rising" },
+      { name: "วินัย ปราบริปู", discipline: "ประติมากรรม / Sculpture", amount: "฿18M+", fame: "rising" },
+      { name: "กลุ่มภาพยนตร์อิสระเชียงใหม่", discipline: "Film", amount: "฿12M+", fame: "small" },
+    ],
+    note: "ยอดรวมประมาณการจากรายงานสื่อและข้อมูลสาธารณะของมูลนิธิ"
+  },
+
+  {
+    id: "cp-art",
+    nameTh: "ธนินท์ เจียรวนนท์ และ CP Group",
+    nameEn: "Dhanin Chearavanont & CP Group",
+    tags: ["visual", "craft", "multi"],
+    totalSpent: "฿95M+",
+    totalNote: "รวม CSR และทุนส่วนตัว",
+    topArtist: "อาจาน เอ็กซ์ (ศิลปินรุ่นใหม่)",
+    topArtistDiscipline: "ศิลปะดิจิทัล / Digital Art",
+    about: "กลุ่ม CP สนับสนุนศิลปะผ่านหลายช่องทาง ทั้ง CP Art Center, ทุนศิลปินรุ่นใหม่ และการสะสมงานส่วนตัว โดยเริ่มเปิดรับงานร่วมสมัยและศิลปะดิจิทัลในยุคหลัง",
+    artists: [
+      { name: "ชาติชาย ปุยเปีย", discipline: "จิตรกรรม / Painting", amount: "฿20M+", fame: "rising" },
+      { name: "กลุ่มงานหัตถกรรมล้านนา", discipline: "Craft", amount: "฿18M+", fame: "small" },
+      { name: "ศิลปินดิจิทัลรุ่นใหม่ (5 คน)", discipline: "Digital / NFT", amount: "฿10M+", fame: "small" },
+    ],
+    note: "CP Art Center ที่กรุงเทพฯ เปิดแสดงงานฟรีแก่สาธารณชน ถือเป็นการลงทุนสาธารณะ"
+  },
+
+  {
+    id: "prateep",
+    nameTh: "คุณประทีป ตั้งมติธรรม",
+    nameEn: "Prateep Tangmatitham",
+    tags: ["visual", "craft"],
+    totalSpent: "฿65M+",
+    totalNote: "ประมาณการ / Estimated",
+    topArtist: "โกวิท เผือกสม",
+    topArtistDiscipline: "ประติมากรรม / Sculpture",
+    about: "ผู้บริหาร SC Asset และนักสะสมงานศิลป์ที่สนับสนุนศิลปินไทยร่วมสมัยอย่างเงียบๆ มายาวนาน เน้นงานที่มีคุณค่าทางแนวคิดมากกว่าชื่อเสียงของศิลปิน",
+    artists: [
+      { name: "โกวิท เผือกสม", discipline: "ประติมากรรม / Sculpture", amount: "฿18M+", fame: "famous" },
+      { name: "นาวิน ลาวัลย์ชัยกุล", discipline: "Media Art", amount: "฿14M+", fame: "rising" },
+      { name: "มณเฑียร บุญมา (มรดก)", discipline: "Installation Art", amount: "฿10M+", fame: "famous" },
+    ],
+    note: "เป็นที่รู้จักในวงการว่าสนับสนุนงานทดลองและงาน installation ที่ตลาดยังไม่รู้จัก"
+  },
+
+  {
+    id: "tcg",
+    nameTh: "คุณเจริญ สิริวัฒนภักดี",
+    nameEn: "Charoen Sirivadhanabhakdi",
+    tags: ["multi", "music"],
+    totalSpent: "฿55M+",
+    totalNote: "รวมทุนดนตรีและมรดกวัฒนธรรม",
+    topArtist: "วง Bangkok Symphony Orchestra",
+    topArtistDiscipline: "ดนตรีคลาสสิก / Classical Music",
+    about: "มหาเศรษฐีเจ้าของ TCC Group สนับสนุนดนตรีคลาสสิกและการอนุรักษ์สถาปัตยกรรม ผ่านการสนับสนุน BSO และโครงการบูรณะอาคารประวัติศาสตร์ที่มีคุณค่าทางศิลปะ",
+    artists: [
+      { name: "Bangkok Symphony Orchestra", discipline: "ดนตรีคลาสสิก / Orchestra", amount: "฿20M+", fame: "famous" },
+      { name: "นักดนตรีไทยเดิมอาวุโส", discipline: "Thai Classical Music", amount: "฿12M+", fame: "rising" },
+      { name: "โครงการอนุรักษ์อาคารศิลปะ", discipline: "Architectural Art", amount: "฿15M+", fame: "rising" },
+    ],
+    note: "การอุปถัมภ์ส่วนใหญ่ผ่านช่องทางที่ไม่ได้รับการประชาสัมพันธ์สาธารณะ"
+  },
+
+  {
+    id: "aree",
+    nameTh: "คุณอารีย์ วงศ์อารยะ",
+    nameEn: "Aree Wongaraya",
+    tags: ["film", "music"],
+    totalSpent: "฿42M+",
+    totalNote: "ประมาณการ / Estimated",
+    topArtist: "อภิชาติพงศ์ วีระเศรษฐกุล",
+    topArtistDiscipline: "ภาพยนตร์ / Film",
+    about: "นักธุรกิจที่สนับสนุนภาพยนตร์อิสระไทยและดนตรีอิสระอย่างจริงจัง เชื่อว่าศิลปะร่วมสมัยของไทยต้องการทุนจากคนไทยด้วยกัน ไม่ใช่รอทุนต่างชาติเพียงอย่างเดียว",
+    artists: [
+      { name: "อภิชาติพงศ์ วีระเศรษฐกุล", discipline: "ภาพยนตร์ / Film", amount: "฿15M+", fame: "famous" },
+      { name: "นพพล โกมารชุน", discipline: "ภาพยนตร์สั้น / Short Film", amount: "฿8M+", fame: "small" },
+      { name: "วงดนตรีอิสระไทย (10+ วง)", discipline: "Indie Music", amount: "฿12M+", fame: "small" },
+    ],
+    note: "เน้นศิลปินที่ถูก mainstream ไม่ยอมรับ แต่มีคุณค่าระดับนานาชาติ"
+  },
+
+  {
+    id: "kanokporn",
+    nameTh: "คุณกนกพร เจริญศิลป์",
+    nameEn: "Kanokporn Charoensil",
+    tags: ["craft", "visual"],
+    totalSpent: "฿38M+",
+    totalNote: "รวมทุนหัตถกรรม",
+    topArtist: "ช่างทอผ้าชุมชนลาหู่–อาข่า",
+    topArtistDiscipline: "ผ้าทอชาติพันธุ์ / Ethnic Textile",
+    about: "นักธุรกิจที่หันมาสนับสนุนช่างฝีมือและหัตถกรรมชาติพันธุ์อย่างจริงจัง โดยสร้างระบบที่ให้รายได้ยั่งยืนแก่ช่างผ่านแบรนด์ที่เธอก่อตั้ง แทนที่จะแค่ซื้อของและบอกว่าช่วยแล้ว",
+    artists: [
+      { name: "ช่างทอผ้าชุมชนลาหู่–อาข่า เชียงราย", discipline: "ผ้าทอ / Textile", amount: "฿14M+", fame: "small" },
+      { name: "ช่างเงินชุมชนเมืองน่าน", discipline: "งานเงิน / Silverwork", amount: "฿10M+", fame: "small" },
+      { name: "ช่างเซรามิกสุโขทัย", discipline: "เซรามิก / Ceramics", amount: "฿8M+", fame: "small" },
+    ],
+    note: "แตกต่างจากผู้อุปถัมภ์คนอื่นตรงที่เน้น craft และชุมชน ไม่ใช่ fine art"
+  },
+
+];
+// ─── END DATA ──────────────────────────────────────────────────────
+
+
+// ═══════════════════════════════════════════════════════
+//  APPLICATION LOGIC
+// ═══════════════════════════════════════════════════════
+
+let activeFilter = 'all';
+
+function setFilter(el, val) {
+  activeFilter = val;
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  renderList();
+}
+
+function filtered() {
+  if (activeFilter === 'all') return PATRONS;
+  return PATRONS.filter(p => p.tags.includes(activeFilter));
+}
+
+function renderList() {
+  const list = filtered();
+  document.getElementById('patronCount').textContent = `${list.length} ENTRIES`;
+
+  const container = document.getElementById('patronList');
+  container.innerHTML = list.map((p, i) => buildRow(p, i + 1)).join('');
+}
+
+function buildRow(p, rank) {
+  // tier labels shown as badge text
+  const tierLabel = { small: 'Underground', rising: '50M+ Rising', famous: 'Established' };
+
+  const artistsHTML = p.artists.map(a => {
+    const tier = a.fame || 'small';
+    return `
+    <div class="artist-item tier-${tier}">
+      <div style="flex:1;min-width:0;">
+        <div class="artist-item-name">${a.name}</div>
+        <div class="artist-item-disc">${a.discipline}</div>
+      </div>
+      <span class="tier-badge">${tierLabel[tier]}</span>
+      <div class="artist-item-amount">${a.amount}</div>
+    </div>
+  `}).join('');
+
+  const tagsHTML = p.tags.map(t => `<span class="patron-tag">${t}</span>`).join('');
+
+  return `
+    <div class="patron-row" id="row-${p.id}" onclick="toggleRow('${p.id}')">
+      <div class="patron-row-main">
+
+        <div class="patron-rank">${rank}</div>
+
+        <div class="patron-name-block">
+          <div class="patron-name-th">${p.nameTh}</div>
+          <div class="patron-name-en">${p.nameEn}</div>
+          <div class="patron-tags">${tagsHTML}</div>
+        </div>
+
+        <div class="patron-amount-block">
+          <div class="patron-amount-num">${p.totalSpent}</div>
+          <div class="patron-amount-unit">${p.totalNote}</div>
+        </div>
+
+        <div class="patron-artist-block">
+          <div class="patron-top-artist">
+            <div class="artist-label">Top Artist</div>
+            <div class="artist-name">${p.topArtist}</div>
+            <div class="artist-discipline">${p.topArtistDiscipline}</div>
+          </div>
+          <span class="expand-arrow">▶</span>
+        </div>
+
+      </div>
+
+      <div class="patron-detail">
+        <div class="detail-grid">
+
+          <div>
+            <div class="detail-block-label">// เกี่ยวกับผู้อุปถัมภ์ / About</div>
+            <div class="detail-block-text">${p.about}</div>
+          </div>
+
+          <div style="grid-column: span 2;">
+            <div class="detail-block-label">// ศิลปินที่ได้รับการสนับสนุน / Artists Supported</div>
+            <div class="artist-list">${artistsHTML}</div>
+            <div style="margin-top:12px;font-family:var(--mono);font-size:0.6rem;color:var(--smoke);letter-spacing:0.08em;">
+              ⚠ ${p.note}
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function toggleRow(id) {
+  const row = document.getElementById('row-' + id);
+  // close others
+  document.querySelectorAll('.patron-row.open').forEach(r => {
+    if (r !== row) r.classList.remove('open');
+  });
+  row.classList.toggle('open');
+}
+
+function showTierTab(btn, tier) {
+  // update tab buttons
+  document.querySelectorAll('.tlb').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  // update panels
+  document.querySelectorAll('.tier-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('tp-' + tier).classList.add('active');
+}
+
+// ── INIT ──
+renderList();
+</script>
+</body>
+</html>

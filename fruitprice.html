@@ -1,0 +1,1458 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ราคาผลไม้ไทย — Thai Fruit Market</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:       #0b0e0b;
+  --surface:  #111511;
+  --surface2: #161c16;
+  --border:   #1f271f;
+  --border2:  #2a382a;
+  --text:     #d4e8d4;
+  --muted:    #5a7a5a;
+  --up:       #22c55e;
+  --down:     #ef4444;
+  --warn:     #f59e0b;
+  --accent:   #86efac;
+  --mono:     'IBM Plex Mono', monospace;
+  --thai:     'Noto Sans Thai', sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--thai);
+  font-size: 14px;
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border2); }
+
+/* ── TICKER TAPE ── */
+.ticker-wrap {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 7px 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.ticker-inner {
+  display: inline-block;
+  animation: ticker 30s linear infinite;
+}
+
+@keyframes ticker {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.ticker-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-right: 40px;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+}
+
+.ticker-name  { color: var(--muted); }
+.ticker-price { color: var(--text); font-weight: 500; }
+.ticker-chg.up   { color: var(--up); }
+.ticker-chg.down { color: var(--down); }
+
+/* ── HEADER ── */
+header {
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.header-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  font-family: var(--mono);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 0.04em;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-sub {
+  font-size: 0.65rem;
+  color: var(--muted);
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  border-left: 1px solid var(--border2);
+  padding-left: 10px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--muted);
+}
+
+.live-dot {
+  width: 6px; height: 6px;
+  background: var(--up);
+  border-radius: 50%;
+  box-shadow: 0 0 6px var(--up);
+  animation: blink 2s infinite;
+}
+
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+/* ── LAYOUT ── */
+.page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 20px;
+}
+
+/* ── FRUIT LIST SIDEBAR ── */
+.fruit-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sidebar-label {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  color: var(--muted);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0 0 10px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 6px;
+}
+
+.fruit-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: none;
+  border: none;
+  border-left: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.12s;
+  width: 100%;
+  text-align: left;
+  gap: 8px;
+}
+
+.fruit-btn:hover   { background: var(--surface2); }
+.fruit-btn.active  { background: var(--surface2); border-left-color: var(--accent); }
+
+.fruit-btn-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.fruit-emoji { font-size: 1.1rem; }
+
+.fruit-btn-name {
+  font-family: var(--thai);
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.fruit-btn-en {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  color: var(--muted);
+}
+
+.fruit-btn-price {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-align: right;
+}
+
+.fruit-btn-chg {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+}
+
+/* ── MAIN CONTENT ── */
+.main-content { min-width: 0; }
+
+/* ── FRUIT HERO ── */
+.fruit-hero {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+
+.hero-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.hero-name-th {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.hero-name-en {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+  margin-top: 3px;
+  letter-spacing: 0.06em;
+}
+
+.hero-price-block { text-align: right; }
+
+.hero-price {
+  font-family: var(--mono);
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1;
+}
+
+.hero-price-unit {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: var(--muted);
+  margin-top: 2px;
+  letter-spacing: 0.08em;
+}
+
+.hero-change {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.hero-change.up   { color: var(--up); }
+.hero-change.down { color: var(--down); }
+
+/* ── HML BAR ── */
+.hml-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 0;
+}
+
+.hml-box {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  padding: 10px 14px;
+}
+
+.hml-label {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  color: var(--muted);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.hml-value {
+  font-family: var(--mono);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.hml-high  .hml-value { color: var(--up); }
+.hml-mid   .hml-value { color: var(--warn); }
+.hml-low   .hml-value { color: var(--down); }
+.hml-mkt   .hml-value { color: var(--accent); font-size: 0.82rem; }
+
+/* ── CHART AREA ── */
+.chart-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 16px 20px;
+  margin-bottom: 16px;
+}
+
+.chart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.chart-title {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: var(--muted);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.chart-periods {
+  display: flex;
+  gap: 4px;
+}
+
+.period-btn {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  padding: 3px 9px;
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.1s;
+}
+
+.period-btn:hover  { border-color: var(--border2); color: var(--text); }
+.period-btn.active { background: var(--border2); color: var(--accent); border-color: var(--border2); }
+
+/* SVG Chart */
+.chart-canvas {
+  width: 100%;
+  height: 160px;
+  position: relative;
+}
+
+.chart-canvas svg { width: 100%; height: 100%; }
+
+/* ── PRICE TABLE ── */
+.history-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+
+.section-head {
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  color: var(--muted);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  display: flex;
+  justify-content: space-between;
+}
+
+.price-table { width: 100%; border-collapse: collapse; }
+
+.price-table th {
+  padding: 8px 20px;
+  text-align: left;
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border);
+  font-weight: 400;
+}
+
+.price-table td {
+  padding: 9px 20px;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.price-table tr:last-child td { border-bottom: none; }
+.price-table tr:hover td { background: var(--surface2); }
+
+.td-date  { color: var(--muted); }
+.td-price { color: var(--text); font-weight: 500; }
+.td-chg.up   { color: var(--up); }
+.td-chg.down { color: var(--down); }
+.td-market { color: var(--muted); font-size: 0.7rem; }
+
+/* ── FORECAST ── */
+.forecast-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  margin-bottom: 16px;
+  padding: 16px 20px;
+}
+
+.forecast-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 14px;
+  margin-top: 12px;
+}
+
+.forecast-box {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  padding: 12px 14px;
+}
+
+.forecast-period {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+
+.forecast-price {
+  font-family: var(--mono);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.forecast-note {
+  font-size: 0.72rem;
+  color: var(--muted);
+  margin-top: 3px;
+}
+
+/* ── THE BACK NOTE — Market Power Warning ── */
+.back-note {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--warn);
+  overflow: hidden;
+}
+
+.back-note-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+}
+
+.back-tab {
+  padding: 10px 18px;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: none;
+  border: none;
+  border-right: 1px solid var(--border);
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.1s;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+
+.back-tab:hover  { color: var(--text); background: var(--surface2); }
+.back-tab.active { color: var(--warn); background: var(--surface2); border-bottom-color: var(--warn); }
+
+.back-panel { display: none; padding: 18px 20px; }
+.back-panel.active { display: block; }
+
+.back-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--warn);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.back-body {
+  font-size: 0.82rem;
+  color: #8aaa8a;
+  line-height: 1.85;
+}
+
+.back-body strong { color: var(--text); font-weight: 600; }
+.back-body em     { color: var(--warn); font-style: normal; font-weight: 500; }
+
+/* scenario flow */
+.scenario {
+  margin: 14px 0;
+  border-left: 2px solid var(--border2);
+  padding-left: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.scenario-step {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 0.8rem;
+  color: #8aaa8a;
+  line-height: 1.65;
+}
+
+.step-num {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  background: var(--border2);
+  color: var(--muted);
+  padding: 1px 6px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.step-num.bad { background: rgba(239,68,68,0.2); color: var(--down); }
+
+/* fix items */
+.fix-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.fix-item {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--up);
+  padding: 10px 14px;
+}
+
+.fix-item-title {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--up);
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.fix-item-body {
+  font-size: 0.78rem;
+  color: #7a9a7a;
+  line-height: 1.7;
+}
+
+/* sticker badge visual */
+.sticker-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(34,197,94,0.1);
+  border: 1px solid rgba(34,197,94,0.3);
+  padding: 4px 12px;
+  margin: 8px 0;
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: var(--up);
+  letter-spacing: 0.08em;
+}
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--muted);
+  padding: 16px 24px;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 32px;
+}
+
+footer span { color: var(--accent); }
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+  .page { grid-template-columns: 1fr; padding: 14px; }
+  .hml-row { grid-template-columns: repeat(2,1fr); }
+  .forecast-row { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- TICKER TAPE -->
+<div class="ticker-wrap">
+  <div class="ticker-inner" id="tickerInner"></div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      🌿 ราคาผลไม้ไทย
+      <span class="logo-sub">THAI FRUIT MARKET · มองทะลุ.net</span>
+    </div>
+    <div class="header-right">
+      <span class="live-dot"></span>
+      <span id="clockDisplay">--:--:--</span>
+      <span>อัปเดตรายวัน / Daily Update</span>
+    </div>
+  </div>
+</header>
+
+<!-- MAIN LAYOUT -->
+<div class="page">
+
+  <!-- FRUIT SIDEBAR -->
+  <aside class="fruit-sidebar">
+    <div class="sidebar-label">// ผลไม้ / Fruits</div>
+    <div id="fruitList"></div>
+  </aside>
+
+  <!-- CONTENT -->
+  <div class="main-content" id="mainContent">
+    <!-- Rendered by JS -->
+  </div>
+
+</div>
+
+<footer>
+  <span>ราคาผลไม้ไทย</span> — ข้อมูลราคาตลาดกลาง · ส่วนหนึ่งของ <span>มองทะลุ.net</span>
+  <span>ราคาเป็นการประมาณการจากตลาดกลางสินค้าเกษตร ไม่ใช่ราคาการันตี</span>
+</footer>
+
+<!-- ════════════════════════════════════════════════════
+     DATA
+     ════════════════════════════════════════════════ -->
+<script>
+
+const FRUITS = [
+
+  // ── มะพร้าว / COCONUT ─────────────────────────────
+  {
+    id: "coconut",
+    emoji: "🥥",
+    nameTh: "มะพร้าว",
+    nameEn: "Coconut",
+    unit: "฿ / ผล",
+    priceToday: 12,
+    priceYesterday: 13,
+    high52w: 22,
+    mid52w: 14,
+    low52w: 2,
+    mainMarket: "ตลาดไท, ปทุมธานี",
+    history: [
+      { date: "23 มี.ค. 68", price: 12, market: "ตลาดไท" },
+      { date: "22 มี.ค. 68", price: 13, market: "ตลาดไท" },
+      { date: "21 มี.ค. 68", price: 13, market: "ตลาดสี่มุมเมือง" },
+      { date: "18 มี.ค. 68", price: 15, market: "ตลาดไท" },
+      { date: "15 มี.ค. 68", price: 14, market: "ตลาดไท" },
+      { date: "10 มี.ค. 68", price: 11, market: "ตลาดสี่มุมเมือง" },
+      { date: "1 มี.ค. 68",  price: 10, market: "ตลาดไท" },
+      { date: "15 ก.พ. 68",  price: 8,  market: "ตลาดไท" },
+    ],
+    // chart data — 12 months relative values
+    chartPoints: [18, 16, 14, 22, 20, 18, 15, 11, 8, 10, 13, 12],
+    chartLabels: ["เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค.", "ม.ค.", "ก.พ.", "มี.ค."],
+    forecast: [
+      { period: "1 เดือน", price: "฿13–15", note: "ฤดูกาลปกติ" },
+      { period: "3 เดือน", price: "฿10–13", note: "ช่วงผลผลิตล้นตลาด" },
+      { period: "6 เดือน", price: "฿14–18", note: "ส่งออกเพิ่ม / น้ำมะพร้าว" },
+    ],
+    // THE BACK NOTE
+    issue: {
+      title: "วงจรราคา: ผู้ซื้อรายใหญ่ควบคุมราคามะพร้าวอย่างไร",
+      scenario: [
+        { n: "1", bad: false, text: "ผู้ซื้อรายใหญ่เข้ามาในตลาด ประกาศราคารับซื้อ <strong>ผลละ 20 บาท</strong>" },
+        { n: "2", bad: false, text: "เกษตรกรทั่วประเทศเห็นราคาดี — <strong>ขยายสวน ปลูกเพิ่ม ผลิตล้น</strong>" },
+        { n: "3", bad: true,  text: "ผลผลิตล้นตลาด ผู้ซื้อรายเดิมกลับมาพร้อมราคาใหม่: <em>\"รับซื้อได้แค่ผลละ 2 บาท\"</em>" },
+        { n: "4", bad: true,  text: "เกษตรกรไม่มีทางเลือก — <strong>ไม่มีผู้ซื้อรายอื่น ไม่มีที่เก็บ ไม่มีอำนาจต่อรอง</strong> ต้องยอมรับราคาที่กำหนด" },
+        { n: "5", bad: true,  text: "ผู้ซื้อนำมะพร้าวต้นทุน 2 บาท ไปขายต่อในราคา 15–25 บาท <strong>กำไรทั้งหมดไม่ตกถึงเกษตรกร</strong>" },
+      ],
+      fixes: [
+        {
+          icon: "🤝",
+          title: "จัดตั้งทีมเจรจาเฉพาะกิจเพื่อเกษตรกร",
+          body: "ตั้งคณะทำงานที่มีนักกฎหมาย นักเศรษฐศาสตร์ และตัวแทนเกษตรกร ทำหน้าที่เจรจาราคาขั้นต่ำกับผู้ซื้อรายใหญ่โดยตรง แทนที่จะให้เกษตรกรต้องต่อรองคนเดียว"
+        },
+        {
+          icon: "🏷️",
+          title: "สติ๊กเกอร์รับรองคนกลางที่เป็นธรรม",
+          body: "ออกแบบระบบตรวจสอบและสติ๊กเกอร์รับรองสำหรับพ่อค้าคนกลางที่จ่ายราคาที่เป็นธรรมแก่เกษตรกร ผู้บริโภคสามารถมองหาสติ๊กเกอร์นี้เพื่อเลือกซื้อจากห่วงโซ่ที่ดี",
+          sticker: true
+        },
+        {
+          icon: "🌍",
+          title: "แจ้งประเทศผู้ซื้อต่างชาติ — คนกลางดี vs คนกลางเลว",
+          body: "ทำงานกับสถานทูตและองค์กรการค้า ชี้แจงผู้นำเข้าต่างประเทศว่า: คนกลางที่จ่ายราคาที่เป็นธรรมแก่เกษตรกร = ผลไม้คุณภาพดีกว่าเสมอ เพราะเกษตรกรมีแรงจูงใจในการดูแลคุณภาพ ส่วนคนกลางที่กดราคา = เกษตรกรประหยัดต้นทุนด้านคุณภาพ ผลไม้เสียหายง่ายกว่า"
+        },
+      ]
+    }
+  },
+
+  // ── ทุเรียน / DURIAN ──────────────────────────────
+  {
+    id: "durian",
+    emoji: "🍈",
+    nameTh: "ทุเรียน",
+    nameEn: "Durian (Monthong)",
+    unit: "฿ / กก.",
+    priceToday: 85,
+    priceYesterday: 80,
+    high52w: 180,
+    mid52w: 95,
+    low52w: 45,
+    mainMarket: "ตลาดไท / ตลาดจันทบุรี",
+    history: [
+      { date: "23 มี.ค. 68", price: 85,  market: "ตลาดไท" },
+      { date: "22 มี.ค. 68", price: 80,  market: "ตลาดไท" },
+      { date: "20 มี.ค. 68", price: 75,  market: "ตลาดจันทบุรี" },
+      { date: "15 มี.ค. 68", price: 90,  market: "ตลาดไท" },
+      { date: "10 มี.ค. 68", price: 110, market: "ตลาดไท" },
+      { date: "1 มี.ค. 68",  price: 130, market: "ตลาดจันทบุรี" },
+      { date: "15 ก.พ. 68",  price: 150, market: "ตลาดไท" },
+    ],
+    chartPoints: [55, 60, 45, 90, 180, 160, 130, 110, 90, 80, 80, 85],
+    chartLabels: ["เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค.", "ม.ค.", "ก.พ.", "มี.ค."],
+    forecast: [
+      { period: "1 เดือน", price: "฿75–90",   note: "ฤดูกาลเปิด เริ่มผลผลิต" },
+      { period: "3 เดือน", price: "฿120–160",  note: "ช่วงพีค ส่งออกจีน" },
+      { period: "6 เดือน", price: "฿60–80",    note: "หลังฤดู ราคาลง" },
+    ],
+    issue: {
+      title: "วงจรราคา: ผู้ส่งออกรายใหญ่และการล็อคราคาทุเรียน",
+      scenario: [
+        { n: "1", bad: false, text: "ผู้ส่งออกรายใหญ่เจรจาล่วงหน้ากับผู้ซื้อจีน <strong>กำหนดราคาขาย</strong> ก่อนฤดูกาล" },
+        { n: "2", bad: true,  text: "แต่ <em>ไม่แจ้งราคานี้แก่เกษตรกร</em> — รับซื้อในราคาต่ำกว่าความเป็นจริงมาก" },
+        { n: "3", bad: false, text: "เกษตรกรไม่รู้ว่าทุเรียนตัวเองราคาจริงเท่าไรในตลาดจีน จึงยอมรับราคาที่บอก" },
+        { n: "4", bad: true,  text: "<strong>ส่วนต่างกำไรทั้งหมด</strong> ตกอยู่ที่ผู้ส่งออก ไม่ถึงมือเกษตรกร" },
+      ],
+      fixes: [
+        { icon: "🤝", title: "จัดตั้งทีมเจรจาเฉพาะกิจ", body: "ตั้งหน่วยงานเจรจาราคากับผู้ส่งออกโดยมีข้อมูลราคาตลาดจีนแบบเรียลไทม์ ทำให้เกษตรกรรู้ว่าสินค้าตัวเองราคาจริงเท่าไร" },
+        { icon: "🏷️", title: "สติ๊กเกอร์รับรองคนกลางที่เป็นธรรม", body: "ออกระบบรับรองผู้ส่งออกที่แบ่งปันข้อมูลราคาแก่เกษตรกรอย่างโปร่งใส", sticker: true },
+        { icon: "🌍", title: "แจ้งผู้นำเข้าต่างประเทศ", body: "ผู้นำเข้าที่ซื้อผ่านช่องทางโปร่งใสจะได้ทุเรียนสุกพอดี ไม่ถูกตัดเขียวเกินไป เพราะเกษตรกรมีแรงจูงใจดูแลคุณภาพเมื่อได้ราคาที่เป็นธรรม" },
+      ]
+    }
+  },
+
+  // ── มังคุด / MANGOSTEEN ───────────────────────────
+  {
+    id: "mangosteen",
+    emoji: "🟣",
+    nameTh: "มังคุด",
+    nameEn: "Mangosteen",
+    unit: "฿ / กก.",
+    priceToday: 35,
+    priceYesterday: 38,
+    high52w: 80,
+    mid52w: 40,
+    low52w: 8,
+    mainMarket: "ตลาดไท / ชุมพร",
+    history: [
+      { date: "23 มี.ค. 68", price: 35, market: "ตลาดไท" },
+      { date: "22 มี.ค. 68", price: 38, market: "ตลาดไท" },
+      { date: "20 มี.ค. 68", price: 40, market: "ชุมพร" },
+      { date: "15 มี.ค. 68", price: 45, market: "ตลาดไท" },
+      { date: "10 มี.ค. 68", price: 55, market: "ชุมพร" },
+      { date: "1 มี.ค. 68",  price: 70, market: "ตลาดไท" },
+      { date: "15 ก.พ. 68",  price: 80, market: "ตลาดไท" },
+    ],
+    chartPoints: [20, 15, 8, 25, 80, 70, 60, 45, 30, 35, 38, 35],
+    chartLabels: ["เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค.", "ม.ค.", "ก.พ.", "มี.ค."],
+    forecast: [
+      { period: "1 เดือน", price: "฿30–40",  note: "ปลายฤดู ราคาลง" },
+      { period: "3 เดือน", price: "฿8–15",   note: "นอกฤดู หายากแต่ราคาต่ำ" },
+      { period: "6 เดือน", price: "฿60–80",  note: "ต้นฤดูใหม่ ราคาสูง" },
+    ],
+    issue: {
+      title: "วงจรราคา: มังคุดราคาดีแต่เกษตรกรได้น้อย",
+      scenario: [
+        { n: "1", bad: false, text: "มังคุดในตลาดต่างประเทศราคา <strong>200–400 บาทต่อกิโล</strong>" },
+        { n: "2", bad: true,  text: "เกษตรกรขายได้ <em>8–35 บาทต่อกิโล</em> — ผ่านคนกลาง 3–4 ชั้น" },
+        { n: "3", bad: true,  text: "แต่ละชั้นบวกราคา โดยที่เกษตรกรไม่รู้ว่าสินค้าตัวเองไปถึงมือผู้บริโภคในราคาเท่าไร" },
+        { n: "4", bad: true,  text: "<strong>คนกลางที่ไม่ซื่อสัตย์</strong> ผสมมังคุดคุณภาพต่างกัน ทำให้ชื่อเสียงมังคุดไทยเสียในระยะยาว" },
+      ],
+      fixes: [
+        { icon: "🤝", title: "ทีมเจรจาราคาส่งออก", body: "มีหน่วยงานที่ติดตามราคาปลายทางและนำข้อมูลมาใช้ในการเจรจาราคารับซื้อต้นทาง" },
+        { icon: "🏷️", title: "สติ๊กเกอร์รับรองคุณภาพและความเป็นธรรม", body: "สติ๊กเกอร์ที่ยืนยันว่าผ่านคนกลางที่ได้รับการรับรอง ไม่มีการผสมหรือเปลี่ยนเกรด", sticker: true },
+        { icon: "🌍", title: "แจ้งผู้นำเข้าต่างชาติ", body: "มังคุดที่ผ่านคนกลางที่เป็นธรรม = เกรดสม่ำเสมอ ไม่ผสม คัดขนาดจริง ต่างจากคนกลางเลวที่ผสมเกรดเพื่อกำไร" },
+      ]
+    }
+  },
+
+  // ── มะม่วง / MANGO ────────────────────────────────
+  {
+    id: "mango",
+    emoji: "🥭",
+    nameTh: "มะม่วงน้ำดอกไม้",
+    nameEn: "Nam Dok Mai Mango",
+    unit: "฿ / กก.",
+    priceToday: 55,
+    priceYesterday: 50,
+    high52w: 120,
+    mid52w: 60,
+    low52w: 18,
+    mainMarket: "ตลาดไท / ฉะเชิงเทรา",
+    history: [
+      { date: "23 มี.ค. 68", price: 55,  market: "ตลาดไท" },
+      { date: "22 มี.ค. 68", price: 50,  market: "ตลาดไท" },
+      { date: "20 มี.ค. 68", price: 48,  market: "ฉะเชิงเทรา" },
+      { date: "15 มี.ค. 68", price: 42,  market: "ตลาดไท" },
+      { date: "10 มี.ค. 68", price: 38,  market: "ตลาดไท" },
+      { date: "1 มี.ค. 68",  price: 30,  market: "ฉะเชิงเทรา" },
+      { date: "15 ก.พ. 68",  price: 25,  market: "ตลาดไท" },
+      { date: "1 ก.พ. 68",   price: 20,  market: "ตลาดไท" },
+    ],
+    chartPoints: [120, 100, 80, 40, 18, 22, 20, 25, 30, 38, 50, 55],
+    chartLabels: ["เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค.", "ม.ค.", "ก.พ.", "มี.ค."],
+    forecast: [
+      { period: "1 เดือน", price: "฿60–80",   note: "เข้าฤดูกาลหลัก" },
+      { period: "3 เดือน", price: "฿100–120",  note: "พีคส่งออกญี่ปุ่น / เกาหลี" },
+      { period: "6 เดือน", price: "฿20–35",    note: "นอกฤดู ราคาลดมาก" },
+    ],
+    issue: {
+      title: "วงจรราคา: มะม่วงน้ำดอกไม้กับผู้ส่งออกญี่ปุ่น",
+      scenario: [
+        { n: "1", bad: false, text: "ญี่ปุ่นและเกาหลีซื้อมะม่วงน้ำดอกไม้ในราคา <strong>300–500 บาทต่อกิโล</strong>" },
+        { n: "2", bad: true,  text: "ผู้ส่งออกรับซื้อจากเกษตรกรที่ <em>18–55 บาท</em> โดยอ้างว่าต้องผ่านต้นทุนคัดเกรด แพ็คเกจ และขนส่ง" },
+        { n: "3", bad: true,  text: "เกษตรกรไม่สามารถส่งออกเองได้ เพราะขาดใบรับรองมาตรฐาน GAP / GlobalGAP — ผู้ส่งออกรายใหญ่เป็นผู้ถือใบรับรอง" },
+        { n: "4", bad: true,  text: "<strong>ใบรับรองกลายเป็นอาวุธ</strong> ที่ล็อคเกษตรกรไว้กับผู้ส่งออกเพียงราย" },
+      ],
+      fixes: [
+        { icon: "🤝", title: "จัดตั้งทีมเจรจาและขึ้นทะเบียน GAP รายเกษตรกร", body: "ช่วยเกษตรกรรายย่อยขึ้นทะเบียนใบรับรองมาตรฐานส่งออกในนามชุมชน เพื่อไม่ต้องพึ่งพาผู้ส่งออกรายเดียว" },
+        { icon: "🏷️", title: "สติ๊กเกอร์รับรองคนกลางที่เป็นธรรม", body: "คนกลางที่แบ่งปันใบรับรองและต้นทุนจริงแก่เกษตรกรอย่างโปร่งใสจะได้รับสัญลักษณ์รับรอง", sticker: true },
+        { icon: "🌍", title: "แจ้งผู้นำเข้าญี่ปุ่น-เกาหลี", body: "มะม่วงจากเกษตรกรที่ได้ราคาที่เป็นธรรมมีความสม่ำเสมอสูงกว่า เพราะเกษตรกรดูแลคุณภาพดีกว่าเมื่อมีแรงจูงใจ" },
+      ]
+    }
+  },
+
+  // ── ลำไย / LONGAN ─────────────────────────────────
+  {
+    id: "longan",
+    emoji: "🍇",
+    nameTh: "ลำไย",
+    nameEn: "Longan",
+    unit: "฿ / กก.",
+    priceToday: 18,
+    priceYesterday: 20,
+    high52w: 45,
+    mid52w: 22,
+    low52w: 4,
+    mainMarket: "ตลาดเชียงใหม่ / ลำพูน",
+    history: [
+      { date: "23 มี.ค. 68", price: 18, market: "ลำพูน" },
+      { date: "22 มี.ค. 68", price: 20, market: "ลำพูน" },
+      { date: "20 มี.ค. 68", price: 22, market: "เชียงใหม่" },
+      { date: "15 มี.ค. 68", price: 25, market: "ลำพูน" },
+      { date: "10 มี.ค. 68", price: 28, market: "เชียงใหม่" },
+      { date: "1 มี.ค. 68",  price: 30, market: "ลำพูน" },
+      { date: "15 ก.พ. 68",  price: 35, market: "เชียงใหม่" },
+      { date: "1 ก.พ. 68",   price: 38, market: "ลำพูน" },
+    ],
+    chartPoints: [12, 8, 4, 45, 40, 35, 30, 25, 22, 25, 20, 18],
+    chartLabels: ["เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค.", "ม.ค.", "ก.พ.", "มี.ค."],
+    forecast: [
+      { period: "1 เดือน", price: "฿12–18",  note: "ปลายฤดู ราคาลง" },
+      { period: "3 เดือน", price: "฿4–8",    note: "นอกฤดู ผลผลิตน้อย" },
+      { period: "6 เดือน", price: "฿35–45",  note: "ฤดูลำไยภาคเหนือ ก.ค.–ส.ค." },
+    ],
+    issue: {
+      title: "วงจรราคา: ลำไยเชียงใหม่กับล้งจีน",
+      scenario: [
+        { n: "1", bad: false, text: "ล้งจีน (โรงรับซื้อผลไม้ของนายทุนจีน) เข้ามาตั้งในเชียงใหม่-ลำพูน <strong>ราคาสูงกว่าพ่อค้าไทย</strong> ช่วงแรก" },
+        { n: "2", bad: false, text: "เกษตรกรขายผ่านล้งจีนได้ราคาดีขึ้น พ่อค้าไทยแข่งไม่ได้ ค่อยๆ หายไปจากตลาด" },
+        { n: "3", bad: true,  text: "เมื่อล้งจีนครองตลาดแล้ว — <em>กดราคารับซื้อลงต่ำกว่าเดิม</em> เกษตรกรไม่เหลือทางเลือกอื่น" },
+        { n: "4", bad: true,  text: "<strong>เงินออกนอกประเทศ</strong> ระบบเศรษฐกิจชุมชนไม่ได้รับประโยชน์ ทั้งที่ผลผลิตเป็นของไทย" },
+      ],
+      fixes: [
+        { icon: "🤝", title: "ทีมเจรจาและนโยบายกำกับล้งต่างชาติ", body: "กำหนดกติกาการรับซื้อขั้นต่ำและเงื่อนไขการดำเนินงานของล้งต่างชาติในไทย" },
+        { icon: "🏷️", title: "สติ๊กเกอร์รับรองแหล่งซื้อที่เป็นธรรม", body: "ช่วยให้ผู้บริโภคทั้งในและต่างประเทศแยกแยะลำไยที่มาจากห่วงโซ่ที่ดี", sticker: true },
+        { icon: "🌍", title: "แจ้งผู้นำเข้า: ล้งที่จ่ายเป็นธรรม = คุณภาพสม่ำเสมอ", body: "ล้งที่กดราคาเกษตรกรมักรับผลไม้ทุกคุณภาพปนกัน ล้งที่ให้ราคาดีได้ผลที่คัดเกรดแล้ว" },
+      ]
+    }
+  },
+
+  // ── เงาะ / RAMBUTAN ───────────────────────────────
+  {
+    id: "rambutan",
+    emoji: "🔴",
+    nameTh: "เงาะโรงเรียน",
+    nameEn: "Rambutan (Rong Rien)",
+    unit: "฿ / กก.",
+    priceToday: 22,
+    priceYesterday: 22,
+    high52w: 55,
+    mid52w: 28,
+    low52w: 5,
+    mainMarket: "ตลาดไท / สุราษฎร์ธานี",
+    history: [
+      { date: "23 มี.ค. 68", price: 22, market: "สุราษฎร์ธานี" },
+      { date: "22 มี.ค. 68", price: 22, market: "สุราษฎร์ธานี" },
+      { date: "20 มี.ค. 68", price: 25, market: "ตลาดไท" },
+      { date: "15 มี.ค. 68", price: 28, market: "สุราษฎร์ธานี" },
+      { date: "10 มี.ค. 68", price: 30, market: "ตลาดไท" },
+      { date: "1 มี.ค. 68",  price: 35, market: "สุราษฎร์ธานี" },
+      { date: "15 ก.พ. 68",  price: 45, market: "ตลาดไท" },
+      { date: "1 ก.พ. 68",   price: 50, market: "สุราษฎร์ธานี" },
+    ],
+    chartPoints: [55, 45, 18, 5, 8, 12, 18, 30, 35, 28, 22, 22],
+    chartLabels: ["เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค.", "ม.ค.", "ก.พ.", "มี.ค."],
+    forecast: [
+      { period: "1 เดือน", price: "฿18–25",  note: "ปลายฤดู" },
+      { period: "3 เดือน", price: "฿5–10",   note: "นอกฤดู หายาก" },
+      { period: "6 เดือน", price: "฿40–55",  note: "ฤดูใหม่ เม.ย.–พ.ค." },
+    ],
+    issue: {
+      title: "วงจรราคา: เงาะล้นตลาดเมื่อทุเรียนราคาดี",
+      scenario: [
+        { n: "1", bad: false, text: "เกษตรกรใต้ปลูกเงาะแซมสวนทุเรียน ราคาเงาะปกติ <strong>28–35 บาทต่อกิโล</strong>" },
+        { n: "2", bad: false, text: "ปีที่ทุเรียนราคาดี เกษตรกรหันมาปลูกทุเรียนเพิ่ม <strong>ลดพื้นที่เงาะ</strong> ราคาเงาะสูงขึ้น" },
+        { n: "3", bad: true,  text: "ปีถัดมาทุเรียนล้น เกษตรกรกลับมาปลูกเงาะพร้อมกันหมด <em>เงาะล้นตลาด ราคาตก 5 บาท</em>" },
+        { n: "4", bad: true,  text: "พ่อค้ารู้รอบการผลิต <strong>เตรียมกดราคาล่วงหน้า</strong> โดยรอให้เกษตรกรตัดสินใจปลูกแล้วค่อยกด" },
+      ],
+      fixes: [
+        { icon: "🤝", title: "ระบบข้อมูลการเพาะปลูกกลาง", body: "แจ้งเตือนเกษตรกรเมื่อปริมาณการปลูกในระบบเกินความต้องการตลาด เพื่อป้องกันการผลิตล้น" },
+        { icon: "🏷️", title: "สติ๊กเกอร์รับรองคนกลางที่เป็นธรรม", body: "สนับสนุนให้ผู้บริโภคซื้อจากห่วงโซ่ที่โปร่งใส ไม่ผ่านคนกลางที่เก็งกำไรจากความไม่รู้", sticker: true },
+        { icon: "🌍", title: "แจ้งผู้นำเข้าต่างชาติ", body: "เงาะจากเกษตรกรที่ได้ราคาเป็นธรรมมีการคัดขนาดและความสดที่สม่ำเสมอกว่า" },
+      ]
+    }
+  },
+
+  // ── สับปะรด / PINEAPPLE ───────────────────────────
+  {
+    id: "pineapple",
+    emoji: "🍍",
+    nameTh: "สับปะรดปัตตาเวีย",
+    nameEn: "Pattavia Pineapple",
+    unit: "฿ / กก.",
+    priceToday: 6,
+    priceYesterday: 7,
+    high52w: 14,
+    mid52w: 8,
+    low52w: 1,
+    mainMarket: "ตลาดกลางสับปะรด / ประจวบฯ",
+    history: [
+      { date: "23 มี.ค. 68", price: 6,  market: "ประจวบฯ" },
+      { date: "22 มี.ค. 68", price: 7,  market: "ประจวบฯ" },
+      { date: "20 มี.ค. 68", price: 7,  market: "ตลาดกลาง" },
+      { date: "15 มี.ค. 68", price: 8,  market: "ประจวบฯ" },
+      { date: "10 มี.ค. 68", price: 9,  market: "ตลาดกลาง" },
+      { date: "1 มี.ค. 68",  price: 10, market: "ประจวบฯ" },
+      { date: "15 ก.พ. 68",  price: 12, market: "ตลาดกลาง" },
+      { date: "1 ก.พ. 68",   price: 14, market: "ประจวบฯ" },
+    ],
+    chartPoints: [8, 6, 3, 1, 2, 4, 8, 12, 14, 10, 7, 6],
+    chartLabels: ["เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค.", "ม.ค.", "ก.พ.", "มี.ค."],
+    forecast: [
+      { period: "1 เดือน", price: "฿4–7",   note: "ฤดูผลผลิตมาก ราคากดดัน" },
+      { period: "3 เดือน", price: "฿1–3",   note: "ช่วงล้นตลาดสุดขีด" },
+      { period: "6 เดือน", price: "฿10–14", note: "ช่วงผลผลิตน้อย ราคาฟื้น" },
+    ],
+    issue: {
+      title: "วงจรราคา: สับปะรดไทยราคาต่ำที่สุดในโลก",
+      scenario: [
+        { n: "1", bad: false, text: "โรงงานแปรรูปสับปะรดส่งออก (Del Monte, Dole ฯลฯ) <strong>กำหนดโควต้ารับซื้อล่วงหน้า</strong>" },
+        { n: "2", bad: true,  text: "เมื่อผลผลิตเกินโควต้า โรงงานปฏิเสธรับซื้อ เกษตรกรต้องขายตลาดสด <em>ราคาพังทลาย เหลือ 1 บาทต่อกิโล</em>" },
+        { n: "3", bad: true,  text: "ต้นทุนเกษตรกร 5–7 บาทต่อกิโล แต่ขายได้ 1 บาท — <strong>ขาดทุนทุกกิโล ยิ่งปลูกยิ่งจน</strong>" },
+        { n: "4", bad: true,  text: "ไม่มีโรงงานแปรรูปของรัฐ เกษตรกรไม่มีทางเลือกในการแปรรูปเพื่อถนอมราคา" },
+      ],
+      fixes: [
+        { icon: "🤝", title: "ทีมเจรจาโควต้าและโรงงานแปรรูปชุมชน", body: "จัดตั้งโรงงานแปรรูปขนาดเล็กในชุมชน เพื่อให้เกษตรกรสามารถทำน้ำสับปะรด สับปะรดกระป๋อง หรืออบแห้ง แทนที่จะขายสดราคาต่ำ" },
+        { icon: "🏷️", title: "สติ๊กเกอร์รับรองสับปะรดชุมชน", body: "สร้างแบรนด์สับปะรดแปรรูปที่มาจากห่วงโซ่ที่เป็นธรรม เพิ่มมูลค่าสินค้าก่อนถึงผู้บริโภค", sticker: true },
+        { icon: "🌍", title: "แจ้งผู้นำเข้า: สับปะรดชุมชนแปรรูป คุณภาพสูงกว่า", body: "สับปะรดที่แปรรูปโดยชุมชนที่ได้ราคาเป็นธรรม = สดกว่า คุมคุณภาพได้ดีกว่า เพราะไม่รีบตัดเพื่อหนีขาดทุน" },
+      ]
+    }
+  },
+
+  // ── กล้วยหอม / BANANA ─────────────────────────────
+  {
+    id: "banana",
+    emoji: "🍌",
+    nameTh: "กล้วยหอมทอง",
+    nameEn: "Hom Thong Banana",
+    unit: "฿ / หวี",
+    priceToday: 30,
+    priceYesterday: 28,
+    high52w: 55,
+    mid52w: 32,
+    low52w: 12,
+    mainMarket: "ตลาดไท / กำแพงเพชร",
+    history: [
+      { date: "23 มี.ค. 68", price: 30, market: "กำแพงเพชร" },
+      { date: "22 มี.ค. 68", price: 28, market: "กำแพงเพชร" },
+      { date: "20 มี.ค. 68", price: 28, market: "ตลาดไท" },
+      { date: "15 มี.ค. 68", price: 25, market: "กำแพงเพชร" },
+      { date: "10 มี.ค. 68", price: 22, market: "ตลาดไท" },
+      { date: "1 มี.ค. 68",  price: 20, market: "กำแพงเพชร" },
+      { date: "15 ก.พ. 68",  price: 18, market: "ตลาดไท" },
+      { date: "1 ก.พ. 68",   price: 15, market: "กำแพงเพชร" },
+    ],
+    chartPoints: [45, 55, 48, 30, 15, 12, 18, 20, 22, 25, 28, 30],
+    chartLabels: ["เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค.", "ม.ค.", "ก.พ.", "มี.ค."],
+    forecast: [
+      { period: "1 เดือน", price: "฿32–40",  note: "ตลาดญี่ปุ่นเปิดคำสั่ง" },
+      { period: "3 เดือน", price: "฿42–55",  note: "ฤดูพีค ส่งออกเพิ่ม" },
+      { period: "6 เดือน", price: "฿20–30",  note: "ผลผลิตมาก ราคานิ่ง" },
+    ],
+    issue: {
+      title: "วงจรราคา: กล้วยหอมส่งออกกับปัญหาคนกลาง 4 ชั้น",
+      scenario: [
+        { n: "1", bad: false, text: "ญี่ปุ่นซื้อกล้วยหอมทองไทยในราคา <strong>หวีละ 150–200 บาท</strong>" },
+        { n: "2", bad: true,  text: "ผ่านผู้ส่งออก → โบรกเกอร์ → พ่อค้าส่ง → พ่อค้าปลีก <em>แต่ละชั้นบวก 20–40%</em>" },
+        { n: "3", bad: true,  text: "เกษตรกรได้รับ <strong>หวีละ 15–30 บาท</strong> จากราคาปลายทาง 200 บาท" },
+        { n: "4", bad: true,  text: "เมื่อกล้วยญี่ปุ่นหายไปจากออเดอร์ — ทุกชั้นกดราคาเกษตรกรพร้อมกัน เพราะเกษตรกรอยู่ล่างสุด" },
+      ],
+      fixes: [
+        { icon: "🤝", title: "ลดชั้นคนกลาง ทีมรวมกลุ่มเกษตรกรส่งออกตรง", body: "จัดตั้งสหกรณ์ส่งออกกล้วยหอมโดยตรงสู่ซูเปอร์มาร์เก็ตญี่ปุ่น ลดคนกลางจาก 4 ชั้นเหลือ 1–2 ชั้น" },
+        { icon: "🏷️", title: "สติ๊กเกอร์รับรองห่วงโซ่โปร่งใส", body: "แสดงจำนวนชั้นคนกลางบนสติ๊กเกอร์ ให้ผู้บริโภคเลือกซื้อจากห่วงโซ่สั้นที่เงินถึงเกษตรกรมากกว่า", sticker: true },
+        { icon: "🌍", title: "แจ้งซูเปอร์มาร์เก็ตญี่ปุ่น", body: "กล้วยจากห่วงโซ่สั้นสดกว่า 2–3 วัน เพราะลดเวลาขนส่งระหว่างชั้น และเกษตรกรตัดเมื่อสุกพอดีไม่ใช่รีบตัดเขียว" },
+      ]
+    }
+  },
+
+  // ── ลิ้นจี่ / LYCHEE ──────────────────────────────
+  {
+    id: "lychee",
+    emoji: "🔴",
+    nameTh: "ลิ้นจี่จักรพรรดิ์",
+    nameEn: "Emperor Lychee",
+    unit: "฿ / กก.",
+    priceToday: 65,
+    priceYesterday: 70,
+    high52w: 180,
+    mid52w: 75,
+    low52w: 20,
+    mainMarket: "ตลาดเชียงราย / ตลาดไท",
+    history: [
+      { date: "23 มี.ค. 68", price: 65,  market: "เชียงราย" },
+      { date: "22 มี.ค. 68", price: 70,  market: "เชียงราย" },
+      { date: "20 มี.ค. 68", price: 75,  market: "ตลาดไท" },
+      { date: "15 มี.ค. 68", price: 85,  market: "เชียงราย" },
+      { date: "10 มี.ค. 68", price: 100, market: "ตลาดไท" },
+      { date: "1 มี.ค. 68",  price: 130, market: "เชียงราย" },
+      { date: "15 ก.พ. 68",  price: 160, market: "ตลาดไท" },
+      { date: "1 ก.พ. 68",   price: 180, market: "เชียงราย" },
+    ],
+    chartPoints: [20, 22, 25, 180, 160, 120, 80, 60, 40, 50, 70, 65],
+    chartLabels: ["เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค.", "ม.ค.", "ก.พ.", "มี.ค."],
+    forecast: [
+      { period: "1 เดือน", price: "฿50–65",   note: "ปลายฤดู ราคาลง" },
+      { period: "3 เดือน", price: "฿20–30",    note: "นอกฤดู หายากมาก" },
+      { period: "6 เดือน", price: "฿150–180",  note: "ต้นฤดู เม.ย. ราคาสูงสุด" },
+    ],
+    issue: {
+      title: "วงจรราคา: ลิ้นจี่เชียงรายกับปัญหาอายุสั้น",
+      scenario: [
+        { n: "1", bad: false, text: "ลิ้นจี่มีอายุสั้นมาก — <strong>เสียหายภายใน 3–5 วัน</strong> หลังเก็บเกี่ยว" },
+        { n: "2", bad: true,  text: "เกษตรกรต้องขายทันทีไม่ว่าราคาจะเป็นเท่าไร <em>ผู้ซื้อรู้จุดอ่อนนี้</em> และรอกดราคาเมื่อใกล้เสียหาย" },
+        { n: "3", bad: true,  text: "ช่วงผลผลิตล้น (พ.ค.) ราคาตกจาก 180 บาท <strong>เหลือ 20 บาทต่อกิโล</strong> ภายใน 2 สัปดาห์" },
+        { n: "4", bad: true,  text: "ห้องเย็นในพื้นที่ไม่เพียงพอ เกษตรกรไม่สามารถรอราคาฟื้น — <strong>ขายขาดทุนดีกว่าทิ้ง</strong>" },
+      ],
+      fixes: [
+        { icon: "🤝", title: "ทีมเจรจาและห้องเย็นชุมชน", body: "จัดหาห้องเย็นราคาถูกสำหรับชุมชน ยืดอายุลิ้นจี่จาก 3 วันเป็น 3 สัปดาห์ ให้เกษตรกรมีเวลาเจรจาราคา" },
+        { icon: "🏷️", title: "สติ๊กเกอร์รับรองและ Cold Chain", body: "รับรองคนกลางที่มีระบบ cold chain ที่ดี ลิ้นจี่ไม่เสียหาย = เกษตรกรไม่ต้องรีบขาย", sticker: true },
+        { icon: "🌍", title: "แจ้งผู้นำเข้า: Cold Chain คือคุณภาพ", body: "ลิ้นจี่ที่ผ่านคนกลางมี cold chain ดี = สีแดงสดกว่า หวานกว่า ไม่เน่าระหว่างขนส่ง" },
+      ]
+    }
+  },
+
+  // ── มะละกอ / PAPAYA ───────────────────────────────
+  {
+    id: "papaya",
+    emoji: "🍈",
+    nameTh: "มะละกอฮอลแลนด์",
+    nameEn: "Holland Papaya",
+    unit: "฿ / กก.",
+    priceToday: 9,
+    priceYesterday: 10,
+    high52w: 22,
+    mid52w: 11,
+    low52w: 3,
+    mainMarket: "ตลาดไท / นครราชสีมา",
+    history: [
+      { date: "23 มี.ค. 68", price: 9,  market: "นครราชสีมา" },
+      { date: "22 มี.ค. 68", price: 10, market: "นครราชสีมา" },
+      { date: "20 มี.ค. 68", price: 10, market: "ตลาดไท" },
+      { date: "15 มี.ค. 68", price: 11, market: "นครราชสีมา" },
+      { date: "10 มี.ค. 68", price: 12, market: "ตลาดไท" },
+      { date: "1 มี.ค. 68",  price: 14, market: "นครราชสีมา" },
+      { date: "15 ก.พ. 68",  price: 16, market: "ตลาดไท" },
+      { date: "1 ก.พ. 68",   price: 18, market: "นครราชสีมา" },
+    ],
+    chartPoints: [14, 18, 22, 16, 10, 5, 3, 6, 10, 12, 10, 9],
+    chartLabels: ["เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค.", "ม.ค.", "ก.พ.", "มี.ค."],
+    forecast: [
+      { period: "1 เดือน", price: "฿8–11",   note: "ผลผลิตเริ่มมาก" },
+      { period: "3 เดือน", price: "฿14–20",  note: "ช่วงผลผลิตน้อย ราคาดี" },
+      { period: "6 เดือน", price: "฿5–9",    note: "ผลผลิตล้นตลาด" },
+    ],
+    issue: {
+      title: "วงจรราคา: มะละกอราคาต่ำตลอดปี",
+      scenario: [
+        { n: "1", bad: false, text: "มะละกอปลูกง่าย ออกผลตลอดปี ทำให้ <strong>ราคาไม่มีฤดูกาลรักษา</strong>" },
+        { n: "2", bad: true,  text: "ผู้ซื้อรู้ว่าเกษตรกรมีผลผลิตตลอดปีและเสียหายง่าย <em>กดราคาตลอดเวลา</em>" },
+        { n: "3", bad: true,  text: "ตลาดมะละกอผงยา (papain) ถูกผูกขาดโดยผู้ซื้อไม่กี่ราย เกษตรกรไม่มีทางเลือกอื่น" },
+        { n: "4", bad: true,  text: "ต้นทุนปุ๋ย ค่าแรง ค่าน้ำ รวม <strong>7–9 บาทต่อกิโล</strong> แต่ขายได้ 3–9 บาท" },
+      ],
+      fixes: [
+        { icon: "🤝", title: "ทีมเจรจาราคา papain และตลาดแปรรูปใหม่", body: "เปิดตลาดมะละกอแห้ง มะละกออบ และผลิตภัณฑ์แปรรูปอื่นๆ เพื่อลดการพึ่งพาตลาดสดราคาต่ำ" },
+        { icon: "🏷️", title: "สติ๊กเกอร์รับรองมะละกออินทรีย์", body: "มะละกออินทรีย์มีราคาสูงกว่า 3–5 เท่า การรับรองช่วยให้เกษตรกรเข้าถึงตลาดพรีเมียมได้", sticker: true },
+        { icon: "🌍", title: "แจ้งผู้นำเข้าและซูเปอร์มาร์เก็ต", body: "มะละกออินทรีย์จากเกษตรกรที่ได้ราคาเป็นธรรม = ไม่ใช้สารเร่งสุก ปลอดภัยกว่า รสดีกว่า" },
+      ]
+    }
+  },
+
+  // ── ส้มโอ / POMELO ────────────────────────────────
+  {
+    id: "pomelo",
+    emoji: "🟡",
+    nameTh: "ส้มโอขาวแตงกวา",
+    nameEn: "Khao Tangkwa Pomelo",
+    unit: "฿ / ผล",
+    priceToday: 45,
+    priceYesterday: 42,
+    high52w: 90,
+    mid52w: 50,
+    low52w: 15,
+    mainMarket: "ตลาดไท / นครปฐม",
+    history: [
+      { date: "23 มี.ค. 68", price: 45, market: "นครปฐม" },
+      { date: "22 มี.ค. 68", price: 42, market: "นครปฐม" },
+      { date: "20 มี.ค. 68", price: 40, market: "ตลาดไท" },
+      { date: "15 มี.ค. 68", price: 38, market: "นครปฐม" },
+      { date: "10 มี.ค. 68", price: 35, market: "ตลาดไท" },
+      { date: "1 มี.ค. 68",  price: 30, market: "นครปฐม" },
+      { date: "15 ก.พ. 68",  price: 25, market: "ตลาดไท" },
+      { date: "1 ก.พ. 68",   price: 20, market: "นครปฐม" },
+    ],
+    chartPoints: [90, 80, 60, 30, 15, 18, 20, 25, 30, 35, 42, 45],
+    chartLabels: ["เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค.", "ม.ค.", "ก.พ.", "มี.ค."],
+    forecast: [
+      { period: "1 เดือน", price: "฿50–65",  note: "เข้าฤดูกาลหลัก" },
+      { period: "3 เดือน", price: "฿75–90",  note: "พีค เม.ย.–พ.ค." },
+      { period: "6 เดือน", price: "฿15–25",  note: "นอกฤดู ราคาลงมาก" },
+    ],
+    issue: {
+      title: "วงจรราคา: ส้มโอนครปฐมกับปัญหาต้นทุนสูง",
+      scenario: [
+        { n: "1", bad: false, text: "ส้มโอใช้เวลาดูแล <strong>6–8 เดือนต่อรอบ</strong> ต้นทุนสูง ห่อผล ใส่ปุ๋ย ค่าแรง รวม 35–50 บาทต่อผล" },
+        { n: "2", bad: true,  text: "พ่อค้าเข้ามารับซื้อช่วงใกล้เก็บเกี่ยว <em>เสนอราคา 15–20 บาทต่อผล</em> แต่เกษตรกรรอนานแล้วไม่กล้าปฏิเสธ" },
+        { n: "3", bad: true,  text: "ส้มโอผลเดียวกันถูกขายในห้างฯ <strong>100–180 บาท</strong> — ส่วนต่างทั้งหมดไม่ถึงเกษตรกร" },
+        { n: "4", bad: true,  text: "หากปฏิเสธ ส้มโอสุกเกินจะเสียหายทั้งสวน เกษตรกรต้อง<strong>ยอมรับราคาที่กำหนด</strong>" },
+      ],
+      fixes: [
+        { icon: "🤝", title: "ทีมเจรจาราคาก่อนฤดูกาล", body: "เจรจาราคารับซื้อขั้นต่ำล่วงหน้าก่อนเกษตรกรลงทุน เพื่อลดความเสี่ยงที่เกษตรกรต้องแบกรับคนเดียว" },
+        { icon: "🏷️", title: "สติ๊กเกอร์รับรองส้มโอ direct trade", body: "ช่วยเกษตรกรขายตรงสู่ห้างฯ หรือผู้บริโภค ลดการผ่านคนกลางหลายชั้น เพิ่มรายได้ 3–5 เท่า", sticker: true },
+        { icon: "🌍", title: "แจ้งผู้นำเข้าและห้างต่างชาติ", body: "ส้มโอที่ซื้อตรงจากสวนที่ได้ราคาเป็นธรรม = หวานกว่า น้ำมากกว่า เพราะเกษตรกรปล่อยให้สุกพอดีบนต้น ไม่ต้องรีบตัดขาย" },
+      ]
+    }
+  },
+
+];
+// ══════════════════════════════════════════════════
+
+let activeFruit = FRUITS[0].id;
+let activePeriod = '1Y';
+let activeBackTab = 'issue';
+
+// ── CLOCK ──
+function updateClock() {
+  const now = new Date();
+  document.getElementById('clockDisplay').textContent =
+    now.toLocaleTimeString('th-TH', { hour12: false });
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// ── TICKER ──
+function buildTicker() {
+  const items = FRUITS.map(f => {
+    const chg = f.priceToday - f.priceYesterday;
+    const pct = ((chg / f.priceYesterday) * 100).toFixed(1);
+    const dir = chg >= 0 ? 'up' : 'down';
+    const arrow = chg >= 0 ? '▲' : '▼';
+    return `<span class="ticker-item">
+      <span class="ticker-name">${f.emoji} ${f.nameTh}</span>
+      <span class="ticker-price">฿${f.priceToday}</span>
+      <span class="ticker-chg ${dir}">${arrow}${Math.abs(pct)}%</span>
+    </span>`;
+  });
+  // duplicate for seamless loop
+  const html = items.join('') + items.join('');
+  document.getElementById('tickerInner').innerHTML = html;
+}
+
+// ── SIDEBAR ──
+function buildSidebar() {
+  const container = document.getElementById('fruitList');
+  container.innerHTML = FRUITS.map(f => {
+    const chg = f.priceToday - f.priceYesterday;
+    const pct = ((chg / f.priceYesterday) * 100).toFixed(1);
+    const dir = chg >= 0 ? 'up' : 'down';
+    const arrow = chg >= 0 ? '▲' : '▼';
+    return `
+      <button class="fruit-btn ${f.id === activeFruit ? 'active' : ''}"
+              id="btn-${f.id}" onclick="selectFruit('${f.id}')">
+        <div class="fruit-btn-left">
+          <span class="fruit-emoji">${f.emoji}</span>
+          <div>
+            <div class="fruit-btn-name">${f.nameTh}</div>
+            <div class="fruit-btn-en">${f.nameEn}</div>
+          </div>
+        </div>
+        <div>
+          <div class="fruit-btn-price" style="color:var(--${dir})">${f.priceToday}</div>
+          <div class="fruit-btn-chg" style="color:var(--${dir})">${arrow}${Math.abs(pct)}%</div>
+        </div>
+      </button>`;
+  }).join('');
+}
+
+// ── SELECT FRUIT ──
+function selectFruit(id) {
+  activeFruit = id;
+  document.querySelectorAll('.fruit-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('btn-' + id).classList.add('active');
+  renderMain();
+}
+
+// ── SVG CHART ──
+function buildChart(f) {
+  const pts = f.chartPoints;
+  const max = Math.max(...pts);
+  const min = Math.min(...pts);
+  const W = 680, H = 140, pad = 10;
+  const range = max - min || 1;
+
+  const xs = pts.map((_, i) => pad + (i / (pts.length - 1)) * (W - 2 * pad));
+  const ys = pts.map(v => H - pad - ((v - min) / range) * (H - 2 * pad));
+
+  const linePath = xs.map((x, i) => `${i === 0 ? 'M' : 'L'}${x.toFixed(1)},${ys[i].toFixed(1)}`).join(' ');
+  const areaPath = linePath + ` L${xs[xs.length-1].toFixed(1)},${H} L${xs[0].toFixed(1)},${H} Z`;
+
+  const lastChg = pts[pts.length-1] - pts[pts.length-2];
+  const colour = lastChg >= 0 ? '#22c55e' : '#ef4444';
+
+  const labels = f.chartLabels.map((lbl, i) => {
+    if (i % 3 !== 0) return '';
+    return `<text x="${xs[i].toFixed(1)}" y="${H + 14}" text-anchor="middle"
+              font-family="IBM Plex Mono" font-size="8" fill="#5a7a5a">${lbl}</text>`;
+  }).join('');
+
+  return `
+    <svg viewBox="0 -4 ${W} ${H+20}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="${colour}" stop-opacity="0.18"/>
+          <stop offset="100%" stop-color="${colour}" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+      <!-- grid lines -->
+      ${[0,0.25,0.5,0.75,1].map(t => {
+        const y = (pad + (1-t)*(H-2*pad)).toFixed(1);
+        const val = (min + t * range).toFixed(0);
+        return `<line x1="${pad}" y1="${y}" x2="${W-pad}" y2="${y}"
+                  stroke="#1f271f" stroke-width="1"/>
+                <text x="${pad}" y="${(parseFloat(y)-3).toFixed(1)}"
+                  font-family="IBM Plex Mono" font-size="7" fill="#5a7a5a">${val}</text>`;
+      }).join('')}
+      <!-- area fill -->
+      <path d="${areaPath}" fill="url(#areaGrad)"/>
+      <!-- line -->
+      <path d="${linePath}" fill="none" stroke="${colour}" stroke-width="1.5"/>
+      <!-- dots -->
+      ${xs.map((x, i) => `<circle cx="${x.toFixed(1)}" cy="${ys[i].toFixed(1)}" r="2.5" fill="${colour}"/>`).join('')}
+      <!-- labels -->
+      ${labels}
+    </svg>`;
+}
+
+// ── RENDER MAIN ──
+function renderMain() {
+  const f = FRUITS.find(x => x.id === activeFruit);
+  if (!f) return;
+
+  const chg = f.priceToday - f.priceYesterday;
+  const pct = ((chg / f.priceYesterday) * 100).toFixed(1);
+  const dir = chg >= 0 ? 'up' : 'down';
+  const arrow = chg >= 0 ? '▲' : '▼';
+
+  const historyRows = f.history.map(h => {
+    const prevPrice = f.history[f.history.indexOf(h) + 1]?.price ?? h.price;
+    const hChg = h.price - prevPrice;
+    const hDir = hChg >= 0 ? 'up' : 'down';
+    const hArrow = hChg >= 0 ? '▲' : '▼';
+    return `<tr>
+      <td class="td-date">${h.date}</td>
+      <td class="td-price">฿${h.price}</td>
+      <td class="td-chg ${hDir}">${hChg !== 0 ? hArrow + Math.abs(hChg) : '—'}</td>
+      <td class="td-market">${h.market}</td>
+    </tr>`;
+  }).join('');
+
+  const forecastBoxes = f.forecast.map(fc => `
+    <div class="forecast-box">
+      <div class="forecast-period">${fc.period}</div>
+      <div class="forecast-price">${fc.price}</div>
+      <div class="forecast-note">${fc.note}</div>
+    </div>`).join('');
+
+  // scenario steps
+  const steps = f.issue.scenario.map(s => `
+    <div class="scenario-step">
+      <span class="step-num ${s.bad ? 'bad' : ''}">${s.n}</span>
+      <span>${s.text}</span>
+    </div>`).join('');
+
+  // fix items
+  const fixes = f.issue.fixes.map(fx => `
+    <div class="fix-item">
+      <div class="fix-item-title">${fx.icon} ${fx.title}</div>
+      <div class="fix-item-body">${fx.body}
+        ${fx.sticker ? `<br><span class="sticker-badge">✓ ETHICAL MIDDLEMAN CERTIFIED · คนกลางที่ได้รับการรับรอง</span>` : ''}
+      </div>
+    </div>`).join('');
+
+  document.getElementById('mainContent').innerHTML = `
+
+    <!-- HERO -->
+    <div class="fruit-hero">
+      <div class="hero-top">
+        <div>
+          <div class="hero-name-th">${f.emoji} ${f.nameTh}</div>
+          <div class="hero-name-en">${f.nameEn} · ${f.mainMarket}</div>
+        </div>
+        <div class="hero-price-block">
+          <div class="hero-price">฿${f.priceToday}</div>
+          <div class="hero-price-unit">${f.unit} · วันนี้</div>
+          <div class="hero-change ${dir}">${arrow} ฿${Math.abs(chg)} (${Math.abs(pct)}%)</div>
+        </div>
+      </div>
+      <div class="hml-row">
+        <div class="hml-box hml-high">
+          <div class="hml-label">High 52W</div>
+          <div class="hml-value">฿${f.high52w}</div>
+        </div>
+        <div class="hml-box hml-mid">
+          <div class="hml-label">Mid 52W</div>
+          <div class="hml-value">฿${f.mid52w}</div>
+        </div>
+        <div class="hml-box hml-low">
+          <div class="hml-label">Low 52W</div>
+          <div class="hml-value">฿${f.low52w}</div>
+        </div>
+        <div class="hml-box hml-mkt">
+          <div class="hml-label">Main Market</div>
+          <div class="hml-value">${f.mainMarket}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHART -->
+    <div class="chart-section">
+      <div class="chart-header">
+        <span class="chart-title">// ประวัติราคา 12 เดือน / 12-Month Price History</span>
+        <div class="chart-periods">
+          <button class="period-btn active">1Y</button>
+        </div>
+      </div>
+      <div class="chart-canvas">${buildChart(f)}</div>
+    </div>
+
+    <!-- HISTORY TABLE -->
+    <div class="history-section">
+      <div class="section-head">
+        <span>// ราคารายวัน / Daily Prices</span>
+        <span>${f.unit}</span>
+      </div>
+      <table class="price-table">
+        <thead>
+          <tr>
+            <th>วันที่</th>
+            <th>ราคา</th>
+            <th>เปลี่ยนแปลง</th>
+            <th>ตลาด</th>
+          </tr>
+        </thead>
+        <tbody>${historyRows}</tbody>
+      </table>
+    </div>
+
+    <!-- FORECAST -->
+    <div class="forecast-section">
+      <div class="section-head" style="padding:0 0 0;border:none;">
+        <span>// ราคาคาดการณ์ / Price Forecast</span>
+      </div>
+      <div class="forecast-row">${forecastBoxes}</div>
+    </div>
+
+    <!-- BACK NOTE -->
+    <div class="back-note">
+      <div class="back-note-tabs">
+        <button class="back-tab active" onclick="switchBack(this,'issue')">⚠ วงจรราคา</button>
+        <button class="back-tab" onclick="switchBack(this,'fix')">✦ แนวทางแก้ไข</button>
+      </div>
+
+      <div class="back-panel active" id="bp-issue">
+        <div class="back-title">⚠ ${f.issue.title}</div>
+        <div class="back-body">
+          ระบบตลาดผลไม้ไทยมีโครงสร้างที่ทำให้ผู้ซื้อรายใหญ่มีอำนาจต่อรองเหนือเกษตรกรอย่างไม่สมดุล:
+          <div class="scenario">${steps}</div>
+          <em>ผลลัพธ์: เกษตรกรแบกรับต้นทุนทั้งหมด แต่ได้รับผลตอบแทนน้อยที่สุดในห่วงโซ่</em>
+        </div>
+      </div>
+
+      <div class="back-panel" id="bp-fix">
+        <div class="back-title">✦ แนวทางแก้ไขเชิงระบบ</div>
+        <div class="back-body">
+          ปัญหานี้ไม่ใช่ความโลภของบุคคล — แต่เป็น<strong>โครงสร้างตลาดที่ขาดทางเลือก</strong>
+          เกษตรกรไม่สามารถต่อรองได้เมื่อไม่มีผู้ซื้อรายอื่น แนวทางแก้ไขต้องสร้างทางเลือกและอำนาจต่อรองขึ้นมาใหม่:
+          <div class="fix-list">${fixes}</div>
+          <br>
+          <em>หลักการสำคัญ: ผู้บริโภคที่ซื้อจากคนกลางที่ดี = สนับสนุนให้เกษตรกรได้ราคาที่เป็นธรรม = ผลไม้คุณภาพดีกว่า = ทุกฝ่ายได้ประโยชน์</em>
+        </div>
+      </div>
+
+    </div>`;
+}
+
+function switchBack(btn, tab) {
+  document.querySelectorAll('.back-tab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.back-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('bp-' + tab).classList.add('active');
+}
+
+// ── INIT ──
+buildTicker();
+buildSidebar();
+renderMain();
+</script>
+</body>
+</html>

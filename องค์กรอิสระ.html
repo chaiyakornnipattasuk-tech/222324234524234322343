@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>มองทะลุ.net</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0a0a0a;
+    --white: #f5f0e8;
+    --cream: #ede8dc;
+    --yellow: #f5c800;
+    --red: #d63031;
+    --blue: #0057b8;
+    --green: #00875a;
+    --border: 2.5px solid #0a0a0a;
+    --shadow: 4px 4px 0px #0a0a0a;
+    --shadow-lg: 6px 6px 0px #0a0a0a;
+    --radius: 0px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--white);
+    color: var(--black);
+    font-family: 'Sarabun', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ─── HEADER ─── */
+  header {
+    background: var(--black);
+    color: var(--white);
+    padding: 0;
+    border-bottom: var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .header-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+  }
+
+  .header-logo {
+    padding: 18px 28px;
+    border-right: var(--border);
+    border-color: #333;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .logo-th {
+    font-family: 'IBM Plex Sans Thai', sans-serif;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--yellow);
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+
+  .logo-en {
+    font-size: 0.72rem;
+    color: #888;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  .header-tagline {
+    padding: 18px 28px;
+    font-size: 0.85rem;
+    color: #aaa;
+    display: flex;
+    align-items: center;
+    border-right: 1px solid #333;
+  }
+
+  .header-count {
+    margin-left: auto;
+    padding: 18px 28px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.82rem;
+    color: #888;
+  }
+
+  .count-badge {
+    background: var(--yellow);
+    color: var(--black);
+    font-weight: 700;
+    font-size: 0.78rem;
+    padding: 2px 8px;
+    border: var(--border);
+  }
+
+  /* ─── SEARCH ZONE ─── */
+  .search-zone {
+    background: var(--yellow);
+    border-bottom: var(--border);
+    padding: 28px 0;
+  }
+
+  .search-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 28px;
+  }
+
+  .search-label {
+    font-family: 'IBM Plex Sans Thai', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    color: var(--black);
+    opacity: 0.7;
+  }
+
+  .search-row {
+    display: flex;
+    gap: 0;
+    border: var(--border);
+    box-shadow: var(--shadow-lg);
+    background: var(--white);
+  }
+
+  #searchInput {
+    flex: 1;
+    border: none;
+    padding: 14px 20px;
+    font-family: 'Sarabun', sans-serif;
+    font-size: 1rem;
+    background: transparent;
+    outline: none;
+    color: var(--black);
+  }
+
+  #searchInput::placeholder { color: #aaa; }
+
+  .search-btn {
+    background: var(--black);
+    color: var(--yellow);
+    border: none;
+    border-left: var(--border);
+    padding: 14px 24px;
+    font-family: 'IBM Plex Sans Thai', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    letter-spacing: 0.04em;
+    transition: background 0.15s;
+  }
+
+  .search-btn:hover { background: #222; }
+
+  /* ─── FILTER CHIPS ─── */
+  .filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 14px;
+  }
+
+  .chip {
+    background: var(--white);
+    border: var(--border);
+    padding: 5px 14px;
+    font-family: 'Sarabun', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.1s;
+    box-shadow: 2px 2px 0 var(--black);
+    user-select: none;
+  }
+
+  .chip:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 var(--black); }
+  .chip.active { background: var(--black); color: var(--yellow); }
+
+  /* ─── MAIN LAYOUT ─── */
+  .main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 32px 28px;
+  }
+
+  .results-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: var(--border);
+  }
+
+  .results-title {
+    font-family: 'IBM Plex Sans Thai', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  .results-count {
+    font-size: 0.82rem;
+    color: #666;
+  }
+
+  /* ─── CARD GRID ─── */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+    gap: 24px;
+  }
+
+  .org-card {
+    background: var(--white);
+    border: var(--border);
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    transition: all 0.15s;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .org-card:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .card-header {
+    padding: 16px 18px 12px;
+    border-bottom: var(--border);
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .card-icon {
+    width: 42px;
+    height: 42px;
+    border: var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+    background: var(--cream);
+  }
+
+  .card-title-block { flex: 1; min-width: 0; }
+
+  .card-name-th {
+    font-family: 'IBM Plex Sans Thai', sans-serif;
+    font-size: 0.98rem;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--black);
+  }
+
+  .card-name-en {
+    font-size: 0.75rem;
+    color: #888;
+    margin-top: 2px;
+  }
+
+  .card-type-badge {
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border: var(--border);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .badge-ngo    { background: #e8f5e9; color: #2e7d32; }
+  .badge-watchdog { background: #fff3e0; color: #e65100; }
+  .badge-research { background: #e3f2fd; color: #1565c0; }
+  .badge-media  { background: #fce4ec; color: #880e4f; }
+  .badge-civil  { background: #ede7f6; color: #4527a0; }
+
+  .card-body { padding: 14px 18px; flex: 1; }
+
+  .card-description {
+    font-size: 0.86rem;
+    color: #444;
+    line-height: 1.65;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .card-meta {
+    padding: 12px 18px;
+    border-top: var(--border);
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .meta-tag {
+    font-size: 0.72rem;
+    padding: 2px 8px;
+    background: var(--cream);
+    border: 1px solid #ccc;
+    color: #555;
+  }
+
+  .card-footer {
+    padding: 10px 18px;
+    border-top: var(--border);
+    background: var(--cream);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .founded-label { font-size: 0.75rem; color: #666; }
+  .founded-year  { font-weight: 700; font-size: 0.85rem; }
+
+  .view-btn {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--blue);
+    letter-spacing: 0.04em;
+    text-decoration: underline;
+  }
+
+  /* ─── MODAL ─── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10,10,10,0.65);
+    z-index: 200;
+    overflow-y: auto;
+    padding: 40px 20px;
+  }
+
+  .modal-overlay.open { display: flex; align-items: flex-start; justify-content: center; }
+
+  .modal {
+    background: var(--white);
+    border: var(--border);
+    box-shadow: 8px 8px 0 var(--black);
+    width: 100%;
+    max-width: 720px;
+    animation: slideIn 0.2s ease;
+  }
+
+  @keyframes slideIn {
+    from { transform: translateY(20px); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+  }
+
+  .modal-topbar {
+    background: var(--black);
+    color: var(--white);
+    padding: 14px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .modal-topbar-label {
+    font-size: 0.78rem;
+    color: #888;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .modal-close {
+    background: none;
+    border: 1px solid #555;
+    color: var(--white);
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.1s;
+  }
+
+  .modal-close:hover { background: #333; }
+
+  .modal-hero {
+    padding: 24px 26px 18px;
+    border-bottom: var(--border);
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
+  }
+
+  .modal-icon {
+    width: 60px;
+    height: 60px;
+    border: var(--border);
+    background: var(--yellow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    flex-shrink: 0;
+  }
+
+  .modal-title-th {
+    font-family: 'IBM Plex Sans Thai', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    line-height: 1.25;
+  }
+
+  .modal-title-en {
+    font-size: 0.9rem;
+    color: #777;
+    margin-top: 4px;
+  }
+
+  .modal-badges { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+
+  /* ─── MODAL TABS ─── */
+  .modal-tabs {
+    display: flex;
+    border-bottom: var(--border);
+    background: var(--cream);
+  }
+
+  .modal-tab {
+    padding: 12px 20px;
+    font-family: 'Sarabun', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border: none;
+    background: none;
+    cursor: pointer;
+    border-right: var(--border);
+    color: #666;
+    transition: all 0.1s;
+    letter-spacing: 0.02em;
+  }
+
+  .modal-tab:hover { background: var(--white); }
+  .modal-tab.active { background: var(--white); color: var(--black); border-bottom: 2.5px solid var(--white); margin-bottom: -2.5px; }
+
+  .modal-content { padding: 24px 26px; }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ─── HISTORY TIMELINE ─── */
+  .section-label {
+    font-family: 'IBM Plex Sans Thai', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #888;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #ddd;
+  }
+
+  .history-text {
+    font-size: 0.92rem;
+    line-height: 1.8;
+    color: #333;
+    margin-bottom: 24px;
+  }
+
+  .timeline {
+    position: relative;
+    padding-left: 20px;
+    border-left: 2.5px solid var(--black);
+    margin-bottom: 24px;
+  }
+
+  .timeline-item {
+    position: relative;
+    padding: 0 0 18px 20px;
+  }
+
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -8px;
+    top: 5px;
+    width: 12px;
+    height: 12px;
+    background: var(--yellow);
+    border: 2px solid var(--black);
+  }
+
+  .timeline-year {
+    font-family: 'IBM Plex Sans Thai', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #888;
+    letter-spacing: 0.06em;
+    margin-bottom: 3px;
+  }
+
+  .timeline-desc {
+    font-size: 0.88rem;
+    color: #333;
+    line-height: 1.6;
+  }
+
+  /* ─── DONORS TABLE ─── */
+  .donors-grid {
+    display: grid;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+
+  .donor-row {
+    display: flex;
+    align-items: center;
+    border: var(--border);
+    background: var(--white);
+    overflow: hidden;
+  }
+
+  .donor-rank {
+    background: var(--black);
+    color: var(--yellow);
+    font-weight: 700;
+    font-size: 0.85rem;
+    width: 36px;
+    min-width: 36px;
+    text-align: center;
+    padding: 10px 0;
+    border-right: var(--border);
+  }
+
+  .donor-info { padding: 8px 14px; flex: 1; }
+
+  .donor-name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--black);
+  }
+
+  .donor-type-tag {
+    font-size: 0.72rem;
+    color: #888;
+    margin-top: 1px;
+  }
+
+  .donor-amount {
+    padding: 8px 14px;
+    font-family: 'IBM Plex Sans Thai', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--blue);
+    border-left: var(--border);
+    white-space: nowrap;
+  }
+
+  .donor-note {
+    background: var(--cream);
+    border: 1px solid #ddd;
+    padding: 10px 14px;
+    font-size: 0.82rem;
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+
+  /* ─── ACCOMPLISHMENTS ─── */
+  .accomplish-list { display: grid; gap: 12px; }
+
+  .accomplish-item {
+    border: var(--border);
+    padding: 14px 16px;
+    background: var(--white);
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+
+  .accomplish-icon {
+    font-size: 1.3rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .accomplish-title {
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 4px;
+  }
+
+  .accomplish-desc {
+    font-size: 0.83rem;
+    color: #555;
+    line-height: 1.6;
+  }
+
+  .accomplish-year {
+    font-size: 0.72rem;
+    color: #999;
+    margin-top: 4px;
+  }
+
+  /* ─── EMPTY STATE ─── */
+  .empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    border: 2.5px dashed #ccc;
+  }
+
+  .empty-icon { font-size: 2.5rem; margin-bottom: 12px; }
+  .empty-title { font-family: 'IBM Plex Sans Thai', sans-serif; font-size: 1.1rem; font-weight: 600; margin-bottom: 6px; }
+  .empty-sub { font-size: 0.85rem; color: #888; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    border-top: var(--border);
+    background: var(--black);
+    color: #888;
+    padding: 20px 28px;
+    text-align: center;
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+  }
+
+  footer span { color: var(--yellow); }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 640px) {
+    .header-tagline { display: none; }
+    .card-grid { grid-template-columns: 1fr; }
+    .modal { margin: 0; }
+    .modal-overlay { padding: 0; align-items: flex-end; }
+    .modal { max-height: 90vh; overflow-y: auto; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ─── HEADER ─── -->
+<header>
+  <div class="header-inner">
+    <div class="header-logo">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div class="logo-th">องค์กรอิสระไทย</div>
+        <div style="background:var(--yellow);color:var(--black);font-family:'IBM Plex Sans Thai',sans-serif;font-weight:700;font-size:0.75rem;padding:2px 8px;border:2px solid var(--yellow);letter-spacing:0.02em;white-space:nowrap;margin-top:1px;">มองทะลุ.net</div>
+      </div>
+      <div class="logo-en">Thai Independent Organizations</div>
+    </div>
+    <div class="header-tagline">ฐานข้อมูลองค์กรพัฒนาเอกชน / กลุ่มเฝ้าระวัง / สื่ออิสระ</div>
+    <div class="header-count">
+      <span>องค์กรทั้งหมด</span>
+      <span class="count-badge" id="totalCount">0</span>
+    </div>
+  </div>
+</header>
+
+<!-- ─── SEARCH ZONE ─── -->
+<div class="search-zone">
+  <div class="search-inner">
+    <div class="search-label">ค้นหาองค์กร / Search Organizations</div>
+    <div class="search-row">
+      <input type="text" id="searchInput" placeholder="พิมพ์ชื่อองค์กร หรือ ประเภท เช่น สิทธิมนุษยชน, สิ่งแวดล้อม…" autocomplete="off">
+      <button class="search-btn" onclick="doSearch()">ค้นหา →</button>
+    </div>
+    <div class="filter-row" id="filterRow">
+      <div class="chip active" data-filter="all" onclick="setFilter(this,'all')">ทั้งหมด</div>
+      <div class="chip" data-filter="ngo" onclick="setFilter(this,'ngo')">NGO / เอ็นจีโอ</div>
+      <div class="chip" data-filter="watchdog" onclick="setFilter(this,'watchdog')">Watchdog / เฝ้าระวัง</div>
+      <div class="chip" data-filter="research" onclick="setFilter(this,'research')">Think Tank / วิจัย</div>
+      <div class="chip" data-filter="media" onclick="setFilter(this,'media')">สื่ออิสระ</div>
+      <div class="chip" data-filter="civil" onclick="setFilter(this,'civil')">ภาคประชาสังคม</div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── MAIN ─── -->
+<main class="main">
+  <div class="results-header">
+    <div class="results-title">ผลการค้นหา</div>
+    <div class="results-count" id="resultsCount">แสดงทั้งหมด</div>
+  </div>
+  <div class="card-grid" id="cardGrid"></div>
+</main>
+
+<!-- ─── MODAL ─── -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <div class="modal-topbar">
+      <span class="modal-topbar-label">ข้อมูลองค์กร / Organization Profile</span>
+      <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    </div>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<footer>
+  <span>องค์กรอิสระไทย</span> — ฐานข้อมูลเพื่อความโปร่งใสและการตรวจสอบ &nbsp;|&nbsp;
+  ส่วนหนึ่งของโครงการ <span>มองทะลุ.net</span> &nbsp;|&nbsp; ข้อมูลอ้างอิงจากแหล่งสาธารณะ
+</footer>
+
+<!-- ════════════════════════════════════════════════════════
+     DATA — รายชื่อองค์กรอิสระในประเทศไทย
+     แก้ไขข้อมูลในส่วนนี้เท่านั้น
+     ════════════════════════════════════════════════════════ -->
+<script>
+const ORGS = [
+  {
+    id: "ilaw",
+    icon: "⚖️",
+    nameTh: "iLaw — โครงการอินเทอร์เน็ตเพื่อกฎหมายประชาชน",
+    nameEn: "Internet Law Reform Dialogue (iLaw)",
+    type: "watchdog",         // ngo / watchdog / research / media / civil
+    founded: 2010,
+    tags: ["กฎหมาย", "สิทธิดิจิทัล", "รัฐธรรมนูญ"],
+    shortDesc: "องค์กรที่ติดตามและวิเคราะห์กฎหมายที่ส่งผลต่อสิทธิเสรีภาพของประชาชน ทั้งในมิติดิจิทัลและการเมือง",
+    history: "iLaw ก่อตั้งในปี 2553 โดยทีมนักกฎหมายและนักกิจกรรมที่ต้องการสร้างพื้นที่ให้ประชาชนเข้าใจและมีส่วนร่วมในกระบวนการนิติบัญญัติ เริ่มต้นจากการแปลและอธิบายกฎหมายให้เข้าใจง่าย ก่อนขยายสู่การรณรงค์แก้ไขกฎหมายที่ละเมิดสิทธิ",
+    historyTimeline: [
+      { year: "2553", desc: "ก่อตั้งโครงการ เริ่มผลิตเนื้อหาอธิบายกฎหมายสู่สาธารณะ" },
+      { year: "2557", desc: "เปิดตัวฐานข้อมูลคดีหมิ่นประมาทและกฎหมาย 112" },
+      { year: "2563", desc: "นำขบวนการล่าแสนชื่อเสนอร่างรัฐธรรมนูญฉบับประชาชน รวบรวมได้กว่า 100,000 รายชื่อ" },
+      { year: "2564", desc: "เปิดตัวแพลตฟอร์ม WeVis ร่วมกับภาคีเครือข่าย" },
+    ],
+    donors: [
+      { rank: 1, name: "Open Society Foundations", type: "มูลนิธิต่างประเทศ", amount: "ไม่เปิดเผยจำนวน" },
+      { rank: 2, name: "National Endowment for Democracy (NED)", type: "ทุนรัฐบาลสหรัฐ", amount: "ไม่เปิดเผยจำนวน" },
+      { rank: 3, name: "สมาชิกและผู้บริจาครายย่อย", type: "ประชาชนทั่วไป", amount: "รายเล็ก" },
+    ],
+    donorNote: "iLaw รับทุนจากองค์กรต่างประเทศหลายแห่ง ซึ่งเป็นที่วิจารณ์จากฝ่ายรัฐ อย่างไรก็ตามองค์กรย้ำว่าผู้ให้ทุนไม่มีอิทธิพลต่อเนื้อหา",
+    accomplishments: [
+      { icon: "📜", title: "ร่างรัฐธรรมนูญฉบับประชาชน 2563", desc: "รวบรวมรายชื่อประชาชนกว่า 100,000 คนเสนอร่างรัฐธรรมนูญฉบับใหม่", year: "2563" },
+      { icon: "🗂️", title: "ฐานข้อมูลคดี ม.112 และ พ.ร.บ.คอมพิวเตอร์", desc: "สร้างฐานข้อมูลคดีที่ครอบคลุมที่สุดในไทย ใช้อ้างอิงโดยนักวิชาการและสื่อทั่วโลก", year: "2557–ปัจจุบัน" },
+      { icon: "🤝", title: "ร่วมก่อตั้ง WeVis", desc: "เป็นหนึ่งในภาคีที่สร้างแพลตฟอร์มข้อมูลรัฐสภาและการเมืองไทย", year: "2564" },
+    ],
+    website: "https://ilaw.or.th"
+  },
+
+  {
+    id: "acn",
+    icon: "🌿",
+    nameTh: "มูลนิธิสืบนาคะเสถียร",
+    nameEn: "Seub Nakhasathien Foundation",
+    type: "ngo",
+    founded: 1990,
+    tags: ["สิ่งแวดล้อม", "ป่าไม้", "สัตว์ป่า"],
+    shortDesc: "มูลนิธิอนุรักษ์ธรรมชาติและสัตว์ป่า ก่อตั้งเพื่อสืบสานเจตนารมณ์ของ สืบ นาคะเสถียร นักอนุรักษ์ผู้เสียสละชีวิตเพื่อปกป้องผืนป่า",
+    history: "มูลนิธิสืบนาคะเสถียรก่อตั้งขึ้นในปี 2533 หลังการจากไปของ สืบ นาคะเสถียร หัวหน้าเขตรักษาพันธุ์สัตว์ป่าห้วยขาแข้งที่สละชีวิตเพื่อประท้วงการทำลายป่า มูลนิธิทำงานติดตามนโยบายป่าไม้ ต่อต้านการบุกรุก และสนับสนุนเจ้าหน้าที่พิทักษ์ป่า",
+    historyTimeline: [
+      { year: "2533", desc: "ก่อตั้งมูลนิธิหลังการจากไปของสืบ นาคะเสถียร เมื่อวันที่ 1 กันยายน" },
+      { year: "2540", desc: "เปิดตัวโครงการ Forest Patrol สนับสนุนเจ้าหน้าที่พิทักษ์ป่าในพื้นที่ทุรกันดาร" },
+      { year: "2556", desc: "ต่อต้านโครงการสร้างเขื่อนแม่วงก์ที่จะกระทบพื้นที่มรดกโลก สำเร็จในการระงับโครงการ" },
+      { year: "2565", desc: "ออกรายงานสถานการณ์สัตว์ป่าและป่าไม้ประจำปี ครอบคลุม 30 ปีของข้อมูล" },
+    ],
+    donors: [
+      { rank: 1, name: "WWF ประเทศไทย", type: "องค์กรอนุรักษ์นานาชาติ", amount: "ร่วมงานเชิงยุทธศาสตร์" },
+      { rank: 2, name: "ภาคเอกชนและ CSR", type: "บริษัทเอกชนไทย", amount: "หลักล้านบาทต่อปี" },
+      { rank: 3, name: "ประชาชนผู้บริจาคทั่วไป", type: "รายย่อย", amount: "ผ่านช่องทางออนไลน์" },
+    ],
+    donorNote: "มูลนิธิพึ่งพาการบริจาคจากสาธารณะและภาคเอกชนเป็นหลัก ไม่รับทุนจากต่างประเทศเพื่อรักษาความเป็นอิสระ",
+    accomplishments: [
+      { icon: "🏕️", title: "ปกป้องผืนป่าตะวันตกกว่า 17 ล้านไร่", desc: "สนับสนุนและรักษาสถานะมรดกโลกของห้วยขาแข้ง–ทุ่งใหญ่นเรศวร", year: "2533–ปัจจุบัน" },
+      { icon: "🚧", title: "ระงับเขื่อนแม่วงก์", desc: "ขับเคลื่อนเชิงนโยบายและสร้างกระแสสาธารณะจนโครงการถูกระงับ", year: "2556" },
+      { icon: "📚", title: "30 ปีรายงานสัตว์ป่า", desc: "ฐานข้อมูลสัตว์ป่าและสถานการณ์ป่าไม้ที่ครอบคลุมที่สุดในไทย", year: "2565" },
+    ],
+    website: "https://www.seub.or.th"
+  },
+
+  {
+    id: "tlhr",
+    icon: "✊",
+    nameTh: "ศูนย์ทนายความเพื่อสิทธิมนุษยชน (ศทส.)",
+    nameEn: "Thai Lawyers for Human Rights (TLHR)",
+    type: "watchdog",
+    founded: 2014,
+    tags: ["สิทธิมนุษยชน", "กฎหมาย", "คดีการเมือง"],
+    shortDesc: "ให้ความช่วยเหลือทางกฎหมายแก่ผู้ถูกดำเนินคดีทางการเมือง ผู้ถูกละเมิดสิทธิโดยรัฐ และผู้ถูกฟ้องเงียบ (SLAPP)",
+    history: "ก่อตั้งขึ้นภายหลังรัฐประหาร 22 พฤษภาคม 2557 โดยกลุ่มทนายความที่ต้องการให้ความช่วยเหลือผู้ถูกเรียกรายงานตัวและถูกจับกุมในช่วงเปลี่ยนผ่าน จากนั้นขยายขอบเขตสู่การเป็นองค์กรด้านสิทธิมนุษยชนเต็มรูปแบบ",
+    historyTimeline: [
+      { year: "2557", desc: "ก่อตั้งทันทีหลังรัฐประหาร เพื่อช่วยเหลือผู้ถูกเรียกรายงานตัวหลายร้อยคน" },
+      { year: "2560", desc: "เปิดตัวฐานข้อมูลคดีคสช. และรายงานการทรมานในค่ายทหาร" },
+      { year: "2563", desc: "รับคดีนักกิจกรรมม็อบ 2563 กว่า 1,800+ คดีทั่วประเทศ" },
+      { year: "2566", desc: "ออกรายงาน 'สิบปีแห่งคดี' สรุปสถานการณ์สิทธิมนุษยชนในรอบทศวรรษ" },
+    ],
+    donors: [
+      { rank: 1, name: "European Union (EU)", type: "ทุนต่างประเทศ", amount: "ไม่เปิดเผย" },
+      { rank: 2, name: "Urgent Action Fund", type: "ทุนฉุกเฉินสิทธิมนุษยชน", amount: "ไม่เปิดเผย" },
+      { rank: 3, name: "ผู้บริจาคอิสระในและต่างประเทศ", type: "บุคคล", amount: "รายย่อย" },
+    ],
+    donorNote: "TLHR ได้รับทุนจากองค์กรสิทธิมนุษยชนระดับโลก ทั้งนี้ยืนยันว่าดำเนินงานตามหลักการ ไม่รับอิทธิพลจากผู้ให้ทุน",
+    accomplishments: [
+      { icon: "⚖️", title: "ดูแลคดีการเมืองกว่า 2,000 คดี", desc: "ให้ความช่วยเหลือทางกฎหมายแก่ผู้ถูกดำเนินคดีทางการเมืองในรอบทศวรรษ", year: "2557–ปัจจุบัน" },
+      { icon: "📋", title: "รายงานการทรมานในค่ายทหาร 2560", desc: "เปิดเผยหลักฐานการซ้อมทรมานที่ถูกปกปิดโดยเจ้าหน้าที่รัฐ", year: "2560" },
+      { icon: "🌐", title: "ฐานข้อมูลคดีสาธารณะ", desc: "สร้างฐานข้อมูลออนไลน์เปิดให้สาธารณชนติดตามคดีทางการเมืองแบบเรียลไทม์", year: "2564" },
+    ],
+    website: "https://tlhr2014.com"
+  },
+
+  {
+    id: "prachatai",
+    icon: "📰",
+    nameTh: "ประชาไท",
+    nameEn: "Prachatai — Independent News",
+    type: "media",
+    founded: 2004,
+    tags: ["สื่ออิสระ", "ข่าว", "ประชาธิปไตย"],
+    shortDesc: "สำนักข่าวออนไลน์อิสระที่รายงานข่าวสิทธิมนุษยชน การเมือง และความเคลื่อนไหวภาคประชาชน โดยไม่รับโฆษณาจากรัฐหรือทุนขนาดใหญ่",
+    history: "ประชาไทก่อตั้งในปี 2547 โดยกลุ่มนักข่าวอิสระที่ต้องการสื่อทางเลือกในยุคที่สื่อกระแสหลักถูกครอบงำ เว็บไซต์ถูกบล็อกหลายครั้งในช่วงรัฐบาลทหาร แต่ยังคงดำเนินงานต่อเนื่องผ่านการสนับสนุนของผู้อ่านและองค์กรสื่อเสรีนานาชาติ",
+    historyTimeline: [
+      { year: "2547", desc: "ก่อตั้งเป็นเว็บไซต์ข่าวอิสระฉบับแรกๆ ของไทย" },
+      { year: "2557", desc: "ถูกบล็อกโดย กสทช. หลังรัฐประหาร แต่ยังเข้าถึงได้ผ่าน VPN และโดเมนสำรอง" },
+      { year: "2563", desc: "เปิดตัวฉบับภาษาอังกฤษ Prachatai English เพื่อเผยแพร่ข่าวไทยสู่โลก" },
+      { year: "2566", desc: "ฉลองครบรอบ 20 ปี ด้วยฐานผู้อ่านมากกว่า 500,000 คนต่อเดือน" },
+    ],
+    donors: [
+      { rank: 1, name: "ผู้อ่านและสมาชิก", type: "ประชาชนทั่วไป", amount: "หลักแสนบาทต่อเดือน" },
+      { rank: 2, name: "Internews", type: "องค์กรส่งเสริมสื่อเสรีนานาชาติ", amount: "ไม่เปิดเผย" },
+      { rank: 3, name: "สถาบันสื่อเพื่อประชาธิปไตย", type: "มูลนิธิ", amount: "ไม่เปิดเผย" },
+    ],
+    donorNote: "ประชาไทพึ่งพาการสนับสนุนจากผู้อ่านเป็นหลัก ผ่านระบบสมาชิกและการบริจาค เพื่อรักษาเอกราชทางบรรณาธิการ",
+    accomplishments: [
+      { icon: "🗞️", title: "20 ปีแห่งการรายงาน", desc: "รายงานข่าวการเมืองและสิทธิมนุษยชนอย่างต่อเนื่องตลอด 20 ปี แม้ถูกคุกคามหลายครั้ง", year: "2547–2567" },
+      { icon: "🌍", title: "Prachatai English", desc: "สร้างสะพานเชื่อมข่าวไทยสู่ผู้อ่านนานาชาติ มีผู้ติดตามทั่วโลก", year: "2563" },
+      { icon: "🏆", title: "รางวัล Press Freedom จาก RSF", desc: "ได้รับการยอมรับจาก Reporters Without Borders ในฐานะสื่ออิสระที่กล้าหาญ", year: "2559" },
+    ],
+    website: "https://prachatai.com"
+  },
+
+  {
+    id: "tdri",
+    icon: "🔬",
+    nameTh: "สถาบันวิจัยเพื่อการพัฒนาประเทศไทย (TDRI)",
+    nameEn: "Thailand Development Research Institute (TDRI)",
+    type: "research",
+    founded: 1984,
+    tags: ["เศรษฐกิจ", "นโยบาย", "การพัฒนา"],
+    shortDesc: "สถาบันวิจัยนโยบายสาธารณะชั้นนำของไทย วิเคราะห์และเสนอแนะนโยบายด้านเศรษฐกิจ สังคม และสิ่งแวดล้อมต่อรัฐบาลและสาธารณชน",
+    history: "TDRI ก่อตั้งในปี 2527 ด้วยการสนับสนุนจาก USAID เพื่อเป็นหน่วยงานวิจัยนโยบายอิสระ เติบโตจนเป็นองค์กรที่มีอิทธิพลต่อนโยบายสาธารณะไทยในหลากหลายด้าน ตั้งแต่การค้า การศึกษา สาธารณสุข ไปจนถึงพลังงาน",
+    historyTimeline: [
+      { year: "2527", desc: "ก่อตั้งด้วยทุนจาก USAID เพื่อสร้างศักยภาพนักวิจัยนโยบายไทย" },
+      { year: "2540", desc: "มีบทบาทสำคัญในการวิเคราะห์วิกฤตต้มยำกุ้งและเสนอแนวทางฟื้นฟูเศรษฐกิจ" },
+      { year: "2555", desc: "เปิดตัว TDRI Podcast และสื่อดิจิทัลเพื่อเผยแพร่งานวิจัยสู่สาธารณะ" },
+      { year: "2566", desc: "เปิดตัวศูนย์วิจัย AI และเศรษฐกิจดิจิทัล รับมือการเปลี่ยนแปลงเทคโนโลยี" },
+    ],
+    donors: [
+      { rank: 1, name: "สำนักงบประมาณ / หน่วยงานรัฐ", type: "ภาครัฐไทย", amount: "ส่วนใหญ่ของงบประมาณ" },
+      { rank: 2, name: "World Bank / ADB", type: "องค์กรระหว่างประเทศ", amount: "โครงการเฉพาะ" },
+      { rank: 3, name: "ภาคเอกชนและมูลนิธิ", type: "ทุนวิจัยร่วม", amount: "ผันแปรตามโครงการ" },
+    ],
+    donorNote: "TDRI มีความเป็นอิสระทางวิชาการสูง แม้รับทุนจากรัฐ โดยมีคณะกรรมการกำกับดูแลจากภาคส่วนต่างๆ",
+    accomplishments: [
+      { icon: "📊", title: "รายงานวิกฤตต้มยำกุ้ง 2540", desc: "เป็นหนึ่งในองค์กรแรกที่วิเคราะห์และเสนอมาตรการรับมือวิกฤตเศรษฐกิจ", year: "2540" },
+      { icon: "🎓", title: "ปฏิรูปการศึกษาไทย", desc: "งานวิจัยด้านการศึกษาของ TDRI ถูกนำไปใช้ในนโยบายการศึกษาแห่งชาติหลายฉบับ", year: "2555–ปัจจุบัน" },
+      { icon: "⚡", title: "นโยบายพลังงานทางเลือก", desc: "เสนอกรอบนโยบายพลังงานสะอาดที่ถูกรับไปปรับใช้ในแผนพลังงานแห่งชาติ", year: "2563" },
+    ],
+    website: "https://tdri.or.th"
+  },
+
+  {
+    id: "enlaw",
+    icon: "🌱",
+    nameTh: "มูลนิธินิติธรรมสิ่งแวดล้อม (EnLAW)",
+    nameEn: "Environmental Litigation and Advocacy for the Wants (EnLAW)",
+    type: "watchdog",
+    founded: 2011,
+    tags: ["สิ่งแวดล้อม", "กฎหมาย", "ชุมชน"],
+    shortDesc: "ให้ความช่วยเหลือทางกฎหมายแก่ชุมชนที่ได้รับผลกระทบจากโครงการอุตสาหกรรมและนโยบายสิ่งแวดล้อม ต่อสู้คดีสิ่งแวดล้อมในศาล",
+    history: "EnLAW ก่อตั้งในปี 2554 โดยทนายความและนักสิ่งแวดล้อมที่เห็นว่าชุมชนที่ได้รับผลกระทบจากโครงการอุตสาหกรรมขาดการเข้าถึงกระบวนการยุติธรรม มูลนิธิเน้นการฟ้องคดีเชิงยุทธศาสตร์ (Strategic Litigation) เพื่อสร้างบรรทัดฐานทางกฎหมาย",
+    historyTimeline: [
+      { year: "2554", desc: "ก่อตั้งและรับคดีแรก — ชุมชนมาบตาพุดต่อสู้กับโรงงานปิโตรเคมี" },
+      { year: "2558", desc: "ชนะคดีมาบตาพุด ศาลสั่งให้บริษัทรับผิดชอบค่าเสียหายด้านสุขภาพ" },
+      { year: "2562", desc: "เปิดตัวคลินิกกฎหมายสิ่งแวดล้อมให้คำปรึกษาฟรีแก่ชุมชน" },
+      { year: "2565", desc: "ยื่นฟ้องคดีมลพิษฝุ่น PM2.5 เป็นคดีแรกในไทยที่นำรัฐขึ้นศาล" },
+    ],
+    donors: [
+      { rank: 1, name: "Heinrich Böll Foundation", type: "มูลนิธิสิ่งแวดล้อมเยอรมัน", amount: "ไม่เปิดเผย" },
+      { rank: 2, name: "Access to Justice Fund", type: "ทุนสิทธิชุมชน", amount: "ไม่เปิดเผย" },
+      { rank: 3, name: "ชุมชนและผู้สนับสนุนรายย่อย", type: "บุคคล", amount: "รายย่อย" },
+    ],
+    donorNote: "EnLAW รับทุนสนับสนุนจากองค์กรสิ่งแวดล้อมนานาชาติและพึ่งพาอาสาสมัครในการดำเนินงาน",
+    accomplishments: [
+      { icon: "🏭", title: "ชนะคดีมาบตาพุด", desc: "ชุมชนได้รับค่าเสียหายจากโรงงานปิโตรเคมี เป็นบรรทัดฐานสำคัญด้านสิ่งแวดล้อม", year: "2558" },
+      { icon: "🌫️", title: "คดีฝุ่น PM2.5 ประวัติศาสตร์", desc: "เป็นองค์กรแรกที่นำรัฐบาลขึ้นศาลในคดีมลพิษทางอากาศ", year: "2565" },
+      { icon: "📖", title: "คลินิกกฎหมายสิ่งแวดล้อม", desc: "ให้คำปรึกษาฟรีแก่ชุมชนกว่า 200 แห่งทั่วประเทศ", year: "2562–ปัจจุบัน" },
+    ],
+    website: "https://enlawfoundation.org"
+  },
+
+  {
+    id: "wevis",
+    icon: "📊",
+    nameTh: "WeVis — วีวิส",
+    nameEn: "WeVis — We Visualize Democracy",
+    type: "civil",
+    founded: 2020,
+    tags: ["ข้อมูลเปิด", "รัฐสภา", "การเมือง"],
+    shortDesc: "กลุ่มภาคประชาสังคมที่แปลงข้อมูลรัฐสภาและการเมืองไทยให้เป็นภาพที่เข้าใจง่าย ผ่านการแสดงผลข้อมูล (Data Visualization)",
+    history: "WeVis เกิดจากความร่วมมือของนักพัฒนา นักออกแบบ และภาคีด้านข้อมูลเปิด ที่ต้องการทำให้ข้อมูลรัฐสภาไทยเข้าถึงได้ง่ายสำหรับทุกคน ก่อตั้งในปี 2563 และได้รับความสนใจอย่างรวดเร็วจากสาธารณชน",
+    historyTimeline: [
+      { year: "2563", desc: "เปิดตัว Parliament Watch แพลตฟอร์มติดตามการทำงานของ ส.ส." },
+      { year: "2564", desc: "เปิดตัว ACT AI — เครื่องมือตรวจสอบการจัดซื้อจัดจ้างภาครัฐ" },
+      { year: "2565", desc: "เปิดตัว Election Explorer สำหรับการเลือกตั้ง 2566" },
+      { year: "2566", desc: "เผยแพร่ข้อมูลทรัพย์สิน-หนี้สิน ส.ส. แบบ Interactive หลังเลือกตั้ง" },
+    ],
+    donors: [
+      { rank: 1, name: "Open Government Partnership", type: "โครงการรัฐบาลเปิด", amount: "ทุนโครงการ" },
+      { rank: 2, name: "iLaw และภาคีเครือข่าย", type: "องค์กรภาคประชาสังคม", amount: "ทรัพยากรร่วม" },
+      { rank: 3, name: "อาสาสมัครและนักพัฒนา", type: "Pro Bono", amount: "แรงงานอาสา" },
+    ],
+    donorNote: "WeVis ดำเนินงานในรูปแบบภาคีและอาสาสมัครเป็นหลัก ลดการพึ่งพาทุนภายนอกเพื่อความยืดหยุ่น",
+    accomplishments: [
+      { icon: "🏛️", title: "Parliament Watch", desc: "แพลตฟอร์มติดตาม ส.ส. ที่มีผู้ใช้งานสูงสุดในช่วงการเลือกตั้ง 2566", year: "2563–ปัจจุบัน" },
+      { icon: "🤖", title: "ACT AI จัดซื้อจัดจ้าง", desc: "เครื่องมือ AI ตรวจจับความผิดปกติในการจัดซื้อจัดจ้างรัฐ เข้าถึงข้อมูลหมื่นล้านบาท", year: "2564" },
+      { icon: "🗳️", title: "Election Explorer 2566", desc: "เครื่องมือวิเคราะห์ผลเลือกตั้งแบบ Interactive ที่ถูกอ้างอิงโดยสื่อชั้นนำ", year: "2566" },
+    ],
+    website: "https://wevis.info"
+  },
+
+  {
+    id: "human-right-watch-th",
+    icon: "🔭",
+    nameTh: "Human Rights Watch — ไทย",
+    nameEn: "Human Rights Watch Thailand",
+    type: "watchdog",
+    founded: 1988,
+    tags: ["สิทธิมนุษยชน", "นานาชาติ", "รายงาน"],
+    shortDesc: "สำนักงานภูมิภาคไทยขององค์กรสิทธิมนุษยชนระดับโลก ติดตามและรายงานสถานการณ์สิทธิมนุษยชนในไทยและภูมิภาคอาเซียนสู่เวทีนานาชาติ",
+    history: "Human Rights Watch มีสำนักงานและนักวิจัยประจำภูมิภาคเอเชียตะวันออกเฉียงใต้ที่ติดตามไทยมาตั้งแต่ยุค 1980s ทำงานร่วมกับองค์กรท้องถิ่นในการรวบรวมหลักฐานและรายงานต่อองค์การสหประชาชาติ",
+    historyTimeline: [
+      { year: "2531", desc: "เริ่มติดตามสถานการณ์ไทย โดยเฉพาะด้านแรงงานและผู้ลี้ภัย" },
+      { year: "2553", desc: "รายงานการสลายการชุมนุมเดือนพฤษภาคม 2553 ต่อเวทีนานาชาติ" },
+      { year: "2557", desc: "เปิดเผยรายงานการละเมิดสิทธิหลังรัฐประหาร ถูกเรียกพบโดย คสช." },
+      { year: "2566", desc: "รายงานล่าสุดเรื่องการปฏิบัติต่อนักโทษการเมืองในเรือนจำไทย" },
+    ],
+    donors: [
+      { rank: 1, name: "มูลนิธิและบุคคลทั่วโลก", type: "ผู้บริจาคทั่วโลก", amount: "งบประมาณรวมกว่า $100M ต่อปี" },
+      { rank: 2, name: "ไม่รับทุนรัฐบาล", type: "นโยบายองค์กร", amount: "—" },
+    ],
+    donorNote: "HRW มีนโยบายเข้มงวดห้ามรับทุนจากรัฐบาลใดๆ เพื่อรักษาความเป็นกลาง พึ่งพาการบริจาคจากบุคคลและมูลนิธิเอกชนเท่านั้น",
+    accomplishments: [
+      { icon: "📢", title: "รายงาน 2553 สู่สหประชาชาติ", desc: "รายงานละเอียดที่นำสู่การตรวจสอบนานาชาติต่อการสลายชุมนุม", year: "2553" },
+      { icon: "🌐", title: "World Report Thailand", desc: "รายงานประจำปีที่เป็นเอกสารอ้างอิงหลักสำหรับนักการทูตและนักวิชาการทั่วโลก", year: "ทุกปี" },
+      { icon: "🏳️", title: "แคมเปญผู้ลี้ภัยชาวอุยกูร์", desc: "กดดันรัฐบาลไทยไม่ให้ส่งผู้ลี้ภัยชาวอุยกูร์กลับจีน", year: "2558" },
+    ],
+    website: "https://www.hrw.org/asia/thailand"
+  },
+
+  {
+    id: "tisa",
+    icon: "🏘️",
+    nameTh: "สถาบันพัฒนาองค์กรชุมชน (พอช.)",
+    nameEn: "Community Organizations Development Institute (CODI)",
+    type: "civil",
+    founded: 2000,
+    tags: ["ชุมชน", "ที่อยู่อาศัย", "พัฒนาสังคม"],
+    shortDesc: "หน่วยงานของรัฐที่ทำงานเหมือนองค์กรอิสระ สนับสนุนชุมชนแออัดและชุมชนเปราะบางในการพัฒนาที่อยู่อาศัยและคุณภาพชีวิต",
+    history: "พอช. ก่อตั้งในปี 2543 ภายใต้กระทรวงการพัฒนาสังคมฯ เพื่อสนับสนุนการพัฒนาชุมชนแบบมีส่วนร่วม โครงการบ้านมั่นคงเป็นโครงการเรือธงที่ช่วยชุมชนแออัดพัฒนาที่ดินและสร้างบ้านใหม่ด้วยตนเอง",
+    historyTimeline: [
+      { year: "2543", desc: "ก่อตั้งโดย พ.ร.บ. สถาบันพัฒนาองค์กรชุมชน เปิดตัวโครงการบ้านมั่นคง" },
+      { year: "2546", desc: "โครงการบ้านมั่นคงพัฒนาที่อยู่อาศัยชุมชนแออัดกว่า 80,000 ครัวเรือนทั่วไทย" },
+      { year: "2554", desc: "เปิดตัวกองทุน SHF (Social Housing Fund) เพื่อการเงินชุมชน" },
+      { year: "2566", desc: "ขยายสู่โครงการชุมชนริมคลองในกรุงเทพฯ และพื้นที่ชายแดน" },
+    ],
+    donors: [
+      { rank: 1, name: "งบประมาณแผ่นดิน", type: "รัฐบาลไทย", amount: "หลักพันล้านบาทต่อปี" },
+      { rank: 2, name: "Asian Coalition for Housing Rights", type: "ภาคีเอเชีย", amount: "โครงการร่วม" },
+      { rank: 3, name: "ชุมชนสมทบทุน", type: "สมาชิกชุมชน", amount: "ร่วมสมทบตามสัดส่วน" },
+    ],
+    donorNote: "พอช. เป็นหน่วยงานรัฐแต่มีโครงสร้างบริหารแบบอิสระ ชุมชนมีส่วนร่วมในการตัดสินใจทางการเงินของโครงการ",
+    accomplishments: [
+      { icon: "🏠", title: "บ้านมั่นคง 80,000 ครัวเรือน", desc: "พัฒนาที่อยู่อาศัยให้ชุมชนแออัดทั่วไทยในรูปแบบ Community Land Trust", year: "2543–ปัจจุบัน" },
+      { icon: "💰", title: "กองทุน SHF", desc: "สร้างระบบการเงินชุมชนที่ทำให้ชุมชนสามารถกู้ยืมและบริหารจัดการเงินได้เอง", year: "2554" },
+      { icon: "🌊", title: "ฟื้นฟูหลังภัยพิบัติ", desc: "ดูแลชุมชนผู้ประสบภัยน้ำท่วมใหญ่ปี 2554 กว่า 600 ชุมชนทั่วประเทศ", year: "2554" },
+    ],
+    website: "https://www.codi.or.th"
+  }
+];
+// ─── END DATA ─────────────────────────────────────────────
+
+// ═══════════════════════════════════════
+//  APPLICATION LOGIC — do not edit below
+// ═══════════════════════════════════════
+
+let currentFilter = 'all';
+let currentSearch = '';
+
+const typeLabels = {
+  ngo: 'NGO',
+  watchdog: 'Watchdog',
+  research: 'Think Tank',
+  media: 'สื่ออิสระ',
+  civil: 'ภาคประชาสังคม'
+};
+
+const typeBadgeClass = {
+  ngo: 'badge-ngo',
+  watchdog: 'badge-watchdog',
+  research: 'badge-research',
+  media: 'badge-media',
+  civil: 'badge-civil'
+};
+
+function setFilter(el, val) {
+  currentFilter = val;
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  renderCards();
+}
+
+function doSearch() {
+  currentSearch = document.getElementById('searchInput').value.toLowerCase();
+  renderCards();
+}
+
+document.getElementById('searchInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') doSearch();
+});
+
+function filtered() {
+  return ORGS.filter(o => {
+    const matchType = currentFilter === 'all' || o.type === currentFilter;
+    const q = currentSearch;
+    const matchSearch = !q ||
+      o.nameTh.toLowerCase().includes(q) ||
+      o.nameEn.toLowerCase().includes(q) ||
+      o.shortDesc.toLowerCase().includes(q) ||
+      o.tags.some(t => t.toLowerCase().includes(q));
+    return matchType && matchSearch;
+  });
+}
+
+function renderCards() {
+  const list = filtered();
+  const grid = document.getElementById('cardGrid');
+  document.getElementById('resultsCount').textContent = `พบ ${list.length} องค์กร`;
+
+  if (list.length === 0) {
+    grid.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">🔍</div>
+        <div class="empty-title">ไม่พบองค์กรที่ค้นหา</div>
+        <div class="empty-sub">ลองเปลี่ยนคำค้นหาหรือเลือกประเภทอื่น</div>
+      </div>`;
+    return;
+  }
+
+  grid.innerHTML = list.map(o => `
+    <div class="org-card" onclick="openModal('${o.id}')">
+      <div class="card-header">
+        <div class="card-icon">${o.icon}</div>
+        <div class="card-title-block">
+          <div class="card-name-th">${o.nameTh}</div>
+          <div class="card-name-en">${o.nameEn}</div>
+        </div>
+        <span class="card-type-badge ${typeBadgeClass[o.type]}">${typeLabels[o.type]}</span>
+      </div>
+      <div class="card-body">
+        <div class="card-description">${o.shortDesc}</div>
+      </div>
+      <div class="card-meta">
+        ${o.tags.map(t => `<span class="meta-tag">${t}</span>`).join('')}
+      </div>
+      <div class="card-footer">
+        <div><span class="founded-label">ก่อตั้ง </span><span class="founded-year">${o.founded}</span></div>
+        <span class="view-btn">ดูรายละเอียด →</span>
+      </div>
+    </div>`).join('');
+}
+
+function openModal(id) {
+  const o = ORGS.find(x => x.id === id);
+  if (!o) return;
+
+  const body = document.getElementById('modalBody');
+  body.innerHTML = `
+    <div class="modal-hero">
+      <div class="modal-icon">${o.icon}</div>
+      <div>
+        <div class="modal-title-th">${o.nameTh}</div>
+        <div class="modal-title-en">${o.nameEn}</div>
+        <div class="modal-badges">
+          <span class="card-type-badge ${typeBadgeClass[o.type]}">${typeLabels[o.type]}</span>
+          ${o.tags.map(t => `<span class="meta-tag">${t}</span>`).join('')}
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-tabs">
+      <button class="modal-tab active" onclick="switchTab(this,'tab-history')">📖 ประวัติ</button>
+      <button class="modal-tab" onclick="switchTab(this,'tab-donors')">💰 ผู้สนับสนุน</button>
+      <button class="modal-tab" onclick="switchTab(this,'tab-accomplish')">🏆 ผลงาน</button>
+    </div>
+
+    <div class="modal-content">
+
+      <!-- TAB: HISTORY -->
+      <div class="tab-panel active" id="tab-history">
+        <div class="section-label">ภาพรวมและประวัติ</div>
+        <div class="history-text">${o.history}</div>
+        <div class="section-label">เหตุการณ์สำคัญ</div>
+        <div class="timeline">
+          ${o.historyTimeline.map(t => `
+            <div class="timeline-item">
+              <div class="timeline-year">${t.year}</div>
+              <div class="timeline-desc">${t.desc}</div>
+            </div>`).join('')}
+        </div>
+        ${o.website ? `<a href="${o.website}" target="_blank" rel="noopener" style="font-size:0.82rem;color:var(--blue);font-weight:600;">🔗 เว็บไซต์ทางการ: ${o.website}</a>` : ''}
+      </div>
+
+      <!-- TAB: DONORS -->
+      <div class="tab-panel" id="tab-donors">
+        <div class="section-label">ผู้ให้ทุนและสนับสนุนหลัก</div>
+        <div class="donors-grid">
+          ${o.donors.map(d => `
+            <div class="donor-row">
+              <div class="donor-rank">#${d.rank}</div>
+              <div class="donor-info">
+                <div class="donor-name">${d.name}</div>
+                <div class="donor-type-tag">${d.type}</div>
+              </div>
+              <div class="donor-amount">${d.amount}</div>
+            </div>`).join('')}
+        </div>
+        <div class="section-label">หมายเหตุ</div>
+        <div class="donor-note">${o.donorNote}</div>
+      </div>
+
+      <!-- TAB: ACCOMPLISHMENTS -->
+      <div class="tab-panel" id="tab-accomplish">
+        <div class="section-label">ผลงานและความสำเร็จสำคัญ</div>
+        <div class="accomplish-list">
+          ${o.accomplishments.map(a => `
+            <div class="accomplish-item">
+              <div class="accomplish-icon">${a.icon}</div>
+              <div>
+                <div class="accomplish-title">${a.title}</div>
+                <div class="accomplish-desc">${a.desc}</div>
+                <div class="accomplish-year">📅 ${a.year}</div>
+              </div>
+            </div>`).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function switchTab(btn, tabId) {
+  btn.closest('.modal').querySelectorAll('.modal-tab').forEach(t => t.classList.remove('active'));
+  btn.closest('.modal').querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(tabId).classList.add('active');
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('modalOverlay')) closeModalDirect();
+}
+
+function closeModalDirect() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModalDirect(); });
+
+// ─── INIT ───
+document.getElementById('totalCount').textContent = ORGS.length;
+renderCards();
+</script>
+</body>
+</html>
